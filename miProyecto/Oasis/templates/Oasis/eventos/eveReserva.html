@@ -1,0 +1,137 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Reservas{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'eveReserva' %}">
+      Inicio                    
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <h1>Mesas Evento</h1>
+    <div class="Contenido">
+        <div class="conteos">
+        <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+        </div>
+        <div class="search">
+            <input  type="text" id="myInput" placeholder="Buscar mesa...">
+            <button id="searchButton" type="submit">Buscar</button>
+        </div>
+    </div>
+    <div class="mesas">
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 1</h2>
+                <p>Estado: Reservada</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 8</h2>
+                <p>Estado: Reservada</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 15</h2>
+                <p>Estado: Reservada</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 19</h2>
+                <p>Estado: Reservada</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 4</h2>
+                <p>Estado: Reservada</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 5</h2>
+                <p>Estado: Reservada</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 3</h2>
+                <p>Estado: Disponible</p>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 11</h2>
+                <p>Estado: Disponible</p>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 16</h2>
+                <p>Estado: Disponible</p>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 6</h2>
+                <p>Estado: Disponible</p>
+            </section>
+        </div>
+    </div>
+
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+      
+
+            <div class="modal-header">
+              <h4 class="modal-title">Mesa #X</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+
+            <div class="modal-body">
+              <h5>Cliente: --</h5>
+            </div>
+            <div class="modal-body">
+                <h5>CC: --</h5>
+            </div>
+            <div class="modal-body">
+                <h5>Evento: --</h5> 
+            </div>
+            <div class="modal-body">
+                <h5>Fecha: --</h5>
+            </div>
+            <div class="modal-body">
+                <h5>Mesa x7 Personas</h5> 
+            </div>
+            <div id="totalModal" class="modal-body">
+                <h4>TOTAL PAGADO: 40.00</h4>
+            </div>
+
+            <div class="modal-footer">
+                <div id="opcionBotones">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">LLegada al bar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+</main>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Pedidos{% endblock %}
+
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+  <li id='segundaOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peHistorial' %}">
+      Historial de Pedidos                    
+    </a>
+  </li>
+  <li id='terceraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peGestionMesas' %}">
+      Gestión de Mesas             
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <h1>Pedidos</h1>
+    <div class="Contenido">
+        <div class="conteos">
+            <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+        </div>
+    </div>
+    <section class="tarjetaOrden" style="margin-top: 0%;">
+        <section class="listaOrden">
+            <div class="Orden">
+                <h3>Mesa 1</h3>
+                <p>Productos: x1 Tequila Don Julio Blanco Reserva 700ml, x3 Martini</p>
+                <p>Estado: Pendiente</p>
+                <button id="preparando" class="btn btn-prepare">En Preparación</button>
+                <button id="entregando" class="btn btn-deliver">Entregado</button>
+            </div>
+        </section>
+
+        <section class="detallesOrden">
+            <div class="informacionOrden">
+                <h3><span>Mesa 1</span> - Cliente: Juan Pérez</h3>
+                <p><b>Estado: <span>En Preparación</span></b></p>
+                <h5>Comentario</h5>
+                <textarea name="textarea" rows="2" cols="90" readonly> Porfavor bastante hielo</textarea>
+            </div>
+            <div class="order-items">
+                <h4>Productos</h4>
+                <ul>
+                    <li>x1 Tequila Don Julio Blanco Reserva 700ml</li>
+                    <li>x3 Martini</li>
+                </ul>
+            </div>
+        </section>
+    </section>
+
+    <section class="tarjetaOrden">
+        <section class="listaOrden">
+            <div class="Orden">
+                <h3>Mesa 7</h3>
+                <p>Productos: x3 Tacos, x2 Moscow Mule, x1 Negroni</p>
+                <p>Estado: Pendiente</p>
+                <button id="preparando" class="btn btn-prepare">En Preparación</button>
+                <button id="entregando" class="btn btn-deliver">Entregado</button>
+            </div>
+        </section>
+
+        <section class="detallesOrden">
+            <div class="informacionOrden">
+                <h3><span>Mesa 7</span> - Cliente: Daniela Medina</h3>
+                <p><b>Estado: <span>En Preparación</span></b></p>
+                <h5>Comentario</h5>
+                <textarea name="textarea" rows="2" cols="90" readonly></textarea>
+            </div>
+            <div class="order-items">
+                <h4>Productos</h4>
+                <ul>
+                    <li>x3 Tacos</li>
+                    <li>x2 Moscow Mule</li>
+                    <li>x1 Negroni</li>
+                </ul>
+            </div>
+        </section>
+    </section>
+
+    <section class="tarjetaOrden">
+        <section class="listaOrden">
+            <div class="Orden">
+                <h3>Mesa 14</h3>
+                <p>Productos: X1 Litro Ron, x5 Michelada</p>
+                <p>Estado: Pendiente</p>
+                <button id="preparando" class="btn btn-prepare">En Preparación</button>
+                <button id="entregando" class="btn btn-deliver">Entregado</button>
+            </div>
+        </section>
+
+        <section class="detallesOrden">
+            <div class="informacionOrden">
+                <h3><span>Mesa 14</span> - Cliente: Yeison Grisales</h3>
+                <p><b>Estado: <span>En Preparación</span></b></p>
+                <h5>Comentario</h5>
+                <textarea name="textarea" rows="2" cols="90" readonly>Las micheladas con bastante limón</textarea>
+            </div>
+            <div class="order-items">
+                <h4>Productos</h4>
+                <ul>
+                    <li>x1 Litro Ron</li>
+                    <li>x5 Michelada</li>
+                </ul>
+            </div>
+        </section>
+    </section>
+</main>
+{% endblock %}

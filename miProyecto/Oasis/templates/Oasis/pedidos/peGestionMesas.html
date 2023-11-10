@@ -1,0 +1,301 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Gestión de Mesas{% endblock %}
+
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+  <li id='segundaOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peHistorial' %}">
+      Historial de Pedidos                    
+    </a>
+  </li>
+  <li id='terceraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peGestionMesas' %}">
+      Gestión de Mesas             
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <h1>Gestión de Mesas</h1>
+    <div class="Contenido">
+        <div class="conteos">
+        <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+        </div>
+        <div class="search">
+            <input  type="text" id="myInput" placeholder="Buscar mesas...">
+            <button id="searchButton" type="submit">Buscar</button>
+        </div>
+    </div>
+    <div class="mesas">
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 1</h2>
+                <p>Estado: Activo</p>
+                <table class="productos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>- Tequila Don Julio Blanco Reserva 700ml</td>
+                            <td>$30.00</td>
+                        </tr>
+                        <tr>
+                            <td>- Martini</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="total">Total: $40.00</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 14</h2>
+                <p>Estado: Activo</p>
+                <table class="productos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>- Tequila Don Julio Blanco Reserva 700ml</td>
+                            <td>$30.00</td>
+                        </tr>
+                        <tr>
+                            <td>- Martini</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="total">Total: $40.00</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 6</h2>
+                <p>Estado: Disponible</p>
+                <a href="{% url 'pedidoEmpleado' %}">
+                    <button type="button" class="btn btn-success">Activar Mesa</button>
+                </a>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 3</h2>
+                <p>Estado: Disponible</p>
+                <a href="pedidoEmpleado.html">
+                    <button type="button" class="btn btn-success">Activar Mesa</button>
+                </a>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 7</h2>
+                <p>Estado: Activo</p>
+                <table class="productos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>- Tequila Don Julio Blanco Reserva 700ml</td>
+                            <td>$30.00</td>
+                        </tr>
+                        <tr>
+                            <td>- Martini</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="total">Total: $40.00</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 10</h2>
+                <p>Estado: Activo</p>
+                <table class="productos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>- Tequila Don Julio Blanco Reserva 700ml</td>
+                            <td>$30.00</td>
+                        </tr>
+                        <tr>
+                            <td>- Martini</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="total">Total: $40.00</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 5</h2>
+                <p>Estado: Activo</p>
+                <table class="productos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>- Tequila Don Julio Blanco Reserva 700ml</td>
+                            <td>$30.00</td>
+                        </tr>
+                        <tr>
+                            <td>- Martini</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="total">Total: $40.00</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaActiva">
+            <section class="mesaActiva">
+                <h2>Mesa 25</h2>
+                <p>Estado: Activo</p>
+                <table class="productos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>- Tequila Don Julio Blanco Reserva 700ml</td>
+                            <td>$30.00</td>
+                        </tr>
+                        <tr>
+                            <td>- Martini</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="total">Total: $40.00</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Ver</button>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 3</h2>
+                <p>Estado: Disponible</p>
+                <a href="pedidoEmpleado.html">
+                    <button type="button" class="btn btn-success">Activar Mesa</button>
+                </a>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 11</h2>
+                <p>Estado: Disponible</p>
+                <a href="pedidoEmpleado.html">
+                    <button type="button" class="btn btn-success">Activar Mesa</button>
+                </a>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 16</h2>
+                <p>Estado: Disponible</p>
+                <a href="pedidoEmpleado.html">
+                    <button type="button" class="btn btn-success">Activar Mesa</button>
+                </a>
+            </section>
+        </div>
+        <div class="tarjetaDisponible">
+            <section class="mesaDisponible">
+                <h2>Mesa 6</h2>
+                <p>Estado: Disponible</p>
+                <a href="pedidoEmpleado.html">
+                    <button type="button" class="btn btn-success">Activar Mesa</button>
+                </a>
+            </section>
+        </div>
+    </div>
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+      
+
+            <div class="modal-header">
+              <h4 class="modal-title">Mesa #X</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+
+            <div class="modal-body">
+              <h5>Cliente: --</h5>
+            </div>
+            <div class="modal-body">
+                <h5>CC: --</h5>
+            </div>
+            <div class="modal-body">
+                <table class="cuentaProductos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>- Tequila Don Julio Blanco Reserva 700ml</td>
+                            <td>$30.00</td>
+                        </tr>
+                        <tr>
+                            <td>- Martini</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>    
+            </div>
+            <div id="totalModal" class="modal-body">
+                <h4>TOTAL: 40.00</h4>
+            </div>
+
+            <div class="modal-footer">
+                <div id="opcionBotones">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cuenta Pagada</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+</main>
+{% endblock %}

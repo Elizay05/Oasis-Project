@@ -1,0 +1,192 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Usuarios{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'guInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+  <li id='segundaOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'guUsuariosBloqueados' %}">
+      Usuarios Bloqueados                    
+    </a>
+  </li>
+  <li id='terceraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="#">
+      Auditoria                    
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <h1>Usuarios</h1>
+  <div class="Contenido">
+      <div class="conteos">
+      <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+      <p>|</p>
+      <p><b>Administrador</b> (<span id="totalAdministrador">0</span>)</p>
+      <p>|</p>
+      <p><b>Empleado</b> (<span id="totalEmpleados">0</span>)</p>
+      <p>|</p>
+      <p><b>Cliente</b> (<span id="totalCliente">0</span>)</p>
+      </div>
+      <div class="search">
+          <input placeholder="Buscar usuarios..." type="text">
+          <button type="submit">Buscar</button>
+      </div>
+  </div>
+  <div class="Agregar">
+    <a type="button" class="btn btn-success" href="{% url 'guInicioForm' %}">Agregar Usuario</a>
+  </div>
+  <div id="contenedorTabla" class="container mt-3 contenedorTabla">            
+      <table id="tabla" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre de usuario</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Fecha de Creación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>John</td>
+            <td>john@example.com</td>
+            <td>Administrador</td>
+            <td>01/05/2023</td>
+            <td>
+              <button type="button" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>
+              <a type="button" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+              <a type="button" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Detalles de Usuario</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div>
+                  <form>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Nombre del usuario</label>
+                      <input type="text" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                      <label>Estado</label>
+                      <div class="dropdown dropend">
+                          <button id="botonDropdown" type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown">
+                            Activo
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item disabled" href="#">Bloqueado</a></li>
+                          </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                      <label>Pedidos</label>
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-primary" readonly>Pedido#3</button>
+                    </div>
+                    <div class="mb-3">
+                      <label>Reservas</label>
+                    </div>
+                    <div class="mb-3">    
+                      <button class="btn btn-primary">Reserva#5</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+    
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="myModal2">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Editar Detalles de Usuario</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div>
+                  <form>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Nombre del usuario</label>
+                      <input type="text" class="form-control" >
+                    </div>
+                    <div class="mb-3">
+                      <label>Estado</label>
+                      <div class="dropdown dropend">
+                          <button id="botonDropdown" type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown">
+                            Activo
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Bloqueado</a></li>
+                          </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                      <label>Pedidos</label>
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-primary" readonly>Pedido#3</button>
+                    </div>
+                    <div class="mb-3">
+                      <label>Reservas</label>
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-primary">Reserva#5</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Guardar cambios</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+    
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="myModal3">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Eliminar Usuario</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="mb-3">
+                      <p>Seguro que desea eliminar a este usuario?</p>
+                  </div>
+                  <div class="mb-3">
+                      <button class="btn btn-success">Confirmar</button>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+    
+        </div>
+      </div>
+    </div>
+</main>
+{% endblock %}
+

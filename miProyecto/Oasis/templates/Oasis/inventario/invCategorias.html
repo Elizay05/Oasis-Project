@@ -1,0 +1,62 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+{{data}}
+
+{% block titulo %}Categorías{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'invInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+  <li id='segundaOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'invCategorias' %}">
+      Categorias                    
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+  <h1 style="margin-top: 0%;">Categorías</h1>
+  <div class="Contenido">
+      <div class="conteos">
+      <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+      </div>
+      <div class="search">
+          <input  type="text" id="myInput" placeholder="Buscar productos...">
+          <button id="searchButton" type="submit">Buscar</button>
+      </div>
+  </div>
+  <div class="Agregar">
+    <a type="button" class="btn btn-success" href="{% url 'invCategoriasForm' %}">Agregar Categoría</a>
+  </div>
+  <div id="contenedorTabla" class="container mt-3">            
+      <table id="tabla" class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th class="acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for i in data %}
+                <tr>
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.nombre }}</td>
+                    <td>{{ i.descripcion }}</td>
+                    <td>
+                    <a class="btn btn-warning" href="{% url 'actualizarCategoriasForm' i.id %}"><i class="bi bi-pencil"></i></a>
+                    <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarCategoria' i.id %}')"><i class="bi bi-x-lg"></i></a>
+                    </td>
+                </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <br>
+    <br>
+{% endblock %}

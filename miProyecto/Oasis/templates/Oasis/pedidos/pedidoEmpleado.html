@@ -1,0 +1,138 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Gestión de Mesas{% endblock %}
+
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+  <li id='segundaOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peHistorial' %}">
+      Historial de Pedidos                    
+    </a>
+  </li>
+  <li id='terceraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peGestionMesas' %}">
+      Gestión de Mesas             
+    </a>
+  </li>
+{% endblock %}
+
+
+{% block contenedor %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="contenedor">
+        <h1>Mesa 3</h1>
+        <div class="search">
+            <input  type="text" id="myInput" placeholder="Buscar productos...">
+            <button id="searchButton" type="submit">Buscar</button>
+        </div>
+        <div class="row">
+            <div  class="col-md-6 productos">
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <div class="pedido-item">
+                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
+                    <h3>Martini</h3>
+                    <h6 style="color: red;">30.000</h6>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
+                        <button class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="pedido-resumen">
+                    <h2>Pedido en Curso</h2>
+                    <div class="order-items">
+                        <h5>Productos</h5>
+                        <ul>
+                            <li>x1 Tequila Don Julio Blanco Reserva 700ml</li>
+                            <li>x3 Martini</li>
+                        </ul>
+                    </div>
+                    <div class="total">
+                        <p>Total: $<span id="total">0.00</span></p>
+                    </div>
+                    <button class="btn btn-success btn-lg pedidoListo">Enviar Pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+

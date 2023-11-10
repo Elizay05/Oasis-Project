@@ -1,0 +1,44 @@
+  #tabla{
+      width: 1500px;
+      margin-top: 40px;
+  }
+  #tabla thead tr th{
+      background-color: #c5d7e8;
+      line-height: 40px;
+      text-align: center;
+  }
+  #tabla thead tr .acciones{
+    width: 100%;
+    text-align: center;
+  }
+  #tabla tbody tr td{
+      line-height: 40px;
+  }
+  #contenedorTabla{
+      margin-left: 20px;
+      padding: 0%;
+  } 
+
+  /* Estilos de otras paginas*/
+  #botonDropdown{
+    border: 1px solid #c5d7e8;
+  }
+  #informacion{
+      border: 1px solid #c5d7e8;
+      color: #6e6e6e ;
+  }
+  #boton+{
+    margin-top: 5%;
+  }
+  #entregado{
+    background-color: rgba(0, 255, 106, 0.271);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 17px;
+  }
+  #cancelado{
+    background-color: rgba(255, 0, 0, 0.271);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 17px;
+  }

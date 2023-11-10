@@ -1,0 +1,210 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Inventario{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'invInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+  <li id='segundaOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'invCategorias' %}">
+      Categorias                    
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+  <h1 style="margin-top: 0%;">Inventario</h1>
+  <div class="Contenido">
+      <div class="conteos">
+      <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+      </div>
+      <div class="search">
+          <input  type="text" id="myInput" placeholder="Buscar productos...">
+          <button id="searchButton" type="submit">Buscar</button>
+      </div>
+  </div>
+  <div class="Agregar">
+    <a type="button" class="btn btn-success" href="{% url 'invInicioForm' %}">Agregar Producto</a>
+  </div>
+  <div id="contenedorTabla" class="container mt-3">            
+      <table id="tabla" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Fecha de Caducidad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tequila Don Julio Blanco Reserva 700ml</td>
+            <td>10 unidades</td>
+            <td>1 unidades</td>
+            <td>
+              <button type="button" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>
+              <a type="button" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+              <a type="button" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Detalles de Productos</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div>
+                  <form>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Nombre del Producto</label>
+                      <input type="text" class="form-control" placeholder="Aguardiente Antioqueño Sin Azucar 750ml"  readonly>
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-inf">Categoría</button>
+                      <div class="dropdown dropend">
+                          <button id="botonDropdown" type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown">
+                            Aguardientes
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item disabled" href="#">Tequilas</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Cervezas</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Vinos</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Whiskys</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Rones</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Brandy</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Vodka</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Ginebra</a></li>
+                          </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Cantidadad Disponible</label>
+                      <input type="text" class="form-control" placeholder="35"  readonly>
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-inf">Estado</button>
+                      <div class="dropdown dropend">
+                          <button id="botonDropdown" type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown">
+                              Disponible para venta
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item disabled" href="#">No Disponible para venta</a></li>
+                          </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                      <label></label>
+                    </div>
+                    <div class="mb-3">
+                      <button id="boton+" class="btn btn-primary">+ Información del Producto</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+    
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="myModal2">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Editar Detalles de productos</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div>
+                  <form>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Nombre del Producto</label>
+                      <input type="text" class="form-control" placeholder="Aguardiente Antioqueño Sin Azucar 750ml">
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-inf">Categoría</button>
+                      <div class="dropdown dropend">
+                          <button id="botonDropdown" type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown">
+                            Aguardientes
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Tequilas</a></li>
+                            <li><a class="dropdown-item" href="#">Cervezas</a></li>
+                            <li><a class="dropdown-item" href="#">Vinos</a></li>
+                            <li><a class="dropdown-item" href="#">Whiskys</a></li>
+                            <li><a class="dropdown-item" href="#">Rones</a></li>
+                            <li><a class="dropdown-item" href="#">Brandy</a></li>
+                            <li><a class="dropdown-item" href="#">Vodka</a></li>
+                            <li><a class="dropdown-item" href="#">Ginebra</a></li>
+                          </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Cantidadad Disponible</label>
+                      <input type="text" class="form-control" placeholder="35">
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-inf">Estado</button>
+                      <div class="dropdown dropend">
+                          <button id="botonDropdown" type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown">
+                              Disponible para venta
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">No Disponible para venta</a></li>
+                          </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                      <label></label>
+                    </div>
+                    <div class="mb-3">
+                      <button id="boton+" class="btn btn-primary">+ Información del Producto</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Guardar cambios</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+    
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="myModal3">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Eliminar Producto</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                  <div class="mb-3">
+                      <p>Seguro que desea eliminar este producto?</p>
+                  </div>
+                  <div class="mb-3">
+                      <button class="btn btn-success">Confirmar</button>
+                  </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+    
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+

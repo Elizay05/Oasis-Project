@@ -1,0 +1,89 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Galería{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'gaInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+{% endblock %}
+
+
+{% block contenedor %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="contenedor2">
+        <h1>Galería</h1>
+        <div class="search">
+            <input  type="text" id="myInput" placeholder="Buscar Carpeta...">
+            <button id="searchButton" type="submit">Buscar</button>
+        </div>
+        <div class="row">
+            <div  class="col-md-12 productos2">
+                <a href="{% url 'gaFotos' %}">
+                    <div class="pedido-item3">
+                        <div class="contenedor-img">
+                            <img src="{% static 'Oasis/img/dia_madre.jpg' %}" alt="Día de las Madres">
+                        </div>
+                        <div class="nombre_carpeta">
+                            <p>Día de las madres</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'gaFotos' %}">
+                    <div class="pedido-item3">
+                        <div class="contenedor-img">
+                            <img src="{% static 'Oasis/img/amor_amistad.jpg' %}" alt="Día Amor y Amistad">
+                        </div>
+                        <div class="nombre_carpeta">
+                            <p>Día del Amor y la Amistad </p>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'gaFotos' %}">
+                    <div class="pedido-item3">
+                        <div class="contenedor-img">
+                            <img src="{% static 'Oasis/img/dia_padre.jpg' %}" alt="Día del Padre">
+                        </div>
+                        <div class="nombre_carpeta">
+                            <p>Día del Padre</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'gaFotos' %}">
+                    <div class="pedido-item3">
+                        <div class="contenedor-img">
+                            <img src="{% static 'Oasis/img/noche_trivia.jpg' %}" alt="Noche de Trivia">
+                        </div>
+                        <div class="nombre_carpeta">
+                            <p>Noche de Trivia</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'gaFotos' %}">
+                    <div class="pedido-item3">
+                        <div class="contenedor-img">
+                            <img src="{% static 'Oasis/img/vino_queso.jpg' %}" alt="Noche de Vino y Queso">
+                        </div>
+                        <div class="nombre_carpeta">
+                            <p>Noche de Vino y Queso</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'gaFotos' %}">
+                    <div class="pedido-item3">
+                        <div class="contenedor-img">
+                            <img src="{% static 'Oasis/img/Halloween2.jpg' %}" alt="Noche de Halloween">
+                        </div>
+                        <div class="nombre_carpeta">
+                            <p>Noche de Halloween</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

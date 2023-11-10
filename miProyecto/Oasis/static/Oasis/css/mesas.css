@@ -1,0 +1,104 @@
+
+  .mesas {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      max-width: 100%;
+      height: auto;
+  }
+
+  .tarjetaActiva{
+      display: flex;
+      justify-content: center;
+      border-radius: 1rem;
+      border: 3px solid #00FF6A;
+      background-color: white;
+      height: 390px;
+      width: 395px;
+      margin-top: 2%;
+      transition: transform 0.3s ease-in-out;
+  }
+
+  .mesaActiva {
+      border: 1px solid #ddd;
+      border-radius: 1rem;
+      padding: 2%;
+      height: 330px;
+      width: 355px;
+      margin-top: 5%;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column; /* Para que el contenido esté apilado verticalmente */
+      justify-content: center;  /* Alineación vertical al centro */
+      align-items: center; /* Alineación horizontal al centro */
+  }
+
+  .mesaActiva p{
+      font-size: 20px;
+  }
+  
+  .mesaActiva .total{
+      margin-top: 4%;
+      color: red;
+      font-size: 17px;
+      font-weight: 500;
+  }
+
+  .tarjetaDisponible{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 1rem;
+      border: 3px solid rgb(138, 138, 138);
+      background-color: white;
+      height: 390px;
+      width: 395px;
+      margin-top: 2%;
+  }
+
+  .mesaDisponible {
+      border: 1px solid #ddd;
+      border-radius: 1rem;
+      padding: 2%;
+      height: 330px;
+      width: 355px;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .mesaDisponible p{
+      font-size: 20px;
+  }
+
+  .mesa ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+  }
+
+  .mesa ul li {
+      margin: 5px 0;
+  }
+
+  .mesa p:last-child {
+      font-weight: bold;
+      color: #ff0000;
+  }
+
+  .cuentaProductos{
+      width: 100%;
+  }
+
+  #totalModal{
+      text-align: right;
+      margin-right: 4%;
+  }
+
+  #opcionBotones{
+      display: flex;
+      justify-content: space-between;
+      width: 500px;
+  }

@@ -1,0 +1,92 @@
+
+  #sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .cerrar li{
+      font-size: 20px;
+  }
+  #primeraOpcion{
+      display: flex;
+      align-items: center;
+      height: 60px;
+      margin-top: 6%;
+      color: white;
+      font-size: 20px;
+  }
+  #segundaOpcion{
+      display: flex;
+      align-items: center;
+      height: 60px;
+      color: white;
+      font-size: 20px;
+  }
+  #terceraOpcion{
+      display: flex;
+      align-items: center;
+      height: 60px;
+      color: white;
+      font-size: 20px;
+  }
+  #listaOpciones li:hover{
+      background-color: rgb(86, 86, 86);
+  }
+  main{
+    background-color: #f9f9f9;
+  }
+  main h1{
+      margin-left: 20px;
+  }
+  .Contenido{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 1500px;
+      margin-left: 20px;
+      margin-right: 20px;
+  }
+  .Agregar{
+    margin-left: 20px;
+  }
+  .conteos{
+      display: flex;
+      width: 500px;
+      justify-content: space-between;
+  }
+  .conteos p{
+      margin-top: 10px;
+      font-size: 17px;
+  }
+  .search {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .search input[type="text"] {
+    width: 380px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search button[type="submit"] {
+    background-color: #4e99e9;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 0px 10px 10px 0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: .9s ease;
+  }
+  
+  .search button[type="submit"]:hover {
+    color: rgb(255, 255, 255);
+    background-color: blue;
+  }

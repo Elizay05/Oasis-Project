@@ -1,0 +1,82 @@
+    .tarjetaOrden{
+        display: flex;
+        margin-top: 3%;
+    }
+    .listaOrden{
+        padding-top: 3%; 
+        width: 500px;
+        flex: 1;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .Orden {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #f9f9f9;
+    }
+    
+    #preparando {
+        background-color: #ff9800;
+        height: 40px;
+        color: #fff;
+        border: none;
+    }
+    #preparando:hover {
+        background-color: #ff6a00;
+        color: #fff;
+    }
+
+    #entregando {
+        background-color: #4caf50;
+        height: 40px;
+        color: #fff;
+        border: none;
+    }
+
+    #entregando:hover {
+        background-color: #119905;
+        color: #fff;
+    }
+    .detallesOrden {
+        flex: 1;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .informacionOrden {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .informacionOrden h3 span{
+        color: #ff0000;
+    }
+
+    .informacionOrden p{
+        margin-top: 3%;
+    }
+
+    .informacionOrden p span{
+        color: #ff9800;
+        font-size: 17px;
+    }
+
+
+    .informacionOrden textarea{
+        border-radius: 1rem;
+        border-color: rgb(192, 192, 192);
+    }
+
+    .productosOrden ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .productosOrden ul li {
+        margin: 5px 0;
+    }

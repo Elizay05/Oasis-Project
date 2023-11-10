@@ -1,0 +1,65 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Menu{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'meInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="contenedor2">
+        <h1>Menú</h1>
+        <div class="search">
+            <input  type="text" id="myInput" placeholder="Buscar categoría...">
+            <button id="searchButton" type="submit">Buscar</button>
+        </div>
+        <div class="row">
+            <div  class="col-md-12 productos2">
+                <a href="{% url 'meProductos' %}">
+                    <div class="pedido-item2">
+                        <img src="{% static 'Oasis/img/cocteles.jpg' %}" alt="cocteles">
+                        <p>COCTELES</p>
+                    </div>
+                </a>
+                <a href="{% url 'meProductos' %}">
+                    <div class="pedido-item2">
+                        <img src="{% static 'Oasis/img/licores.png' %}" alt="licores">
+                        <p>LICORES</p>
+                    </div>
+                </a>
+                <a href="{% url 'meProductos' %}">
+                    <div class="pedido-item2">
+                        <img src="{% static 'Oasis/img/bebidas_no_alcoholicas.jpg' %}" alt="bebidas">
+                        <p>BEBIDAS NO ALCOHÓLICAS</p>
+                    </div>
+                </a>
+                <a href="{% url 'meProductos' %}">
+                    <div class="pedido-item2">
+                        <img src="{% static 'Oasis/img/comida.jpg' %}" alt="comida">
+                        <p>COMIDAS</p>
+                    </div>
+                </a>
+                <a href="{% url 'meProductos' %}">
+                    <div class="pedido-item2">
+                        <img src="{% static 'Oasis/img/aperitivos.jpg' %}" alt="aperitivos">
+                        <p>APERITIVOS</p>
+                    </div>
+                </a>
+                <a href="{% url 'meProductos' %}">
+                    <div class="pedido-item2">
+                        <img src="{% static 'Oasis/img/cafeteria.jpg' %}" alt="cafeteria">
+                        <p>COFFEE</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+

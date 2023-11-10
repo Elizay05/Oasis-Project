@@ -1,0 +1,82 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Editar Usuario{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'guInicio' %}">
+      Inicio                    
+    </a>
+  </li>
+  <li id='segundaOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'guUsuariosBloqueados' %}">
+      Usuarios Bloqueados                    
+    </a>
+  </li>
+  <li id='terceraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="#">
+      Auditoria                    
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+<style>
+
+    form h1{
+        margin-left: 0%;
+    }
+
+    form label{
+        font-size: 2.2vh;
+    }
+
+
+</style>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 ">
+        <div class="container">
+            <form>
+                {% csrf_token %}
+                <h1>Agregar Usuario</h1>
+                <br>
+                <input type="hidden" name="id">
+                <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
+                    <div class="mb-3 col-6">
+                        <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Cedula</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="cedula">
+                    </div>
+                </div>
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlTextarea1" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="exampleFormControlInput2" name="email">
+                </div>
+                <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
+                    <div class="mb-3 col-6">
+                        <label for="exampleFormControlInput1" class="form-label">Telefono</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="Telefono">
+                    </div>
+                    <div class="mb-3 col-5">
+                        <label for="exampleFormControlInput1" class="form-label">fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="exampleFormControlInput1" name="fechaNacimiento">
+                    </div>
+                </div>
+                <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
+                    <div class="mb-3 col-6">
+                        <label for="exampleFormControlInput1" class="form-label">Rol</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="rol">
+                    </div>
+                    <div class="mb-3 col-5">
+                        <label for="exampleFormControlInput1" class="form-label">Estado</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="Estado">
+                    </div>
+                </div>
+                <button class="btn btn-success">Crear Usuario</button>
+            </form>
+        </div>
+    </main>
+{% endblock %}
