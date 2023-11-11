@@ -44,8 +44,14 @@ urlpatterns = [
     path('Productos/', views.meProductos, name='meProductos'),
 
 
+#   CRUD GALERÍA
     path('Gestion_Galeria/', views.gaInicio, name='gaInicio'),
+    path('Galeria_Form/', views.gaCarpetaForm, name='gaCarpetaForm'),
+    path('Agregar_Carpeta/', views.crearCarpeta, name='crearCarpeta'),
     path('Galeria_Fotos/', views.gaFotos, name='gaFotos'),
+    path('Eliminar_Carpeta/<int:id>', views.eliminarCarpeta, name='eliminarCarpeta'),
+    path('Actualizar_Carpeta_Form/<int:id>', views.gaCarpetaFormActualizar, name='gaCarpetaFormActualizar'),
+    path('Actualizar_Carpeta/', views.actualizarCarpeta, name='actualizarCarpeta'),
 
 
 
