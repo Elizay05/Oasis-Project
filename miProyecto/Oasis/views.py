@@ -116,11 +116,85 @@ def pedidoEmpleado(request):
 
 
 
-def eveInicio(request):
-    return render (request, 'Oasis/eventos/eveInicio.html')
+#EVENTOS
+
+def Eventos(request):
+#SELECT * FROM Eventos
+    q = Evento.objects.all()
+    contexto = {'data' : q}
+    return render(request, "Oasis/eventos/eveInicio.html", contexto)
 
 def eveForm(request):
     return render (request, 'Oasis/eventos/eveForm.html')
+
+def crearEvento(request):
+    if request.method == "POST":
+        try:
+            nom = request.POST.get('nombre')
+            date = request.POST.get('fecha')
+            time = request.POST.get('hora_incio')
+            desc = request.POST.get('descripcion')
+            foto = request.POST.get('foto')
+            # INSERT INTO Evento VALUES (nom, date, time, desc, foto)
+            q = Evento(
+                nombre = nom,
+                fecha = date,
+                hora_incio = time,
+                descripcion = desc,
+                foto = f'fotos/{foto}')
+            q.save()
+            messages.success(request, "Evento Creado Correctamente!")
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+        return redirect('Eventos')
+    
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        return redirect('Eventos')
+
+def eliminarEvento(request, id):
+    try:
+        q = Evento.objects.get(pk = id)
+        q.delete()
+        messages.success(request, "Evento Eliminado Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('Eventos')
+
+def eveFormActualizar(request, id):
+    q = Evento.objects.get(pk = id)
+    contexto = {'data': q}
+    return render(request, 'Oasis/eventos/eveFormActualizar.html', contexto)
+
+def actualizarEvento(request):
+    if request.method == "POST":
+        id = request.POST.get('id')
+        nom = request.POST.get('nombre')
+        date = request.POST.get('fecha')
+        time = request.POST.get('hora_incio')
+        desc = request.POST.get('descripcion')
+        foto = request.POST.get('foto')
+        try:
+            q = Evento.objects.get(pk=id)
+            q.nombre = nom
+            q.fecha = date
+            q.hora_incio = time
+            q.descripcion = desc
+            q.foto = foto
+
+            q.save()
+            messages.success(request, "Evento Actualizado Correctamente!")
+
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        
+    return redirect('Eventos')
+
+
 
 def eveReserva(request):
     return render (request, 'Oasis/eventos/eveReserva.html')
