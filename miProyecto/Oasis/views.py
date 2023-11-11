@@ -134,14 +134,15 @@ def crearEvento(request):
             date = request.POST.get('fecha')
             time = request.POST.get('hora_incio')
             desc = request.POST.get('descripcion')
-            foto = request.POST.get('foto')
+            foto = request.FILES.get('foto')
             # INSERT INTO Evento VALUES (nom, date, time, desc, foto)
             q = Evento(
                 nombre = nom,
                 fecha = date,
                 hora_incio = time,
                 descripcion = desc,
-                foto = f'fotos/{foto}')
+                foto = f"fotos/{foto}",
+            )
             q.save()
             messages.success(request, "Evento Creado Correctamente!")
         except Exception as e:
@@ -181,7 +182,7 @@ def actualizarEvento(request):
             q.fecha = date
             q.hora_incio = time
             q.descripcion = desc
-            q.foto = foto
+            q.foto = f'fotos/{foto}'
 
             q.save()
             messages.success(request, "Evento Actualizado Correctamente!")
@@ -210,10 +211,81 @@ def meProductos(request):
 
 
 def gaInicio(request):
-    return render (request, 'Oasis/galeria/gaInicio.html')
+#SELECT * FROM Galeria
+    q = Galeria.objects.all()
+    contexto = {'data' : q}
+    return render(request, "Oasis/galeria/gaInicio.html", contexto)
+
+
+def gaCarpetaForm(request):
+    return render (request, 'Oasis/galeria/gaCarpetaForm.html')
+
+
+def crearCarpeta(request):
+    if request.method == "POST":
+        try:
+            nom = request.POST.get('nombre')
+            date = request.POST.get('fecha')
+            foto = request.FILES.get('foto')
+            # INSERT INTO Evento VALUES (nom, date, time, desc, foto)
+            q = Galeria(
+                nombre = nom,
+                fecha = date,
+                foto = f"fotos/{foto}",
+            )
+            q.save()
+            messages.success(request, "Carpeta Creada Correctamente!")
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+        return redirect('gaInicio')
+    
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        return redirect('gaInicio')
+
+def eliminarCarpeta(request, id):
+    try:
+        q = Galeria.objects.get(pk = id)
+        q.delete()
+        messages.success(request, "Carpeta Eliminada Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('gaInicio')
+
+def gaCarpetaFormActualizar(request, id):
+    q = Galeria.objects.get(pk = id)
+    contexto = {'data': q}
+    return render(request, 'Oasis/galeria/gaCarpetaFormActualizar.html', contexto)
+
+
+def actualizarCarpeta(request):
+    if request.method == "POST":
+        id = request.POST.get('id')
+        nom = request.POST.get('nombre')
+        date = request.POST.get('fecha')
+        foto = request.POST.get('foto')
+        try:
+            q = Galeria.objects.get(pk=id)
+            q.nombre = nom
+            q.fecha = date
+            q.foto = f'fotos/{foto}'
+
+            q.save()
+            messages.success(request, "Carpeta Actualizada Correctamente!")
+
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        
+    return redirect('gaInicio')
+
 
 def gaFotos(request):
     return render(request, 'Oasis/galeria/gaFotos.html')
+
 
 
 def saludar(request):

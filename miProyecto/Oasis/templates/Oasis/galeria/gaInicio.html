@@ -1,5 +1,6 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
+{{data}}
 
 {% block titulo %}Galería{% endblock %}
 
@@ -13,77 +14,40 @@
 
 
 {% block contenedor %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="contenedor2">
         <h1>Galería</h1>
-        <div class="search">
-            <input  type="text" id="myInput" placeholder="Buscar Carpeta...">
-            <button id="searchButton" type="submit">Buscar</button>
+        <div class="Contenido">
+            <div class="conteos">
+            <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+            </div>
+            <div class="search">
+                <input  type="text" id="myInput" placeholder="Buscar productos...">
+                <button id="searchButton" type="submit">Buscar</button>
+            </div>
+        </div>
+        <div class="Agregar">
+            <a type="button" class="btn btn-success" href="{% url 'gaCarpetaForm' %}">Agregar Carpeta</a>
         </div>
         <div class="row">
             <div  class="col-md-12 productos2">
+                {% for i in data %}
                 <a href="{% url 'gaFotos' %}">
-                    <div class="pedido-item3">
+                    <div class="pedido-item3 foto">
                         <div class="contenedor-img">
-                            <img src="{% static 'Oasis/img/dia_madre.jpg' %}" alt="Día de las Madres">
+                            <img src="{{ i.foto.url }}" alt="foto">
                         </div>
                         <div class="nombre_carpeta">
-                            <p>Día de las madres</p>
+                            <p>{{ i.nombre }}</p>
                         </div>
+                        <div class="fecha">
+                            <p style="font-size: 15px;">{{ i.fecha }}</p>
+                        </div>
+                        <a class="btn btn-warning" href="{% url 'gaCarpetaFormActualizar' i.id %}"><i class="bi bi-pencil"></i></a>
+                        <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarCarpeta' i.id %}')"><i class="bi bi-x-lg"></i></a>
                     </div>
                 </a>
-                <a href="{% url 'gaFotos' %}">
-                    <div class="pedido-item3">
-                        <div class="contenedor-img">
-                            <img src="{% static 'Oasis/img/amor_amistad.jpg' %}" alt="Día Amor y Amistad">
-                        </div>
-                        <div class="nombre_carpeta">
-                            <p>Día del Amor y la Amistad </p>
-                        </div>
-                    </div>
-                </a>
-                <a href="{% url 'gaFotos' %}">
-                    <div class="pedido-item3">
-                        <div class="contenedor-img">
-                            <img src="{% static 'Oasis/img/dia_padre.jpg' %}" alt="Día del Padre">
-                        </div>
-                        <div class="nombre_carpeta">
-                            <p>Día del Padre</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="{% url 'gaFotos' %}">
-                    <div class="pedido-item3">
-                        <div class="contenedor-img">
-                            <img src="{% static 'Oasis/img/noche_trivia.jpg' %}" alt="Noche de Trivia">
-                        </div>
-                        <div class="nombre_carpeta">
-                            <p>Noche de Trivia</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="{% url 'gaFotos' %}">
-                    <div class="pedido-item3">
-                        <div class="contenedor-img">
-                            <img src="{% static 'Oasis/img/vino_queso.jpg' %}" alt="Noche de Vino y Queso">
-                        </div>
-                        <div class="nombre_carpeta">
-                            <p>Noche de Vino y Queso</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="{% url 'gaFotos' %}">
-                    <div class="pedido-item3">
-                        <div class="contenedor-img">
-                            <img src="{% static 'Oasis/img/Halloween2.jpg' %}" alt="Noche de Halloween">
-                        </div>
-                        <div class="nombre_carpeta">
-                            <p>Noche de Halloween</p>
-                        </div>
-                    </div>
-                </a>
+                {% endfor %}
             </div>
         </div>
     </div>
-</main>
 {% endblock %}
