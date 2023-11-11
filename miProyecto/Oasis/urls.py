@@ -22,15 +22,21 @@ urlpatterns = [
     path('Eliminar_Categoria/<int:id>', views.eliminarCategoria, name='eliminarCategoria'),
     path('Actualizar_Categoria_Form/<int:id>', views.invCategoriaFormActualizar, name='actualizarCategoriasForm'),
     path('Actualizar_Categoria/', views.actualizarCategoria, name='actualizarCategoria'),
-    
+
+
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
     path('Historial_Pedidos/', views.peHistorial, name='peHistorial'),
     path('Gestion_Mesas/', views.peGestionMesas, name='peGestionMesas'),
     path('Agregar_Pedido/', views.pedidoEmpleado, name='pedidoEmpleado'),
 
 
-    path('Gestion_Eventos/', views.eveInicio, name='eveInicio'),
-    path('Agregar_Evento/', views.eveForm, name='eveForm'),
+#   CRUD EVENTOS
+    path('Gestion_Eventos/', views.Eventos, name='Eventos'),
+    path('Evento_Form/', views.eveForm, name='eveForm'),
+    path('Agregar_Evento/', views.crearEvento, name='crearEvento'),
+    path('Eliminar_Evento/<int:id>', views.eliminarEvento, name='eliminarEvento'),
+    path('Actualizar_Evento_Form/<int:id>', views.eveFormActualizar, name='eveFormActualizar'),
+    path('Actualizar_Evento/', views.actualizarEvento, name='actualizarEvento'),
     path('Reservas/', views.eveReserva, name='eveReserva'),
 
 

@@ -25,6 +25,7 @@ class Evento(models.Model):
     fecha = models.DateField()
     hora_incio = models.TimeField() 
     descripcion = models.TextField()
+    foto = models.ImageField(upload_to="fotos/", default= 'No_Image')
 
     def __str__(self):
         return self.nombre

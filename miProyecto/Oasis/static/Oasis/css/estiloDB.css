@@ -42,3 +42,6 @@
     vertical-align: middle;
     font-size: 17px;
   }
+  input .descripcion{
+    height: 50%;
+  }

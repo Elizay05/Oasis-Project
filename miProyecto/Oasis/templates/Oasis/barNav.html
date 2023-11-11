@@ -58,7 +58,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link toggle opcionesNav" href="{% url 'eveInicio' %}" role="button">
+                                <a class="nav-link toggle opcionesNav" href="{% url 'Eventos' %}" role="button">
                                     Eventos
                                 </a>
                             </li>
@@ -143,6 +143,18 @@
             });
         });
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var fechaInput = document.getElementById('exampleFormControlInput1');
+                var fecha = new Date(fechaInput.value);
+        
+                if (!isNaN(fecha.getTime())) {
+                    var fechaFormateada = fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear();
+                    fechaInput.value = fechaFormateada;
+                }
+            });
+        </script>
+        
 </body>
 
 </html>
