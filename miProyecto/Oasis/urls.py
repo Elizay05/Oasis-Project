@@ -12,8 +12,14 @@ urlpatterns = [
 
 
     #CRUD INVENTARIO
-    path('Gestion_Inventario/', views.invInicio, name='invInicio'),
-    path('Agregar_Producto/', views.invInicioForm, name='invInicioForm'),
+    path('Gestion_Inventario/', views.inventario, name='inventario'),
+    path('Agregar_Producto/', views.invForm, name='invForm'),
+    path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
+    path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
+    path('Inventario_Actualizar/<int:id>', views.invFormActualizar, name='invFormActualizar'),
+    path('Actualizar_Inventario/', views.actualizarInventario, name='actualizarInventario'),
+    
+
 
     #CRUD CATEGORIAS
     path('Gestion_Categorias/', views.invCategorias, name='invCategorias'),
@@ -44,8 +50,14 @@ urlpatterns = [
     path('Productos/', views.meProductos, name='meProductos'),
 
 
+#   CRUD GALERÍA
     path('Gestion_Galeria/', views.gaInicio, name='gaInicio'),
+    path('Galeria_Form/', views.gaCarpetaForm, name='gaCarpetaForm'),
+    path('Agregar_Carpeta/', views.crearCarpeta, name='crearCarpeta'),
     path('Galeria_Fotos/', views.gaFotos, name='gaFotos'),
+    path('Eliminar_Carpeta/<int:id>', views.eliminarCarpeta, name='eliminarCarpeta'),
+    path('Actualizar_Carpeta_Form/<int:id>', views.gaCarpetaFormActualizar, name='gaCarpetaFormActualizar'),
+    path('Actualizar_Carpeta/', views.actualizarCarpeta, name='actualizarCarpeta'),
 
 
 

@@ -45,10 +45,14 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion','imagen','categoria', 'precio']
+    list_display = ['id','nombre','descripcion','foto','categoria', 'precio']
     search_fields = ['id','nombre','categoria', 'precio']
     list_filter = ['categoria']
     list_editable = ['precio']
+    
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
@@ -69,3 +73,20 @@ class InventarioAdmin(admin.ModelAdmin):
     search_fields = ['id','producto','cantidad','fecha_caducidad']
     list_filter = ['fecha_caducidad']
     list_editable = ['cantidad','fecha_caducidad']
+
+
+@admin.register(Galeria)
+class GaleriaAdmin(admin.ModelAdmin):
+    list_display = ['nombre', 'fecha', 'foto', 'ver_foto']
+    search_fields = ['nombre', 'fecha', 'foto']
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+
+@admin.register(Fotos)
+class FotosAdmin(admin.ModelAdmin):
+    list_display = ['foto', 'carpeta', 'ver_foto']
+    search_fields = ['foto', 'carpeta']
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
