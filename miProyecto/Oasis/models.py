@@ -59,6 +59,7 @@ class Reserva(models.Model):
 class Categoria(models.Model):
     nombre = models.CharField(max_length=150)
     descripcion = models.TextField()
+    foto = models.ImageField(upload_to="fotos/", default= 'No_Image')
 
     def __str__(self):
         return self.nombre

@@ -1,0 +1,49 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Agregar Categoria{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'Menu' %}">
+      Inicio                    
+    </a>
+  </li>
+{% endblock %}
+
+
+{% block contenedor %}
+<style>
+
+    form h1{
+        margin-left: 0%;
+    }
+
+    form label{
+        font-size: 2.2vh;
+    }
+
+
+</style>
+        <div class="container">
+            <form action="{% url 'crearCategoria' %}" method="post">
+                {% csrf_token %}
+                <h1 style="margin-top: 0%;">Agregar Categoria</h1>
+                <br>
+                <input type="hidden" name="id">
+                <div class="mb-3 col-3">
+                    <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre">
+                </div>
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Descripción</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="descripcion">
+                </div>
+                <div class="mb-3 col-5">
+                  <label for="exampleFormControlInput1" class="form-label">Imagen Portada</label>
+                    <input type="file" accept="image/jpeg, image/png" class="form-control" id="exampleFormControlInput1" name="foto">
+              </div>
+                <button class="btn btn-success">Agregar Categoría</button>
+            </form>
+        </div>
+{% endblock %}
