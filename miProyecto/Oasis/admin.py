@@ -40,8 +40,11 @@ class ReservaAdmin(admin.ModelAdmin):
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion']
+    list_display = ['id','nombre','descripcion', 'foto']
     search_fields = ['nombre']
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):

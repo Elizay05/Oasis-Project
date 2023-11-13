@@ -157,7 +157,7 @@
     font-size: 2.2vh;
     font-weight: 500;
     color: white;
-    border: 1px solid rgb(252, 70, 100);
+    border: 1px solid #fc4664;
     cursor: pointer;
     position: relative;
     background-color: transparent;
@@ -198,7 +198,7 @@
     font-size: 2.2vh;
     font-weight: 500;
     color: white;
-    border: 1px solid rgb(170, 70, 252);
+    border: 1px solid #aa46fc;
     cursor: pointer;
     position: relative;
     background-color: transparent;

@@ -18,10 +18,6 @@ urlpatterns = [
     #CRUD CATEGORIAS
     path('Gestion_Categorias/', views.invCategorias, name='invCategorias'),
     path('Categorias_Form/', views.invCategoriasForm, name='invCategoriasForm'),
-    path('Crear_Categoria/', views.crearCategoria, name='crearCategoria'),
-    path('Eliminar_Categoria/<int:id>', views.eliminarCategoria, name='eliminarCategoria'),
-    path('Actualizar_Categoria_Form/<int:id>', views.invCategoriaFormActualizar, name='actualizarCategoriasForm'),
-    path('Actualizar_Categoria/', views.actualizarCategoria, name='actualizarCategoria'),
 
 
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
@@ -39,8 +35,13 @@ urlpatterns = [
     path('Actualizar_Evento/', views.actualizarEvento, name='actualizarEvento'),
     path('Reservas/', views.eveReserva, name='eveReserva'),
 
-
-    path('Gestion_Menu/', views.meInicio, name='meInicio'),
+#   CRUD MENÚ (CATEGORÍAS)
+    path('Gestion_Menu/', views.Menu, name='Menu'),
+    path('Menu_Form/', views.meForm, name='meForm'),
+    path('Crear_Categoria/', views.crearCategoria, name='crearCategoria'),
+    path('Eliminar_Categoria/<int:id>', views.eliminarCategoria, name='eliminarCategoria'),
+    path('Actualizar_Categoria_Form/<int:id>', views.meFormActualizar, name='meFormActualizar'),
+    path('Actualizar_Categoria/', views.actualizarCategoria, name='actualizarCategoria'),
     path('Productos/', views.meProductos, name='meProductos'),
 
 

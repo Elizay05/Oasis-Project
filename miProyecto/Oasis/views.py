@@ -43,63 +43,6 @@ def invCategorias(request):
 def invCategoriasForm(request):
     return render(request, 'Oasis/inventario/invCategoriasForm.html')
 
-def crearCategoria(request):
-    if request.method == "POST":
-        try:
-            nom = request.POST.get('nombre')
-            desc = request.POST.get('descripcion')
-            # INSERT INTO Categoria VALUES (nom, desc)
-            q = Categoria(
-                nombre = nom, 
-                descripcion = desc)
-            q.save()
-            messages.success(request, "Categoria Creada Correctamente!")
-        except Exception as e:
-            messages.error(request, f'Error: {e}')
-        return redirect('invCategorias')
-    
-    else:
-        messages.warning (request, f'Error: No se enviaron datos...')
-        return redirect('invCategorias')
-
-
-def eliminarCategoria(request, id):
-    try:
-        q = Categoria.objects.get(pk = id)
-        q.delete()
-        messages.success(request, "Categoria Eliminada Correctamente!")
-    except Exception as e:
-        messages.error(request, f'Error: {e}')
-    
-    return redirect('invCategorias')
-
-
-def invCategoriaFormActualizar(request, id):
-    q = Categoria.objects.get(pk = id)
-    contexto = {'data': q}
-    return render(request, 'Oasis/inventario/invCategoriasActualizar.html', contexto)
-
-def actualizarCategoria(request):
-    if request.method == "POST":
-        id = request.POST.get('id')
-        nom = request.POST.get('nombre')
-        desc = request.POST.get('descripcion')
-        try:
-            q = Categoria.objects.get(pk=id)
-            q.nombre = nom
-            q.descripcion = desc
-
-            q.save()
-            messages.success(request, "Categoria Actualizada Correctamente!")
-
-        except Exception as e:
-            messages.error(request, f'Error: {e}')
-
-    else:
-        messages.warning (request, f'Error: No se enviaron datos...')
-        
-    return redirect('invCategorias')
-
 
 
 def peInicio(request):
@@ -201,9 +144,74 @@ def eveReserva(request):
     return render (request, 'Oasis/eventos/eveReserva.html')
 
 
+# MENÚ (CATEGORÍAS)
+def Menu(request):
+#SELECT * FROM Eventos
+    q = Categoria.objects.all()
+    contexto = {'data' : q}
+    return render(request, "Oasis/menu/meInicio.html", contexto)
 
-def meInicio(request):
-    return render (request, 'Oasis/menu/meInicio.html')
+def meForm(request):
+    return render (request, 'Oasis/menu/meForm.html')
+
+def crearCategoria(request):
+    if request.method == "POST":
+        try:
+            nom = request.POST.get('nombre')
+            desc = request.POST.get('descripcion')
+            foto = request.POST.get('foto')
+            # INSERT INTO Categoria VALUES (nom, desc)
+            q = Categoria(
+                nombre = nom, 
+                descripcion = desc,
+                foto = foto)
+            q.save()
+            messages.success(request, "Categoria Creada Correctamente!")
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+        return redirect('Menu')
+    
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        return redirect('Menu')
+
+def eliminarCategoria(request, id):
+    try:
+        q = Categoria.objects.get(pk = id)
+        q.delete()
+        messages.success(request, "Categoria Eliminada Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('Menu')
+
+def meFormActualizar(request, id):
+    q = Categoria.objects.get(pk = id)
+    contexto = {'data': q}
+    return render(request, 'Oasis/menu/meFormActualizar.html', contexto)
+
+def actualizarCategoria(request):
+    if request.method == "POST":
+        id = request.POST.get('id')
+        nom = request.POST.get('nombre')
+        desc = request.POST.get('descripcion')
+        foto = request.POST.get('foto')
+        try:
+            q = Categoria.objects.get(pk=id)
+            q.nombre = nom
+            q.descripcion = desc
+            q.foto = f'fotos/{foto}'
+
+            q.save()
+            messages.success(request, "Categoria Actualizada Correctamente!")
+
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        
+    return redirect('Menu')
 
 def meProductos(request):
     return render (request, 'Oasis/menu/meProductos.html')
