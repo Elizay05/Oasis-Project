@@ -15,13 +15,89 @@ def registro(request):
     return render(request, 'Oasis/registro.html')
 
 def guInicio(request):
-    return render(request, "Oasis/usuarios/guInicio.html")
+    q = Usuario.objects.all()
+    contexto = {'data': q}
+    return render(request, "Oasis/usuarios/guInicio.html", contexto)
 
 def guInicioForm(request):
     return render(request, "Oasis/usuarios/guInicioForm.html")
 
 def guUsuariosBloqueados(request):
     return render(request, "Oasis/usuarios/guUsuariosBloqueados.html")
+
+def guUsuariosCrear(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        fecha_nacimiento = request.POST.get('fechaNacimiento')
+        email = request.POST.get('email')
+        cedula = request.POST.get('cedula')
+        rol = request.POST.get('rol')
+        telefono = request.POST.get('Telefono')
+        estado = request.POST.get('Estado')
+        try:
+            q = Usuario(
+                nombre = nombre,
+                fecha_nacimiento = fecha_nacimiento,
+                email = email,
+                rol = rol,
+                cedula = cedula,
+                telefono = telefono,
+                estado = estado,
+            )
+            
+            q.save()
+            messages.success(request, "Fue creado correctamente")
+        except Exception as e:
+            messages.error(request,f'Error: {e}')
+    else:
+        messages.warning(request,'No se enviaron datos')
+
+    return redirect('guInicio')
+
+def guUsuariosEliminados(request, id):
+    try:
+        q = Usuario.objects.get(pk = id)
+        q.delete()
+        messages.success(request, 'Usuario eliminado correctamente!!')
+    except Exception as e:
+        messages.error(request,f'Error: {e}')
+
+    return redirect('guInicio')
+
+def guUsuariosFormEditar(request, id):
+    q = Usuario.objects.get(pk = id)
+    contexto = {'data': q}
+
+    return render(request, 'Oasis/usuarios/guInicioFormEditar.html', contexto)
+
+def guUsuariosActualizar(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        nombre = request.POST.get('nombre')
+        fecha_nacimiento = request.POST.get('fechaNacimiento')
+        email = request.POST.get('email')
+        cedula = request.POST.get('cedula')
+        rol = request.POST.get('rol')
+        telefono = request.POST.get('Telefono')
+        estado = request.POST.get('Estado')
+        try:
+            q = Usuario.objects.get(pk = id)
+            q.nombre = nombre
+            q.email = email
+            q.fecha_nacimiento = fecha_nacimiento
+            q.rol = rol
+            q.cedula = cedula
+            q.telefono = telefono
+            q.estado = estado
+            
+            q.save()
+            messages.success(request, "Fue actualizado correctamente")
+        except Exception as e:
+            messages.error(request,f'Error: {e}')
+    else:
+        messages.warning(request,'No se enviaron datos')
+
+    return redirect('guInicio')
 
 
 
