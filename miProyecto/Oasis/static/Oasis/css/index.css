@@ -1,5 +1,5 @@
 header {
-    height: 70px;
+    height: 4.6em;
     width: 100%;
     background-repeat: no-repeat;
     background-size: cover;
@@ -8,23 +8,49 @@ header {
     transition: background-color 0.3s;
   }
 
-  #pru{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content:space-between ;
+  .opcionesNav {
+    text-decoration: none;
+    color: rgb(204, 198, 198);
+    font-size: 1em;
+    font-family: Nunito;
   }
 
-  .opcionesNav {
-    color: white;
-    font-size: 2.5vh;
+  .opcionesNav:hover{
+    color: #fc4664;
   }
+
+  .opcionesNav2{
+    text-decoration: none;
+    color: rgb(204, 198, 198);
+    font-size: 1em;
+    font-family: Nunito;
+  }
+
+  .opcionesNav2:hover{
+    color: white;
+  }
+
+  #Opciones{
+    width: 40em;
+  }
+
+  #botones{
+    width: 20em;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #navbarSupportedContent{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
 
   .navIzquierda{
     width: 50%;
     display: flex;
     justify-content: space-around;
-    margin-left: 12%;
   }
 
   .botones{
@@ -182,6 +208,11 @@ header {
   @font-face {
     font-family: Quicksand;
     src: url('../fonts/Quicksand_Book.otf') format('woff');
+  }
+
+  @font-face {
+    font-family: Nunito;
+    src: url('../fonts/Nunito-Medium.ttf') format('woff');
   }
 
   @font-face {

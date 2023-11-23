@@ -4,17 +4,17 @@
 {% block titulo %}Usuarios{% endblock %}
 
 {% block Opciones %}
-  <li id='primeraOpcion' class="nav-item">
+  <li id='primeraOpcion' class="nav-item lateralOpciones">
     <a class="nav-link text-white" href="{% url 'guInicio' %}">
       Inicio                    
     </a>
   </li>
-  <li id='segundaOpcion' class="nav-item">
+  <li id='segundaOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="{% url 'guUsuariosBloqueados' %}">
       Usuarios Bloqueados                    
     </a>
   </li>
-  <li id='terceraOpcion' class="nav-item">
+  <li id='terceraOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="#">
       Auditoria                    
     </a>
@@ -22,8 +22,7 @@
 {% endblock %}
 
 {% block contenedor %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-  <h1 style="margin-top: 0%;">Usuarios</h1>
+  <h1 style="margin-top: 0.5em;">Usuarios</h1>
   <div class="Contenido">
       <div class="conteos">
       <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -42,7 +41,7 @@
   <div class="Agregar">
     <a type="button" class="btn btn-success" href="{% url 'guInicioForm' %}">Agregar Usuario</a>
   </div>
-  <div id="contenedorTabla" class="container mt-3 contenedorTabla">            
+  <div id="contenedorTabla" class="contenedorTabla">            
       <table id="tabla" class="table table-striped">
         <thead>
           <tr>
@@ -54,6 +53,17 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>John</td>
+            <td>john@example.com</td>
+            <td>Administrador</td>
+            <td>01/05/2023</td>
+            <td>
+              <button type="button" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>
+              <a type="button" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+              <a type="button" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
+            </td>
+          </tr>
           <tr>
             <td>John</td>
             <td>john@example.com</td>
@@ -187,6 +197,5 @@
         </div>
       </div>
     </div>
-</main>
 {% endblock %}
 

@@ -12,8 +12,13 @@ urlpatterns = [
 
 
     #CRUD INVENTARIO
-    path('Gestion_Inventario/', views.invInicio, name='invInicio'),
-    path('Agregar_Producto/', views.invInicioForm, name='invInicioForm'),
+    path('Gestion_Inventario/', views.inventario, name='inventario'),
+    path('Agregar_Producto/', views.invForm, name='invForm'),
+    path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
+    path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
+    path('Inventario_Actualizar/<int:id>', views.invFormActualizar, name='invFormActualizar'),
+    path('Actualizar_Inventario/', views.actualizarInventario, name='actualizarInventario'),
+
 
     #CRUD CATEGORIAS
     path('Gestion_Categorias/', views.invCategorias, name='invCategorias'),
