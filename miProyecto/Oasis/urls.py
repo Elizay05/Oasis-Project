@@ -9,6 +9,11 @@ urlpatterns = [
     path('Gestion_Usuarios/', views.guInicio, name='guInicio'),
     path('Agregar_Usuario/', views.guInicioForm, name='guInicioForm'),
     path('Usuarios_Bloqueados/', views.guUsuariosBloqueados, name='guUsuariosBloqueados'),
+    path('Usuarios_Eliminados/<int:id>', views.guUsuariosEliminados, name='guUsuariosEliminados'),
+    path('Usuarios_Form_Editar/<int:id>', views.guUsuariosFormEditar, name='guUsuariosFormEditar'),
+    path('Usuarios_Actualizar/', views.guUsuariosActualizar, name='guUsuariosActualizar'),
+    path('guUsuariosCrear/', views.guUsuariosCrear, name='guUsuariosCrear'),
+    
 
 
     #CRUD INVENTARIO
