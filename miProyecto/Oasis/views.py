@@ -24,12 +24,76 @@ def guUsuariosBloqueados(request):
     return render(request, "Oasis/usuarios/guUsuariosBloqueados.html")
 
 
+#INVENTARIO
+def inventario(request):
+    q = Inventario.objects.all()
+    p = Producto.objects.all()
+    contexto = {'data': q, 'producto': p}
+    return render(request, "Oasis/inventario/invInicio.html", contexto)
 
-def invInicio(request):
-    return render(request, "Oasis/inventario/invInicio.html")
+def invForm(request):
+    q = Producto.objects.all()
+    contexto = {'data': q}
+    return render(request, "Oasis/inventario/invInicioForm.html", contexto)
 
-def invInicioForm(request):
-    return render(request, "Oasis/inventario/invInicioForm.html")
+def crearInventario(request):
+    if request.method == "POST":
+        try:
+            producto =Producto.objects.get(pk=request.POST.get('producto')) 
+            cantidad = request.POST.get('cantidad')
+            fecha_caducidad = request.POST.get('fecha_caducidad')
+            # INSERT INTO Categoria VALUES (nom, desc)
+            q = Inventario(
+                producto = producto, 
+                cantidad = cantidad,
+                fecha_caducidad = fecha_caducidad)
+            q.save()
+            messages.success(request, "Producto de Inventario Creado Correctamente!")
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+        return redirect('inventario')
+    
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        return redirect('inventario')
+    
+def eliminarInventario(request, id):
+    try:
+        q = Inventario.objects.get(pk = id)
+        q.delete()
+        messages.success(request, "Producto de Inventario Eliminado Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('inventario')
+       
+def invFormActualizar(request, id):
+    q = Inventario.objects.get(pk = id)
+    p = Producto.objects.all()
+    contexto = {'data': q, 'producto': p}
+    return render(request, 'Oasis/inventario/invFormActualizar.html', contexto)
+
+def actualizarInventario(request):
+    if request.method == "POST":
+        id = request.POST.get('id')
+        producto =Producto.objects.get(pk=request.POST.get('producto')) 
+        cantidad = request.POST.get('cantidad')
+        fecha_caducidad = request.POST.get('fecha_caducidad')
+        try:
+            q = Inventario.objects.get(pk=id)
+            q.producto = producto
+            q.cantidad = cantidad
+            q.fecha_caducidad = fecha_caducidad
+            q.save()
+            messages.success(request, "Producto de Inventario Actualizado Correctamente!")
+
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        
+    return redirect('inventario')
 
 
 #CATEGORÍAS
