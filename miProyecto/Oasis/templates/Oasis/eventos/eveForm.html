@@ -27,7 +27,7 @@
         <div class="container">
             <form action="{% url 'crearEvento' %}" method="post">
                 {% csrf_token %}
-                <h1>Agregar Evento</h1>
+                <h1 style="margin-top: 0.5em;" >Agregar Evento</h1>
                 <br>
                 <input type="hidden" name="id">
                 <div class="mb-3 col-6">

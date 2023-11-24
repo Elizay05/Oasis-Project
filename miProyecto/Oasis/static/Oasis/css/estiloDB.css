@@ -29,6 +29,15 @@
       color: #6e6e6e;
       font-weight: 100;
   }
+
+  #tabla tbody tr .tablaProductosHistorial{
+    line-height: 2.5em;
+    text-align: start;
+    font-family: Nunito;
+    color: #6e6e6e;
+    font-weight: 100;
+}
+
   #contenedorTabla{
       margin-left: 1.3em;
       padding: 0%;

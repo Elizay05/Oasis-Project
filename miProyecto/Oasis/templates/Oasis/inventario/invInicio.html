@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block contenedor %}
-  <h1 style="margin-top: 0%;">Inventario</h1>
+  <h1 style="margin-top: 0.5em;">Inventario</h1>
   <div class="Contenido">
       <div class="conteos">
       <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -32,7 +32,7 @@
   <div class="Agregar">
     <a type="button" class="btn btn-success" href="{% url 'invForm' %}">Agregar Producto</a>
   </div>
-  <div id="contenedorTabla" class="container mt-3">            
+  <div id="contenedorTabla" class="contenedorTabla">            
       <table id="tabla" class="table table-striped">
         <thead>
           <tr>

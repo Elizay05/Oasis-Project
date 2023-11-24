@@ -18,22 +18,11 @@
 
 
 {% block contenedor %}
-<style>
 
-    form h1{
-        margin-left: 0%;
-    }
-
-    form label{
-        font-size: 2.2vh;
-    }
-
-
-</style>
         <div class="container">
             <form action="{% url 'crearInventario' %}" method="post">
                 {% csrf_token %}
-                <h1 style="margin-top: 0%;" >Agregar Producto</h1>
+                <h1 style="margin-top: 0.5em;">Agregar Producto</h1>
                 <br>
                 <input type="hidden" name="id">
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
