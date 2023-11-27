@@ -3,11 +3,17 @@ from django.db import models
 # Create your models here.
 class Usuario(models.Model):
     nombre = models.CharField(max_length=150)
+    email = models.EmailField(unique=True)
+    clave = models.CharField(max_length=254)
     cedula = models.CharField(max_length=10, unique=True)
     fecha_nacimiento = models.DateField()
-    email = models.EmailField(unique=True)
-    telefono = models.CharField(max_length=10)
-    rol = models.CharField(max_length=100)
+    ROLES = (
+		(1, "Administrador"),
+		(2, "Bartender"),
+		(3, "Mesero"),
+        (4, "Cliente"),
+	)
+    rol = models.IntegerField(choices=ROLES, default=4)
     ACTIVO = 'Activo'
     BLOQUEADO = 'Bloqueado'
 
@@ -16,6 +22,7 @@ class Usuario(models.Model):
         (BLOQUEADO, 'Bloqueado'),
     )
     estado = models.CharField(max_length=9, choices=ESTADO_CHOICES)
+    foto = models.ImageField(upload_to="fotos/")
 
     def __str__(self):
         return self.nombre
