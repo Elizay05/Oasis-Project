@@ -43,24 +43,24 @@
                     <input type="email" class="form-control" id="exampleFormControlInput2" name="email" value = "{{ data.email }}">
                 </div>
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
-                    <div class="mb-3 col-6">
-                        <label for="exampleFormControlInput1" class="form-label">Telefono</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" name="Telefono" value="{{ data.telefono }}">
-                    </div>
                     <div class="mb-3 col-5">
                         <label for="exampleFormControlInput1" class="form-label">fecha de Nacimiento</label>
                         <input type="date" class="form-control" id="exampleFormControlInput1" name="fechaNacimiento" value="{{ data.fecha_nacimiento|date:'Y-m-d' }}">
                     </div>
+                    <div class="mb-3 col-6">
+                      <label for="exampleFormControlInput1" class="form-label">Rol</label>
+                      <input type="text" class="form-control" id="exampleFormControlInput1" name="rol" value="{{ data.rol }}">
+                  </div>
                 </div>
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
-                    <div class="mb-3 col-6">
-                        <label for="exampleFormControlInput1" class="form-label">Rol</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" name="rol" value="{{ data.rol }}">
-                    </div>
                     <div class="mb-3 col-5">
                         <label for="exampleFormControlInput1" class="form-label">Estado</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" name="Estado" value="{{ data.estado}}">
                     </div>
+                    <div class="mb-3 col-6">
+                      <label for="exampleFormControlInput1" class="form-label">Foto</label>
+                      <input type="text" class="form-control" id="exampleFormControlInput1" name="foto" value="{{ data.foto }}">
+                  </div>
                 </div>
                 <button class="btn btn-success">Actualizar Usuario</button>
             </form>
