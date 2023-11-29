@@ -348,7 +348,7 @@ def crearCategoria(request):
         try:
             nom = request.POST.get('nombre')
             desc = request.POST.get('descripcion')
-            foto = request.POST.get('foto')
+            foto = request.FILES.get('foto')
             # INSERT INTO Categoria VALUES (nom, desc)
             q = Categoria(
                 nombre = nom, 
@@ -384,12 +384,13 @@ def actualizarCategoria(request):
         id = request.POST.get('id')
         nom = request.POST.get('nombre')
         desc = request.POST.get('descripcion')
-        foto = request.POST.get('foto')
+        foto = request.FILES.get('foto')
         try:
             q = Categoria.objects.get(pk=id)
             q.nombre = nom
             q.descripcion = desc
-            q.foto = f'fotos/{foto}'
+            if foto:
+                q.foto = foto
 
             q.save()
             messages.success(request, "Categoria Actualizada Correctamente!")
