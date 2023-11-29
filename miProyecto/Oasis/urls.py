@@ -2,7 +2,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.index, name="index"),
+	path('inicio/', views.inicio, name="inicio"),
+
+
+    #Autenticación de usuarios del sistema
+    path('login/', views.login, name="login"),
+	path('logout/', views.logout, name="logout"),
+
 
     path('registro/', views.registro, name='registro'),
 
@@ -18,7 +25,7 @@ urlpatterns = [
 
 
     #CRUD INVENTARIO
-    path('Gestion_Inventario/', views.inventario, name='inventario'),
+    path('Gestion_Inventario/', views.invInicio, name='invInicio'),
     path('Agregar_Producto/', views.invForm, name='invForm'),
     path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
     path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
@@ -38,7 +45,7 @@ urlpatterns = [
 
 
 #   CRUD EVENTOS
-    path('Gestion_Eventos/', views.Eventos, name='Eventos'),
+    path('Gestion_Eventos/', views.eveInicio, name='eveInicio'),
     path('Evento_Form/', views.eveForm, name='eveForm'),
     path('Agregar_Evento/', views.crearEvento, name='crearEvento'),
     path('Eliminar_Evento/<int:id>', views.eliminarEvento, name='eliminarEvento'),
@@ -47,7 +54,7 @@ urlpatterns = [
     path('Reservas/', views.eveReserva, name='eveReserva'),
 
 #   CRUD MENÚ (CATEGORÍAS)
-    path('Gestion_Menu/', views.Menu, name='Menu'),
+    path('Gestion_Menu/', views.meInicio, name='meInicio'),
     path('Menu_Form/', views.meForm, name='meForm'),
     path('Crear_Categoria/', views.crearCategoria, name='crearCategoria'),
     path('Eliminar_Categoria/<int:id>', views.eliminarCategoria, name='eliminarCategoria'),

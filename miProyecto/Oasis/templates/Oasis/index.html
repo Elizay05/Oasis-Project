@@ -10,7 +10,7 @@
   </a>
 </li>
 <li class="nav-item">
-  <a class="opcionesNav" href="{% url 'inventario' %}" role="button">
+  <a class="opcionesNav" href="{% url 'invInicio' %}" role="button">
     Inventario
   </a>
 </li>
@@ -20,12 +20,12 @@
   </a>
 </li>
 <li class="nav-item">
-  <a class="opcionesNav" href="{% url 'Eventos' %}" role="button">
+  <a class="opcionesNav" href="{% url 'eveInicio' %}" role="button">
     Eventos
   </a>
 </li>
 <li class="nav-item">
-  <a class="opcionesNav" href="{% url 'Menu' %}" role="button">
+  <a class="opcionesNav" href="{% url 'meInicio' %}" role="button">
     Menú
   </a>
 </li>
@@ -45,34 +45,46 @@
   <button class="btn2" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin">Reservar
     Ahora
   </button>
+  <div class="dropdown dropstart">
+    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+      <img src="{% static 'Oasis/img/logoUser.png' %}" alt="LogoUsario" width="45px" height="45px">
+    </button>
+        <ul class="dropdown-menu cerrar">
+            <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Salir</a></li>
+        </ul>
+</div>
 {% endblock %}
 
 {% block lateral %}
-<div class="offcanvas offcanvas-end bg-dark" id="pantallaLogin">
-  <div class="offcanvas-header cabecera">
-    <p class="offcanvas-title titulo">Iniciar Sesión</p>
-    <button id="botonCerrar" type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body text-white cuerpo">
-    <p>Ingresa con tu email y contraseña.</p>
-    <div class="input-container inputEdit1">
-      <input type="text" required="">
-      <label for="input" class="label">Escribe tu correo electrónico</label>
-      <div class="underline"></div>
+  <div class="offcanvas offcanvas-end bg-dark" id="pantallaLogin">
+    <div class="offcanvas-header cabecera">
+      <p class="offcanvas-title titulo">Iniciar Sesión</p>
+      <button id="botonCerrar" type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
-    <div class="input-container inputEdit2">
-      <input type="password" required="">
-      <label for="input" class="label">Escribe tu contraseña</label>
-      <div class="underline"></div>
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <div class="offcanvas-body text-white cuerpo">
+        <p>Ingresa con tu email y contraseña.</p>
+        <div class="input-container inputEdit1">
+          <input type="text" required="" name="correo">
+          <label for="input" class="label">Escribe tu correo electrónico</label>
+          <div class="underline"></div>
+        </div>
+        <div class="input-container inputEdit2">
+          <input type="password" required="" name="clave">
+          <label for="input" class="label">Escribe tu contraseña</label>
+          <div class="underline"></div>
+        </div>
+        <a class="olvidarContraseña">Olvidé mi contraseña</a>
+        <button type="submit" class="btn-normal">Entrar</button>
+        <p class="p1">¿No tiene una cuenta?</p>
+        <a href="{% url 'registro' %}">
+          <button class="btn-normal2">Registrarse</button>
+        </a>
+      </form>
     </div>
-    <a class="olvidarContraseña">Olvidé mi contraseña</a>
-    <button class="btn-normal">Entrar</button>
-    <p class="p1">¿No tiene una cuenta?</p>
-    <a href="{% url 'registro' %}">
-      <button class="btn-normal2">Registrarse</button>
-    </a>
   </div>
-</div>
 {% endblock %}
 
 {% block contenedor %}

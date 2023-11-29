@@ -8,7 +8,50 @@ from .models import *
 # Create your views here.
 
 def index(request):
-    return render(request, "Oasis/index.html")
+    logueo = request.session.get("logueo", False)
+    if logueo == False:
+        return render(request, "Oasis/login/login.html")
+    else:
+        return redirect("inicio")
+
+def login(request):
+	if request.method == "POST":
+		user = request.POST.get("correo")
+		passw = request.POST.get("clave")
+		#Select * from Usuario where correo = "user" and clave = "passw"
+		try:
+			q = Usuario.objects.get(email = user, clave = passw)
+			# Crear variable de sesión.
+			request.session["logueo"] = {
+				"id": q.id,
+				"nombre": q.nombre,
+				"rol": q.rol
+			}
+			messages.success(request, f"Bienvendido {q.nombre}!!")
+			return redirect("inicio")
+		except Exception as e:
+			messages.error(request, f"Error: Usuario o contraseña incorrectos {e}")
+			return redirect("index")
+	else:
+		messages.warning(request, "Error: No se enviaron datos.")
+		return redirect("index")
+
+
+def logout(request):
+	try:
+		del request.session["logueo"]
+		messages.success(request, "Sesión cerrada correctamente")
+		return redirect("index")
+	except Exception as e:
+		messages.warning(request, "No se pudo cerrar sesión")
+		return redirect("inicio")
+    
+def inicio(request):
+	logueo = request.session.get("logueo", False)
+	if logueo:
+		return render(request, "Oasis/index.html")
+	else:
+		return redirect("index")
 
 
 def registro(request):
@@ -32,23 +75,25 @@ def guUsuariosCrear(request):
         nombre = request.POST.get('nombre')
         fecha_nacimiento = request.POST.get('fechaNacimiento')
         email = request.POST.get('email')
+        clave = request.POST.get('clave')
         cedula = request.POST.get('cedula')
         rol = request.POST.get('rol')
-        telefono = request.POST.get('Telefono')
         estado = request.POST.get('Estado')
+        foto = request.POST.get('foto')
         try:
             q = Usuario(
                 nombre = nombre,
                 fecha_nacimiento = fecha_nacimiento,
                 email = email,
+                clave = clave,
                 rol = rol,
                 cedula = cedula,
-                telefono = telefono,
                 estado = estado,
+                foto = foto
             )
 
             q.save()
-            messages.success(request, "Fue creado correctamente")
+            messages.success(request, "Usuario creado correctamente")
         except Exception as e:
             messages.error(request,f'Error: {e}')
     else:
@@ -78,22 +123,24 @@ def guUsuariosActualizar(request):
         nombre = request.POST.get('nombre')
         fecha_nacimiento = request.POST.get('fechaNacimiento')
         email = request.POST.get('email')
+        clave = request.POST.get('clave')
         cedula = request.POST.get('cedula')
         rol = request.POST.get('rol')
-        telefono = request.POST.get('Telefono')
         estado = request.POST.get('Estado')
+        foto = request.POST.get('foto')
         try:
             q = Usuario.objects.get(pk = id)
             q.nombre = nombre
             q.email = email
+            q.clave = clave
             q.fecha_nacimiento = fecha_nacimiento
             q.rol = rol
             q.cedula = cedula
-            q.telefono = telefono
             q.estado = estado
+            q.foto = foto
 
             q.save()
-            messages.success(request, "Fue actualizado correctamente")
+            messages.success(request, "Usuario actualizado correctamente")
         except Exception as e:
             messages.error(request,f'Error: {e}')
     else:
@@ -103,7 +150,7 @@ def guUsuariosActualizar(request):
 
 
 #INVENTARIO
-def inventario(request):
+def invInicio(request):
     q = Inventario.objects.all()
     p = Producto.objects.all()
     contexto = {'data': q, 'producto': p}
@@ -203,7 +250,7 @@ def pedidoEmpleado(request):
 
 #EVENTOS
 
-def Eventos(request):
+def eveInicio(request):
 #SELECT * FROM Eventos
     q = Evento.objects.all()
     contexto = {'data' : q}
@@ -287,7 +334,7 @@ def eveReserva(request):
 
 
 # MENÚ (CATEGORÍAS)
-def Menu(request):
+def meInicio(request):
 #SELECT * FROM Eventos
     q = Categoria.objects.all()
     contexto = {'data' : q}
