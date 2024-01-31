@@ -1,7 +1,29 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+
+
 from . import views
 
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'usuario', views.UsuarioViewSet)
+router.register(r'evento', views.EventoViewSet)
+router.register(r'mesa', views.MesaViewSet)
+router.register(r'reserva', views.ReservaViewSet)
+router.register(r'categoria', views.CategoriaViewSet)
+router.register(r'producto', views.ProductoViewSet)
+router.register(r'pedido', views.PedidoViewSet)
+router.register(r'pedido_mesa', views.PedidoMesaViewSet)
+router.register(r'inventario', views.InventarioViewSet)
+router.register(r'galeria', views.GaleriaViewSet)
+router.register(r'fotos', views.FotosViewSet)
+
+
 urlpatterns = [
+    path('api/1.0/', include(router.urls)),
+
+
     path('', views.index, name="index"),
 	path('inicio/', views.inicio, name="inicio"),
 
@@ -25,7 +47,7 @@ urlpatterns = [
 
 
     #CRUD INVENTARIO
-    path('Gestion_Inventario/', views.invInicio, name='invInicio'),
+    path('Gestion_Inventario/', views.invInicio, name='inventario'),
     path('Agregar_Producto/', views.invForm, name='invForm'),
     path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
     path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
@@ -33,9 +55,13 @@ urlpatterns = [
     path('Actualizar_Inventario/', views.actualizarInventario, name='actualizarInventario'),
 
 
-    #CRUD CATEGORIAS
-    path('Gestion_Categorias/', views.invCategorias, name='invCategorias'),
-    path('Categorias_Form/', views.invCategoriasForm, name='invCategoriasForm'),
+    #CRUD PRODUCTOS
+    path('Gestion_Categorias/', views.invProductos, name='Productos'),
+    path('Categorias_Form/', views.invProductosForm, name='invProductosForm'),
+    path('Crear_Producto/', views.crearProducto, name='crearProducto'),
+    path('Eliminar_Producto/<int:id>', views.eliminarProducto, name='eliminarProducto'),
+    path('Actualizar_Producto_Form/<int:id>', views.invFormProductosActualizar, name='invFormProductosActualizar'),
+    path('Actualizar_Producto/', views.actualizarProducto, name='actualizarProducto'),
 
 
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
@@ -45,7 +71,7 @@ urlpatterns = [
 
 
 #   CRUD EVENTOS
-    path('Gestion_Eventos/', views.eveInicio, name='eveInicio'),
+    path('Gestion_Eventos/', views.eveInicio, name='Eventos'),
     path('Evento_Form/', views.eveForm, name='eveForm'),
     path('Agregar_Evento/', views.crearEvento, name='crearEvento'),
     path('Eliminar_Evento/<int:id>', views.eliminarEvento, name='eliminarEvento'),
@@ -54,7 +80,7 @@ urlpatterns = [
     path('Reservas/', views.eveReserva, name='eveReserva'),
 
 #   CRUD MENÚ (CATEGORÍAS)
-    path('Gestion_Menu/', views.meInicio, name='meInicio'),
+    path('Gestion_Menu/', views.meInicio, name='Menu'),
     path('Menu_Form/', views.meForm, name='meForm'),
     path('Crear_Categoria/', views.crearCategoria, name='crearCategoria'),
     path('Eliminar_Categoria/<int:id>', views.eliminarCategoria, name='eliminarCategoria'),
@@ -73,9 +99,4 @@ urlpatterns = [
     path('Actualizar_Carpeta/', views.actualizarCarpeta, name='actualizarCarpeta'),
 
 
-
-
-    path('saludar/', views.saludar, name='saludar'),
-    path('saludar_param/<str:nombre>/<str:apellido>', views.saludar_param, name='saludar_param'),
-    path('calculadora/<int:num1>/<int:num2>/<str:operador>', views.calculadora, name='calculadora'),
 ]   
