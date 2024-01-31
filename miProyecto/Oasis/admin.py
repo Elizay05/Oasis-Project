@@ -52,13 +52,14 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion','foto','categoria', 'precio']
-    search_fields = ['id','nombre','categoria', 'precio']
-    list_filter = ['categoria']
+    list_display = ['id','nombre','descripcion', 'precio','ver_foto']
+    search_fields = ['id','nombre', 'precio']
     list_editable = ['precio']
 
     def ver_foto(self, obj):
-        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+        if obj.foto:
+            return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='15%'></a>")
+        
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):

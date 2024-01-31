@@ -1,6 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+
+from rest_framework import viewsets
+
+from .serializers import *
+
+
+
 
 #Importar todos los modelos de la base de datos.
 from .models import *
@@ -173,7 +182,7 @@ def crearInventario(request):
                 cantidad = cantidad,
                 fecha_caducidad = fecha_caducidad)
             q.save()
-            messages.success(request, "Producto de Inventario Creado Correctamente!")
+            messages.success(request, "Producto de Inventario Registrado Correctamente!")
         except Exception as e:
             messages.error(request, f'Error: {e}')
         return redirect('inventario')
@@ -221,16 +230,100 @@ def actualizarInventario(request):
     return redirect('inventario')
 
 
-#CATEGORÍAS
+#PRODUCTOS
 
-def invCategorias(request):
-#SELECT * FROM Categorias
-    q = Categoria.objects.all()
+def invProductos(request):
+#SELECT * FROM Productos
+    q = Producto.objects.all()
     contexto = {'data' : q}
-    return render(request, "Oasis/inventario/invCategorias.html", contexto)
+    return render(request, "Oasis/inventario/invProductos.html", contexto)
 
-def invCategoriasForm(request):
-    return render(request, 'Oasis/inventario/invCategoriasForm.html')
+def invProductosForm(request):
+    q = Categoria.objects.all()
+    contexto = {'data': q}
+    return render(request, 'Oasis/inventario/invProductosForm.html', contexto)
+
+def crearProducto(request):
+    if request.method == "POST":
+        try:
+            nom = request.POST.get('nombre')
+            desc = request.POST.get('descripcion')
+            cat_id = int(request.POST.get('categoria'))
+            pre = request.POST.get('precio')
+            foto = request.FILES.get('foto')
+
+            cat = Categoria.objects.get(pk=cat_id)
+            
+            if foto == None:
+                foto = "fotos_productos/default.png"
+
+            q = Producto(
+                nombre=nom,
+                descripcion=desc,
+                categoria=cat,
+                precio=pre,
+                foto=foto,
+            )
+            q.save()
+            messages.success(request, "Producto Agregado Correctamente!")
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+    else:
+        messages.warning(request, f'Error: No se enviaron datos...')
+
+    return redirect('Productos')
+
+def eliminarProducto(request, id):
+    try:
+        q = Producto.objects.get(pk = id)
+        q.delete()
+        messages.success(request, "Producto Eliminado Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('Productos')
+
+
+def invFormProductosActualizar(request, id):
+    q = Producto.objects.get(pk = id)
+    c = Categoria.objects.all()
+    print(type(q.precio), q.precio)
+    contexto = {'data': q, 'categorias' : c}
+    return render(request, 'Oasis/inventario/invProductosActualizar.html', contexto)
+
+def actualizarProducto(request):
+    if request.method == "POST":
+        id = request.POST.get('id')
+        cat = Categoria.objects.get(pk=request.POST.get('categoria'))
+        nom = request.POST.get('nombre')
+        desc = request.POST.get('descripcion')
+        precio_str = request.POST.get('precio')
+        precio_str = precio_str.replace(',', '.')
+        pre = float(precio_str)
+        foto_nueva = request.FILES.get('foto_nueva')
+
+        try:
+            q = Producto.objects.get(pk=id)
+            q.nombre = nom
+            q.categoria = cat
+            q.descripcion = desc
+            q.precio = pre
+
+            if foto_nueva:
+                q.foto = foto_nueva
+
+            q.save()
+            messages.success(request, "Producto Actualizado Correctamente!")
+
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+
+    else:
+        messages.warning(request, f'Error: No se enviaron datos...')
+
+    return redirect('Productos')
+
+
 
 
 
@@ -485,24 +578,44 @@ def gaFotos(request):
     return render(request, 'Oasis/galeria/gaFotos.html')
 
 
+# Vistas para el conjunto de datos de las API
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+class EventoViewSet(viewsets.ModelViewSet):
+    queryset = Evento.objects.all()
+    serializer_class = EventoSerializer
+class MesaViewSet(viewsets.ModelViewSet):
+    queryset = Mesa.objects.all()
+    serializer_class = MesaSerializer
 
-def saludar(request):
-    return HttpResponse("Hola, <strong style='color:red'>A todos!!</strong>")
+class ReservaViewSet(viewsets.ModelViewSet):
+    queryset = Reserva.objects.all()
+    serializer_class = ReservaSerializer
+class CategoriaViewSet(viewsets.ModelViewSet):
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
 
-def saludar_param(request, nombre, apellido):
-    return HttpResponse(f"Hola, <strong style='color:red'>{nombre} {apellido}</strong>")
+class ProductoViewSet(viewsets.ModelViewSet):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer
 
+class PedidoViewSet(viewsets.ModelViewSet):
+    queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
 
-#Construir una miniCalculadora, que haga operaciones con dos números
+class PedidoMesaViewSet(viewsets.ModelViewSet):
+    queryset = PedidoMesa.objects.all()
+    serializer_class = PedidoMesaSerializer
 
-def calculadora(request, num1, num2, operador):
-    if operador == "suma":
-        return HttpResponse(f"La suma de {num1} + {num2} es: <strong style='color:red'>{num1 + num2}</strong>")
-    elif operador == "resta":
-        return HttpResponse(f"La resta de {num1} - {num2} es: <strong style='color:red'>{num1 - num2}</strong>")
-    elif operador == "multiplicacion":
-        return HttpResponse(f"La multiplicación de {num1} * {num2} es: <strong style='color:red'>{num1 * num2}</strong>")
-    elif operador == "division":
-        return HttpResponse(f"La division de {num1} / {num2} es: <strong style='color:red'>{num1 / num2}</strong>")
-    else:
-        return HttpResponse("Operador no valido")
+class InventarioViewSet(viewsets.ModelViewSet):
+    queryset = Inventario.objects.all()
+    serializer_class = InventarioSerializer
+
+class GaleriaViewSet(viewsets.ModelViewSet):
+    queryset = Galeria.objects.all()
+    serializer_class = GaleriaSerializer
+
+class FotosViewSet(viewsets.ModelViewSet):
+    queryset = Fotos.objects.all()
+    serializer_class = FotosSerializer

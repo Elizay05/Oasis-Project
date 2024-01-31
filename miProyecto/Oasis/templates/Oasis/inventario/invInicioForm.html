@@ -10,8 +10,8 @@
     </a>
   </li>
   <li id='segundaOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'invCategorias' %}">
-      Categorias                    
+    <a class="nav-link text-white" href="{% url 'Productos' %}">
+      Productos                    
     </a>
   </li>
 {% endblock %}
@@ -22,7 +22,7 @@
         <div class="container">
             <form action="{% url 'crearInventario' %}" method="post">
                 {% csrf_token %}
-                <h1 style="margin-top: 0.5em;">Agregar Producto</h1>
+                <h1 style="margin-top: 0.5em;">Registrar Producto</h1>
                 <br>
                 <input type="hidden" name="id">
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
@@ -34,18 +34,17 @@
                                 <option value="{{ i.id }}">{{ i.nombre }}</option>
                             {% endfor %}
                         </select>
-
                     </div>
-                </div>
-                <div class="mb-3 col-5">
-                    <label for="exampleFormControlInput1" class="form-label">Cantidad</label>
-                    <input type="number" class="form-control" id="exampleFormControlInput1" name="cantidad">
+                    <div class="mb-3 col-5">
+                      <label for="exampleFormControlInput1" class="form-label">Cantidad</label>
+                      <input type="number" class="form-control" id="exampleFormControlInput1" name="cantidad">
+                  </div>
                 </div>
                 <div class="mb-3 col-5">
                     <label for="exampleFormControlTextarea1" class="form-label">Fecha de Caducidad</label>
                     <input type="date" class="form-control" id="exampleFormControlInput2" name="fecha_caducidad">
                 </div>
-                <button class="btn btn-success">Agregar Producto</button>
+                <button class="btn btn-success">Registrar Producto</button>
             </form>
         </div>
 {% endblock %}
