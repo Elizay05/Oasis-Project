@@ -59,10 +59,10 @@
           <tr>
             <td>{{ c.nombre }}</td>
             <td>{{ c.email }}</td>
-            <td>{{ c.rol}}</td>
+            <td>{{ c.get_rol_display }}</td>
             <td>{{ c.fecha_nacimiento}}</td>
             <td>{{ c.cedula}}</td>
-            <td>{{ c.estado}}</td>
+            <td>{{ c.get_estado_display }}</td>
             <td>
               <a type="button" class="btn btn-warning" href="{% url 'guUsuariosFormEditar' c.id %}"><i class="bi bi-pencil"></i></a>
               <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'guUsuariosEliminados' c.id %}')"><i class="bi bi-x-lg"></i></a>

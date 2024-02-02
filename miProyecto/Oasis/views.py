@@ -19,7 +19,7 @@ from .models import *
 def index(request):
     logueo = request.session.get("logueo", False)
     if logueo == False:
-        return render(request, "Oasis/login/login.html")
+        return render(request, "Oasis/index.html")
     else:
         return redirect("inicio")
 
@@ -34,7 +34,8 @@ def login(request):
 			request.session["logueo"] = {
 				"id": q.id,
 				"nombre": q.nombre,
-				"rol": q.rol
+				"rol": q.rol,
+                "nombre_rol":q.get_rol_display()
 			}
 			messages.success(request, f"Bienvendido {q.nombre}!!")
 			return redirect("inicio")
@@ -56,57 +57,147 @@ def logout(request):
 		return redirect("inicio")
     
 def inicio(request):
-	logueo = request.session.get("logueo", False)
-	if logueo:
-		return render(request, "Oasis/index.html")
-	else:
-		return redirect("index")
+    logueo = request.session.get("logueo", False)
+    if logueo:
+        try:
+            usuario_id = request.session['logueo']['id']
+            usuario = Usuario.objects.get(id=usuario_id)
+            contexto = {'data': usuario}
+            return render(request, "Oasis/index.html", contexto)
+        except Usuario.DoesNotExist:
+            messages.error(request, "El usuario no existe")
+    else:
+        return redirect("index")
+    
 
 
 def registro(request):
     return render(request, 'Oasis/registro.html')
 
 
+#PERFIL
+def ver_perfil(request):
+    logueo = request.session.get("logueo", False)
+    #Consultamos en base de datos el ID del usuario logueado
+    q = Usuario.objects.get(pk = logueo["id"])
+    roles = Usuario.ROLES
+    estado = Usuario.ESTADO
+    contexto = {'data': q, 'roles': roles, 'estado':estado}
+    return render(request, "Oasis/login/perfil.html", contexto)
+
+def editar_perfil(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        nombre = request.POST.get('nombre')
+        fecha_nacimiento = request.POST.get('fechaNacimiento')
+        email = request.POST.get('email')
+        cedula = request.POST.get('cedula')
+        rol = request.POST.get('rol')
+        estado = request.POST.get('Estado')
+        foto_nueva = request.FILES.get('foto_nueva')
+
+        try:
+            q = Usuario.objects.get(pk = id)
+            q.nombre = nombre
+            q.email = email
+            q.fecha_nacimiento = fecha_nacimiento
+            q.rol = rol
+            q.cedula = cedula
+            q.estado = estado
+            
+            if foto_nueva:
+                q.foto = foto_nueva
+
+            q.save()
+            messages.success(request, "Usuario actualizado correctamente")
+        except Exception as e:
+            messages.error(request,f'Error: {e}')
+    else:
+        messages.warning(request,'No se enviaron datos')
+
+    return redirect('ver_perfil')
+
+
+#CAMBIAR CONTRASEÑA
+def cambio_clave_formulario(request):
+    return render(request, "Oasis/login/cambio_clave.html")
+
+def cambiar_clave(request):
+    if request.method == "POST":
+        logueo = request.session.get("logueo", False)
+        q = Usuario.objects.get(pk=logueo["id"])
+
+        c1 = request.POST.get("nueva1")
+        c2 = request.POST.get("nueva2")
+
+        if q.clave == request.POST.get("clave"):
+            if c1 == c2:
+                #Cambiar clave en DB
+                q.clave = c1
+                q.save()
+                messages.success(request, "Contraseña guardada correctamente!")
+                return redirect('ver_perfil')
+            else:
+               messages.info(request, "Las contraseñas nuevas no coinciden...")
+        else:
+            messages.error(request, "Contraseña no válida...")
+    else:
+        messages.warning(request, "Error: No se enviaron datos...")
+    
+    return redirect('cc_formulario')
+
+
+
 #USUARIOS
 def guInicio(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Usuario.objects.all()
-    contexto = {'data': q}
+    contexto = {'data': q, 'user': user}
     return render(request, "Oasis/usuarios/guInicio.html", contexto)
 
 def guInicioForm(request):
-    return render(request, "Oasis/usuarios/guInicioForm.html")
+    roles = Usuario.ROLES
+    estado = Usuario.ESTADO
+
+    contexto = {'roles': roles, 'estado': estado}
+    return render(request, "Oasis/usuarios/guInicioForm.html", contexto)
 
 def guUsuariosBloqueados(request):
     return render(request, "Oasis/usuarios/guUsuariosBloqueados.html")
 
 def guUsuariosCrear(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        fecha_nacimiento = request.POST.get('fechaNacimiento')
-        email = request.POST.get('email')
-        clave = request.POST.get('clave')
-        cedula = request.POST.get('cedula')
-        rol = request.POST.get('rol')
-        estado = request.POST.get('Estado')
-        foto = request.POST.get('foto')
         try:
+            nombre = request.POST.get('nombre')
+            fecha_nacimiento = request.POST.get('fechaNacimiento')
+            email = request.POST.get('email')
+            clave = request.POST.get('clave')
+            cedula = request.POST.get('cedula')
+            foto = request.FILES.get('foto')
+            rol = int(request.POST.get('rol'))
+            estado = int(request.POST.get('Estado'))
+
+            if foto is None:
+                foto = "Img_usuarios/default.png"
+            
             q = Usuario(
-                nombre = nombre,
-                fecha_nacimiento = fecha_nacimiento,
-                email = email,
-                clave = clave,
-                rol = rol,
-                cedula = cedula,
-                estado = estado,
-                foto = foto
+                nombre=nombre,
+                fecha_nacimiento=fecha_nacimiento,
+                email=email,
+                clave=clave,
+                rol=rol,
+                cedula=cedula,
+                estado=estado,
+                foto=foto,
             )
 
             q.save()
             messages.success(request, "Usuario creado correctamente")
         except Exception as e:
-            messages.error(request,f'Error: {e}')
+            messages.error(request, f'Error: {e}')
     else:
-        messages.warning(request,'No se enviaron datos')
+        messages.warning(request, 'No se enviaron datos')
 
     return redirect('guInicio')
 
@@ -122,7 +213,9 @@ def guUsuariosEliminados(request, id):
 
 def guUsuariosFormEditar(request, id):
     q = Usuario.objects.get(pk = id)
-    contexto = {'data': q}
+    roles = Usuario.ROLES
+    estado = Usuario.ESTADO
+    contexto = {'data': q, 'roles': roles, 'estado':estado}
 
     return render(request, 'Oasis/usuarios/guInicioFormEditar.html', contexto)
 
@@ -136,7 +229,8 @@ def guUsuariosActualizar(request):
         cedula = request.POST.get('cedula')
         rol = request.POST.get('rol')
         estado = request.POST.get('Estado')
-        foto = request.POST.get('foto')
+        foto_nueva = request.FILES.get('foto_nueva')
+
         try:
             q = Usuario.objects.get(pk = id)
             q.nombre = nombre
@@ -146,7 +240,9 @@ def guUsuariosActualizar(request):
             q.rol = rol
             q.cedula = cedula
             q.estado = estado
-            q.foto = foto
+            
+            if foto_nueva:
+                q.foto = foto_nueva
 
             q.save()
             messages.success(request, "Usuario actualizado correctamente")
@@ -255,7 +351,7 @@ def crearProducto(request):
             cat = Categoria.objects.get(pk=cat_id)
             
             if foto == None:
-                foto = "fotos_productos/default.png"
+                foto = "Img_productos/default.png"
 
             q = Producto(
                 nombre=nom,
@@ -360,13 +456,17 @@ def crearEvento(request):
             time = request.POST.get('hora_incio')
             desc = request.POST.get('descripcion')
             foto = request.FILES.get('foto')
+
+            if foto == None:
+                foto = "Img_eventos/default.png"
+
             # INSERT INTO Evento VALUES (nom, date, time, desc, foto)
             q = Evento(
                 nombre = nom,
                 fecha = date,
                 hora_incio = time,
                 descripcion = desc,
-                foto = f"fotos/{foto}",
+                foto = foto,
             )
             q.save()
             messages.success(request, "Evento Creado Correctamente!")
@@ -400,14 +500,16 @@ def actualizarEvento(request):
         date = request.POST.get('fecha')
         time = request.POST.get('hora_incio')
         desc = request.POST.get('descripcion')
-        foto = request.POST.get('foto')
+        foto_nueva = request.FILES.get('foto_nueva')
         try:
             q = Evento.objects.get(pk=id)
             q.nombre = nom
             q.fecha = date
             q.hora_incio = time
             q.descripcion = desc
-            q.foto = f'fotos/{foto}'
+
+            if foto_nueva:
+                q.foto = foto_nueva
 
             q.save()
             messages.success(request, "Evento Actualizado Correctamente!")
@@ -442,11 +544,16 @@ def crearCategoria(request):
             nom = request.POST.get('nombre')
             desc = request.POST.get('descripcion')
             foto = request.FILES.get('foto')
+
+            if foto == None:
+                foto = "Img_categorias/default.jpg"
+
             # INSERT INTO Categoria VALUES (nom, desc)
             q = Categoria(
                 nombre = nom, 
                 descripcion = desc,
-                foto = foto)
+                foto = foto,
+                )
             q.save()
             messages.success(request, "Categoria Creada Correctamente!")
         except Exception as e:
@@ -477,13 +584,14 @@ def actualizarCategoria(request):
         id = request.POST.get('id')
         nom = request.POST.get('nombre')
         desc = request.POST.get('descripcion')
-        foto = request.FILES.get('foto')
+        foto_nueva = request.FILES.get('foto_nueva')
         try:
             q = Categoria.objects.get(pk=id)
             q.nombre = nom
             q.descripcion = desc
-            if foto:
-                q.foto = foto
+
+            if foto_nueva:
+                q.foto = foto_nueva
 
             q.save()
             messages.success(request, "Categoria Actualizada Correctamente!")
@@ -518,11 +626,15 @@ def crearCarpeta(request):
             nom = request.POST.get('nombre')
             date = request.POST.get('fecha')
             foto = request.FILES.get('foto')
+
+            if foto == None:
+                foto = "Img_carpeta/default.png"
+
             # INSERT INTO Evento VALUES (nom, date, time, desc, foto)
             q = Galeria(
                 nombre = nom,
                 fecha = date,
-                foto = f"fotos/{foto}",
+                foto = foto,
             )
             q.save()
             messages.success(request, "Carpeta Creada Correctamente!")
@@ -555,12 +667,14 @@ def actualizarCarpeta(request):
         id = request.POST.get('id')
         nom = request.POST.get('nombre')
         date = request.POST.get('fecha')
-        foto = request.POST.get('foto')
+        foto_nueva = request.FILES.get('foto_nueva')
         try:
             q = Galeria.objects.get(pk=id)
             q.nombre = nom
             q.fecha = date
-            q.foto = f'fotos/{foto}'
+            
+            if foto_nueva:
+                q.foto = foto_nueva
 
             q.save()
             messages.success(request, "Carpeta Actualizada Correctamente!")
