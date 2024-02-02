@@ -35,6 +35,16 @@ urlpatterns = [
 
     path('registro/', views.registro, name='registro'),
 
+    #PERFIL
+    path('Perfil/', views.ver_perfil, name='ver_perfil'),
+    path('editar_perfil', views.editar_perfil, name='editar_perfil'),
+
+
+    #CAMBIAR CONTRASEÑA
+    path('cc_formulario/', views.cambio_clave_formulario, name="cc_formulario"),
+    path('cambiar_clave/', views.cambiar_clave, name="cambiar_clave"),
+
+
     #USUARIOS
     path('Gestion_Usuarios/', views.guInicio, name='guInicio'),
     path('Agregar_Usuario/', views.guInicioForm, name='guInicioForm'),

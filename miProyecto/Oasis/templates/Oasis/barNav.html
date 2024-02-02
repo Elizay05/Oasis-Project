@@ -75,12 +75,23 @@
                     <div class="d-flex">
                         <div class="dropdown dropstart">
                             <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                              <img src="{% static 'Oasis/img/logoUser.png' %}" alt="LogoUsario" width="45px" height="45px">
+                                {% if user.foto %}
+                                    <img src="{{ user.foto.url }}" alt="FotoUsuario" width="45px" height="45px"  class="rounded-circle">
+                                {% else %}
+                                    <img src="{% static 'Oasis/img/logoUser.png' %}" alt="LogoUsuario" width="45px" height="45px">
+                                {% endif %}
                             </button>
-                                <ul class="dropdown-menu cerrar">
-                                    <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'index' %}">Salir</a></li>
-                                </ul>
+                            <ul class="dropdown-menu cerrar">
+                                  <li><a class="dropdown-item" href="{% url 'ver_perfil' %}">
+                                    {% if user.rol == 1 %} Administrador 
+                                    {% elif user.rol == 2 %} Bartender 
+                                    {% elif user.rol == 3 %} Mesero 
+                                    {% elif user.rol == 4 %} Perfil 
+                                    {% endif %}
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Salir</a></li>
+                              </ul>
                         </div>
                     </div>
                 </div>
