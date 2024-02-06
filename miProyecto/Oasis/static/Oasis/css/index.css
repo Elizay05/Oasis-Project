@@ -1,3 +1,12 @@
+#enlace_logo{
+  width: 15%;
+}
+
+#enlace_logo img{
+  max-width: 100%;
+  height: auto;
+}
+
 header {
     height: 4.6em;
     width: 100%;

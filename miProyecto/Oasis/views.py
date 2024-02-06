@@ -157,14 +157,19 @@ def guInicio(request):
     return render(request, "Oasis/usuarios/guInicio.html", contexto)
 
 def guInicioForm(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     roles = Usuario.ROLES
     estado = Usuario.ESTADO
 
-    contexto = {'roles': roles, 'estado': estado}
+    contexto = {'roles': roles, 'estado': estado, 'user': user}
     return render(request, "Oasis/usuarios/guInicioForm.html", contexto)
 
 def guUsuariosBloqueados(request):
-    return render(request, "Oasis/usuarios/guUsuariosBloqueados.html")
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render(request, "Oasis/usuarios/guUsuariosBloqueados.html", contexto)
 
 def guUsuariosCrear(request):
     if request.method == 'POST':
@@ -212,10 +217,12 @@ def guUsuariosEliminados(request, id):
     return redirect('guInicio')
 
 def guUsuariosFormEditar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Usuario.objects.get(pk = id)
     roles = Usuario.ROLES
     estado = Usuario.ESTADO
-    contexto = {'data': q, 'roles': roles, 'estado':estado}
+    contexto = {'data': q, 'roles': roles, 'estado':estado, 'user':user}
 
     return render(request, 'Oasis/usuarios/guInicioFormEditar.html', contexto)
 
@@ -256,14 +263,18 @@ def guUsuariosActualizar(request):
 
 #INVENTARIO
 def invInicio(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Inventario.objects.all()
     p = Producto.objects.all()
-    contexto = {'data': q, 'producto': p}
+    contexto = {'data': q, 'producto': p, 'user':user}
     return render(request, "Oasis/inventario/invInicio.html", contexto)
 
 def invForm(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Producto.objects.all()
-    contexto = {'data': q}
+    contexto = {'data': q, 'user':user}
     return render(request, "Oasis/inventario/invInicioForm.html", contexto)
 
 def crearInventario(request):
@@ -298,9 +309,11 @@ def eliminarInventario(request, id):
     return redirect('inventario')
        
 def invFormActualizar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Inventario.objects.get(pk = id)
     p = Producto.objects.all()
-    contexto = {'data': q, 'producto': p}
+    contexto = {'data': q, 'producto': p, 'user':user}
     return render(request, 'Oasis/inventario/invFormActualizar.html', contexto)
 
 def actualizarInventario(request):
@@ -330,13 +343,17 @@ def actualizarInventario(request):
 
 def invProductos(request):
 #SELECT * FROM Productos
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Producto.objects.all()
-    contexto = {'data' : q}
+    contexto = {'data' : q, 'user':user}
     return render(request, "Oasis/inventario/invProductos.html", contexto)
 
 def invProductosForm(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Categoria.objects.all()
-    contexto = {'data': q}
+    contexto = {'data': q, 'user':user}
     return render(request, 'Oasis/inventario/invProductosForm.html', contexto)
 
 def crearProducto(request):
@@ -381,10 +398,12 @@ def eliminarProducto(request, id):
 
 
 def invFormProductosActualizar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Producto.objects.get(pk = id)
     c = Categoria.objects.all()
     print(type(q.precio), q.precio)
-    contexto = {'data': q, 'categorias' : c}
+    contexto = {'data': q, 'categorias' : c, 'user':user}
     return render(request, 'Oasis/inventario/invProductosActualizar.html', contexto)
 
 def actualizarProducto(request):
@@ -424,29 +443,46 @@ def actualizarProducto(request):
 
 
 def peInicio(request):
-    return render (request, "Oasis/pedidos/peInicio.html")
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, "Oasis/pedidos/peInicio.html", contexto)
 
 def peHistorial(request):
-    return render (request, "Oasis/pedidos/peHistorial.html")
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, "Oasis/pedidos/peHistorial.html", contexto)
 
 def peGestionMesas(request):
-    return render (request, "Oasis/pedidos/peGestionMesas.html")
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, "Oasis/pedidos/peGestionMesas.html", contexto)
 
 def pedidoEmpleado(request):
-    return render (request, "Oasis/pedidos/pedidoEmpleado.html")
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, "Oasis/pedidos/pedidoEmpleado.html", contexto)
 
 
 
 #EVENTOS
 
 def eveInicio(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
 #SELECT * FROM Eventos
     q = Evento.objects.all()
-    contexto = {'data' : q}
+    contexto = {'data' : q , 'user':user}
     return render(request, "Oasis/eventos/eveInicio.html", contexto)
 
 def eveForm(request):
-    return render (request, 'Oasis/eventos/eveForm.html')
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, 'Oasis/eventos/eveForm.html', contexto)
 
 def crearEvento(request):
     if request.method == "POST":
@@ -489,8 +525,10 @@ def eliminarEvento(request, id):
     return redirect('Eventos')
 
 def eveFormActualizar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Evento.objects.get(pk = id)
-    contexto = {'data': q}
+    contexto = {'data': q, 'user':user}
     return render(request, 'Oasis/eventos/eveFormActualizar.html', contexto)
 
 def actualizarEvento(request):
@@ -525,18 +563,26 @@ def actualizarEvento(request):
 
 
 def eveReserva(request):
-    return render (request, 'Oasis/eventos/eveReserva.html')
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, 'Oasis/eventos/eveReserva.html', contexto)
 
 
 # MENÚ (CATEGORÍAS)
 def meInicio(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
 #SELECT * FROM Eventos
     q = Categoria.objects.all()
-    contexto = {'data' : q}
+    contexto = {'data' : q, 'user':user}
     return render(request, "Oasis/menu/meInicio.html", contexto)
 
 def meForm(request):
-    return render (request, 'Oasis/menu/meForm.html')
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, 'Oasis/menu/meForm.html', contexto)
 
 def crearCategoria(request):
     if request.method == "POST":
@@ -575,8 +621,10 @@ def eliminarCategoria(request, id):
     return redirect('Menu')
 
 def meFormActualizar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Categoria.objects.get(pk = id)
-    contexto = {'data': q}
+    contexto = {'data': q, 'user':user}
     return render(request, 'Oasis/menu/meFormActualizar.html', contexto)
 
 def actualizarCategoria(request):
@@ -605,19 +653,27 @@ def actualizarCategoria(request):
     return redirect('Menu')
 
 def meProductos(request):
-    return render (request, 'Oasis/menu/meProductos.html')
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, 'Oasis/menu/meProductos.html', contexto)
 
 
 
 def gaInicio(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
 #SELECT * FROM Galeria
     q = Galeria.objects.all()
-    contexto = {'data' : q}
+    contexto = {'data' : q, 'user':user}
     return render(request, "Oasis/galeria/gaInicio.html", contexto)
 
 
 def gaCarpetaForm(request):
-    return render (request, 'Oasis/galeria/gaCarpetaForm.html')
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, 'Oasis/galeria/gaCarpetaForm.html', contexto)
 
 
 def crearCarpeta(request):
@@ -657,8 +713,10 @@ def eliminarCarpeta(request, id):
     return redirect('gaInicio')
 
 def gaCarpetaFormActualizar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
     q = Galeria.objects.get(pk = id)
-    contexto = {'data': q}
+    contexto = {'data': q, 'user':user}
     return render(request, 'Oasis/galeria/gaCarpetaFormActualizar.html', contexto)
 
 
@@ -689,7 +747,10 @@ def actualizarCarpeta(request):
 
 
 def gaFotos(request):
-    return render(request, 'Oasis/galeria/gaFotos.html')
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render(request, 'Oasis/galeria/gaFotos.html', contexto)
 
 
 # Vistas para el conjunto de datos de las API
