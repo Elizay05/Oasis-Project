@@ -162,3 +162,49 @@ def calculadora(request, num1, num2, operador):
         return HttpResponse(f"La division de {num1} / {num2} es: <strong style='color:red'>{num1 / num2}</strong>")
     else:
         return HttpResponse("Operador no valido")
+    
+
+# carrito de compras
+def add_carrito(request, producto_id):
+    try:
+        producto = Producto.objects.get(pk=producto_id)
+
+        carrito = request.session.get("carrito", [])
+        carrito.append({
+            "id": producto.id,
+            "nombre": producto.nombre,
+            "precio": producto.precio,
+            # Otros campos que puedas necesitar
+        })
+        request.session["carrito"] = carrito
+
+        messages.success(request, f"Producto '{producto.nombre}' agregado al carrito correctamente.")
+    except Producto.DoesNotExist:
+        messages.error(request, "El producto no existe.")
+        return redirect('index')
+        
+        
+          # Ajusta la redirección según tu aplicación
+
+def ver_carrito(request):
+    carrito = request.session.get("carrito", [])
+    total = sum(item["precio"] for item in carrito)
+
+    contexto = {
+        "carrito": carrito,
+        "total": total,
+    }
+
+    return render(request, 'Oasis/carrito/carrito.html', contexto)
+
+def vaciar_carrito(request):
+    request.session["carrito"] = []
+    messages.success(request, "El carrito ha sido vaciado correctamente.")
+    return redirect('index')
+
+def eliminar_del_carrito(request, item_id):
+    carrito = request.session.get("carrito", [])
+    carrito = [item for item in carrito if item["id"] != item_id]
+    request.session["carrito"] = carrito
+    messages.success(request, "El producto ha sido eliminado del carrito correctamente.")
+    return redirect('index')

@@ -47,4 +47,11 @@ urlpatterns = [
     path('saludar/', views.saludar, name='saludar'),
     path('saludar_param/<str:nombre>/<str:apellido>', views.saludar_param, name='saludar_param'),
     path('calculadora/<int:num1>/<int:num2>/<str:operador>', views.calculadora, name='calculadora'),
+
+
+
+    # carrito de compras
+    path('carrito/', views.add_carrito, name='carrito_add'),
+    path('agregar_carrito/<int:id>', views.ver_carrito, name='agregar_carrito'),
+    path('vaciar_carrito/', views.vaciar_carrito, name='vaciar_carrito'),
 ]   
