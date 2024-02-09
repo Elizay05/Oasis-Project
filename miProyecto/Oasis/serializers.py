@@ -44,10 +44,10 @@ class PedidoMesaSerializer(serializers.HyperlinkedModelSerializer):
         model = PedidoMesa
         fields = ['id', 'mesa', 'producto', 'cantidad']
 
-class InventarioSerializer(serializers.HyperlinkedModelSerializer):
+"""class InventarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Inventario
-        fields = ['id', 'producto', 'cantidad', 'fecha_caducidad']
+        fields = ['id', 'producto', 'cantidad', 'fecha_caducidad']"""
 
 class GaleriaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

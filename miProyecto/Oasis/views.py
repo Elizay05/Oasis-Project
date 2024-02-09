@@ -50,6 +50,7 @@ def login(request):
 def logout(request):
 	try:
 		del request.session["logueo"]
+		del request.session["carrito"]
 		messages.success(request, "Sesión cerrada correctamente")
 		return redirect("index")
 	except Exception as e:
@@ -78,11 +79,13 @@ def registro(request):
 #PERFIL
 def ver_perfil(request):
     logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    logueo = request.session.get("logueo", False)
     #Consultamos en base de datos el ID del usuario logueado
     q = Usuario.objects.get(pk = logueo["id"])
     roles = Usuario.ROLES
     estado = Usuario.ESTADO
-    contexto = {'data': q, 'roles': roles, 'estado':estado}
+    contexto = {'data': q, 'roles': roles, 'estado':estado, 'user':user}
     return render(request, "Oasis/login/perfil.html", contexto)
 
 def editar_perfil(request):
@@ -120,7 +123,10 @@ def editar_perfil(request):
 
 #CAMBIAR CONTRASEÑA
 def cambio_clave_formulario(request):
-    return render(request, "Oasis/login/cambio_clave.html")
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {"user":user}
+    return render(request, "Oasis/login/cambio_clave.html", contexto)
 
 def cambiar_clave(request):
     if request.method == "POST":
@@ -261,6 +267,8 @@ def guUsuariosActualizar(request):
     return redirect('guInicio')
 
 
+
+"""
 #INVENTARIO
 def invInicio(request):
     logueo = request.session.get("logueo", False)
@@ -337,6 +345,7 @@ def actualizarInventario(request):
         messages.warning (request, f'Error: No se enviaron datos...')
         
     return redirect('inventario')
+"""
 
 
 #PRODUCTOS
@@ -753,6 +762,123 @@ def gaFotos(request):
     return render(request, 'Oasis/galeria/gaFotos.html', contexto)
 
 
+
+def front_productos(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk=logueo["id"])
+
+    if logueo:
+        categorias = Categoria.objects.all()
+
+        cat = request.GET.get("cat")
+
+        if cat == None:
+            productos = Producto.objects.all()
+        else:
+            c = Categoria.objects.get(pk=cat)
+            productos = Producto.objects.filter(categoria=c)
+        
+        contexto = {"data": user, "productos": productos, "categorias": categorias}
+        return render(request, "Oasis/front_productos/front_productos.html", contexto)
+    else:
+        return redirect("inicio")
+    
+
+def carrito_add(request):
+    if request.method == "POST":
+        try:
+            carrito = request.session.get("carrito", False)
+            if not carrito:
+                request.session["carrito"] =[]
+                request.session["items"] = 0
+                carrito = []
+
+            id_producto = int(request.POST.get("id"))
+            cantidad = request.POST.get("cantidad")
+            #Consulto en DB..........................
+            q = Producto.objects.get(pk=id_producto)
+
+            for p in carrito:
+                if p["id"] == id_producto:
+                    if q.inventario >= (p["cantidad"] + int(cantidad)) and int(cantidad) > 0:
+                        p["cantidad"] += int(cantidad)
+                        p["subtotal"] = p["cantidad"] * q.precio
+                    else:
+                        print("Cantidad supera inventario...")
+                        messages.warning(request, "Cantidad supera inventario")
+                    break
+            else:
+                print("No existe en carrito... lo agregamos")
+                if q.inventario >= int(cantidad) and int(cantidad) > 0:
+                    carrito.append({
+                        "id": q.id,
+                        "foto": q.foto.url,
+                        "producto": q.nombre,
+                        "cantidad": int(cantidad),
+                        "subtotal": int(cantidad) * q.precio
+                    })
+                else:
+                    print("Cantidad supera inventario...")
+                    messages.warning(request, "No se puede agregar, no hay suficiente inventario.")
+            
+            
+            #Actualizamos variable de sesión carrito...
+            request.session["carrito"] = carrito
+            items = len(carrito)
+            contexto = {
+                "items": items,
+                "total": sum(p["subtotal"] for p in carrito)
+                }
+            request.session["items"] = len(carrito)
+            return render(request, "Oasis/carrito/carrito.html", contexto)
+        except ValueError as e:
+            messages.error(request, f"Error: Digite un valor correcto para cantidad...")
+            return HttpResponse("Error...")
+        except Exception as e:
+            messages.error(request, f"Ocurrió un error: {e}")
+            return HttpResponse("Error...")
+    else:
+        messages.warning(request, "No se enviaron datos.")
+        return HttpResponse("Error...")
+
+
+
+
+def carrito_ver(request):
+    carrito = request.session.get("carrito", False)
+
+    if not carrito:
+        request.session["carrito"] =[]
+        request.session["items"] = 0
+        contexto = {
+        "items": 0,
+        "total": 0
+    }
+    else:
+        contexto = {
+            "items": len(carrito),
+            "total": sum(p["subtotal"] for p in carrito)
+        }
+        request.session["items"] = len(carrito)
+    return render(request, "Oasis/carrito/carrito.html", contexto)
+
+
+
+def carrito_eliminar(request, id):
+	carrito = request.session.get("carrito", False)
+	for p in carrito:
+		if p["id"] == id:
+			carrito.remove(p)
+			request.session["carrito"] = carrito
+			request.session["items"] = len(carrito)
+	return redirect('inicio')
+
+
+def vaciar_carrito(request):
+	request.session["carrito"] = []
+	request.session["items"] = []
+	return redirect('inicio')
+
 # Vistas para el conjunto de datos de las API
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
@@ -783,9 +909,9 @@ class PedidoMesaViewSet(viewsets.ModelViewSet):
     queryset = PedidoMesa.objects.all()
     serializer_class = PedidoMesaSerializer
 
-class InventarioViewSet(viewsets.ModelViewSet):
+"""class InventarioViewSet(viewsets.ModelViewSet):
     queryset = Inventario.objects.all()
-    serializer_class = InventarioSerializer
+    serializer_class = InventarioSerializer """
 
 class GaleriaViewSet(viewsets.ModelViewSet):
     queryset = Galeria.objects.all()

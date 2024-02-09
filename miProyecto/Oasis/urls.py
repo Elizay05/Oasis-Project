@@ -15,7 +15,7 @@ router.register(r'categoria', views.CategoriaViewSet)
 router.register(r'producto', views.ProductoViewSet)
 router.register(r'pedido', views.PedidoViewSet)
 router.register(r'pedido_mesa', views.PedidoMesaViewSet)
-router.register(r'inventario', views.InventarioViewSet)
+#router.register(r'inventario', views.InventarioViewSet)
 router.register(r'galeria', views.GaleriaViewSet)
 router.register(r'fotos', views.FotosViewSet)
 
@@ -57,12 +57,12 @@ urlpatterns = [
 
 
     #CRUD INVENTARIO
-    path('Gestion_Inventario/', views.invInicio, name='inventario'),
-    path('Agregar_Producto/', views.invForm, name='invForm'),
-    path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
-    path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
-    path('Inventario_Actualizar/<int:id>', views.invFormActualizar, name='invFormActualizar'),
-    path('Actualizar_Inventario/', views.actualizarInventario, name='actualizarInventario'),
+    #path('Gestion_Inventario/', views.invInicio, name='inventario'),
+    #path('Agregar_Producto/', views.invForm, name='invForm'),
+    #path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
+    #path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
+    #path('Inventario_Actualizar/<int:id>', views.invFormActualizar, name='invFormActualizar'),
+    #path('Actualizar_Inventario/', views.actualizarInventario, name='actualizarInventario'),
 
 
     #CRUD PRODUCTOS
@@ -107,6 +107,19 @@ urlpatterns = [
     path('Eliminar_Carpeta/<int:id>', views.eliminarCarpeta, name='eliminarCarpeta'),
     path('Actualizar_Carpeta_Form/<int:id>', views.gaCarpetaFormActualizar, name='gaCarpetaFormActualizar'),
     path('Actualizar_Carpeta/', views.actualizarCarpeta, name='actualizarCarpeta'),
+
+
+
+#   FRONT PRODUCTOS
+    path('front_productos/', views.front_productos, name='front_productos'),
+
+
+# CARRITO DE COMPRA
+	path("carrito_add/", views.carrito_add, name="carrito_add"),
+	path("carrito_ver/", views.carrito_ver, name="carrito_ver"),
+    path("carrito_eliminar/<int:id>/", views.carrito_eliminar, name="carrito_eliminar"),
+	path("vaciar_carrito/", views.vaciar_carrito, name="vaciar_carrito"),
+
 
 
 ]   

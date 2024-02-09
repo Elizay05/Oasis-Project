@@ -71,9 +71,10 @@ class Categoria(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=150)
     descripcion = models.TextField()
+    inventario = models.IntegerField(default=0)
     foto = models.ImageField(upload_to="Img_productos/", default="Img_productos/default.png")
     categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    precio = models.IntegerField()
 
     def __str__(self):
         return self.nombre
@@ -107,13 +108,13 @@ class PedidoMesa(models.Model):
     cantidad = models.IntegerField()
 
 
-class Inventario(models.Model):
+"""class Inventario(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
     cantidad = models.IntegerField()
     fecha_caducidad = models.DateField()
 
     def __str__(self):
-        return self.producto.nombre
+        return self.producto.nombre"""
 
 class Galeria(models.Model):
     nombre = models.CharField(max_length=254)

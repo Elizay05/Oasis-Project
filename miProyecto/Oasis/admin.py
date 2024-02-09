@@ -52,7 +52,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion', 'precio','ver_foto']
+    list_display = ['id','nombre','descripcion','inventario','precio','ver_foto']
     search_fields = ['id','nombre', 'precio']
     list_editable = ['precio']
 
@@ -74,12 +74,12 @@ class PedidoMesaAdmin(admin.ModelAdmin):
     search_fields = ['id','mesa','producto','cantidad']
     list_filter = ['mesa']
 
-@admin.register(Inventario)
+"""@admin.register(Inventario)
 class InventarioAdmin(admin.ModelAdmin):
     list_display = ['id','producto','cantidad','fecha_caducidad']
     search_fields = ['id','producto','cantidad','fecha_caducidad']
     list_filter = ['fecha_caducidad']
-    list_editable = ['cantidad','fecha_caducidad']
+    list_editable = ['cantidad','fecha_caducidad']"""
 
 
 @admin.register(Galeria)

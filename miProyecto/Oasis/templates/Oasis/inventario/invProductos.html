@@ -1,16 +1,17 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
+{% load humanize %}
 {{data}}
 
 {% block titulo %}Productos{% endblock %}
 
 {% block Opciones %}
-  <li id='primeraOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'inventario' %}">
+  <!--<li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="#">
       Inicio                    
     </a>
-  </li>
-  <li id='segundaOpcion' class="nav-item">
+  </li>-->
+  <li id='primeraOpcion' class="nav-item">
     <a class="nav-link text-white" href="{% url 'Productos' %}">
       Productos                    
     </a>
@@ -51,7 +52,7 @@
                     <td>{{ i.nombre }}</td>
                     <td>{{ i.descripcion }}</td>
                     <td>{{ i.categoria }}</td>
-                    <td>{{ i.precio }}</td>
+                    <td>${{ i.precio|intcomma }}</td>
                     <td>
                       <img src="{{ i.foto.url }}" class="card-img-top" alt="foto_producto" style="max-height: 80px;">
                     </td>

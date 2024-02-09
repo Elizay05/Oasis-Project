@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Oasis', 
     'rest_framework',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,7 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+FORMAT_MODULE_PATH = [
+    "Oasis.formats"
+]
