@@ -97,3 +97,15 @@ class FotosAdmin(admin.ModelAdmin):
 
     def ver_foto(self, obj):
         return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+
+
+@admin.register(Venta)
+class VentaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'fecha_venta', 'usuario']
+
+@admin.register(DetalleVenta)
+class DetalleVentaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'venta', 'producto', 'cantidad', 'precio_historico', 'subtotal']
+
+    def subtotal(self, obj):
+        return f"{obj.cantidad * obj.precio_historico}"

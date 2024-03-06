@@ -125,3 +125,26 @@ class Galeria(models.Model):
 class Fotos(models.Model):
     foto = models.ImageField(upload_to="Img_galeria/", default="Img_galeria/default.png")
     carpeta = models.ForeignKey(Galeria, on_delete=models.DO_NOTHING)
+
+class Venta(models.Model):
+	fecha_venta = models.DateTimeField(auto_now=True)
+	usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+	ESTADOS = (
+		(1, 'Pendiente'),
+		(2, 'Enviado'),
+		(3, 'Rechazada'),
+	)
+	estado = models.IntegerField(choices=ESTADOS, default=1)
+
+	def __str__(self):
+		return f"{self.id} - {self.usuario}"
+
+
+class DetalleVenta(models.Model):
+	venta = models.ForeignKey(Venta, on_delete=models.DO_NOTHING)
+	producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
+	cantidad = models.IntegerField()
+	precio_historico = models.IntegerField()
+
+	def __str__(self):
+		return f"{self.id} - {self.venta}"

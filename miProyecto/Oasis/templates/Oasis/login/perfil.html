@@ -9,15 +9,21 @@
           Inicio                    
         </a>
     </li>
-    {% if data.rol == 4 %}
+    {% if user.rol == 4 %}
         <li id='segundaOpcion' class="nav-item lateralOpciones2">
-            <a class="nav-link text-white" href="#">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
             Historial de pedidos                   
             </a>
         </li>
         <li id='segundaOpcion' class="nav-item lateralOpciones2">
             <a class="nav-link text-white" href="#">
             Reservas                    
+            </a>
+        </li>
+    {% else %}
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Historial de Ventas                   
             </a>
         </li>
     {% endif %}

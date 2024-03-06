@@ -54,7 +54,7 @@ def logout(request):
 		messages.success(request, "Sesión cerrada correctamente")
 		return redirect("index")
 	except Exception as e:
-		messages.warning(request, "No se pudo cerrar sesión")
+		#messages.warning(request, "No se pudo cerrar sesión")
 		return redirect("inicio")
     
 def inicio(request):
@@ -814,6 +814,7 @@ def carrito_add(request):
                         "id": q.id,
                         "foto": q.foto.url,
                         "producto": q.nombre,
+                        "precio": q.precio,
                         "cantidad": int(cantidad),
                         "subtotal": int(cantidad) * q.precio
                     })
@@ -865,19 +866,96 @@ def carrito_ver(request):
 
 
 def carrito_eliminar(request, id):
-	carrito = request.session.get("carrito", False)
-	for p in carrito:
-		if p["id"] == id:
-			carrito.remove(p)
-			request.session["carrito"] = carrito
-			request.session["items"] = len(carrito)
-	return redirect('inicio')
+    try:
+        carrito = request.session.get("carrito", False)
+        if carrito != False:
+            for i, item in enumerate(carrito):
+                if item["id"] == id:
+                    carrito.pop(i)
+                    break
+            else:
+                messages.warning(request, "No se encontró el item carrito")
+        request.session["carrito"] = carrito
+        request.session["items"] = len(carrito)
+        return redirect('carrito_ver')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
 
 
 def vaciar_carrito(request):
 	request.session["carrito"] = []
-	request.session["items"] = []
+	request.session["items"] = 0
+	return redirect('front_productos')
+
+
+def actualizar_totales_carrito(request, id_producto):
+    carrito = request.session.get("carrito", False)
+    cantidad = request.GET.get("cantidad")
+    if carrito != False:
+        for i, item in enumerate(carrito):
+            if item["id"] == id_producto:
+                item["cantidad"] = int(cantidad)
+                item["subtotal"] = int(cantidad) * item["precio"]
+                break
+        else:
+            messages.warning(request, "No se encontró el item carrito")
+    request.session["carrito"] = carrito
+    request.session["items"] = len(carrito)
+    return redirect('carrito_ver')
+
+def crear_venta(request):
+	try:
+		logueo = request.session.get("logueo")
+
+		user = Usuario.objects.get(pk=logueo["id"])
+		nueva_venta = Venta.objects.create(usuario=user)
+
+		carrito = request.session.get("carrito", [])
+		for p in carrito:
+			producto = Producto.objects.get(pk=p["id"])
+			cantidad = p["cantidad"]
+
+			detalle_venta = DetalleVenta.objects.create(
+                venta=nueva_venta,
+                producto= producto,
+                cantidad= cantidad,
+                precio_historico=producto.precio,
+            )
+
+			producto.inventario -= cantidad
+			producto.save()
+
+			request.session["carrito"] = []
+			request.session["items"] = 0
+
+		messages.success(request, "Venta realizada correctamente!")
+
+	except Exception as e:
+		messages.error(request, f"Ocurrió un Error: {e}")
+
 	return redirect('inicio')
+
+def ver_ventas(request):
+	logueo = request.session.get("logueo")
+	user = Usuario.objects.get(pk=logueo["id"])
+
+	if user.rol == 4:
+		venta = Venta.objects.filter(usuario=user)
+		contexto = {"user":user, "venta":venta}
+		return render(request, "Oasis/carrito/ventas.html", contexto)
+	else:
+		venta = Venta.objects.all()
+		contexto = {"user": user, "venta":venta}
+		return render(request, "Oasis/carrito/ventas.html", contexto)
+
+def ver_detalles(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    venta = Venta.objects.get(pk=id) 
+    detalles = DetalleVenta.objects.filter(venta=venta.id)
+    contexto = {"user":user, "venta":detalles}
+    return render(request, "Oasis/carrito/detalles.html", contexto)
+
 
 # Vistas para el conjunto de datos de las API
 class UsuarioViewSet(viewsets.ModelViewSet):
@@ -920,3 +998,11 @@ class GaleriaViewSet(viewsets.ModelViewSet):
 class FotosViewSet(viewsets.ModelViewSet):
     queryset = Fotos.objects.all()
     serializer_class = FotosSerializer
+
+class VentaViewSet(viewsets.ModelViewSet):
+    queryset = Venta.objects.all()
+    serializer_class = VentaSerializer
+
+class DetalleVentaViewSet(viewsets.ModelViewSet):
+    queryset = DetalleVenta.objects.all()
+    serializer_class = DetalleVentaSerializer

@@ -18,6 +18,8 @@ router.register(r'pedido_mesa', views.PedidoMesaViewSet)
 #router.register(r'inventario', views.InventarioViewSet)
 router.register(r'galeria', views.GaleriaViewSet)
 router.register(r'fotos', views.FotosViewSet)
+router.register(r'venta', views.VentaViewSet)
+router.register(r'detalle_venta', views.DetalleVentaViewSet)
 
 
 urlpatterns = [
@@ -119,6 +121,13 @@ urlpatterns = [
 	path("carrito_ver/", views.carrito_ver, name="carrito_ver"),
     path("carrito_eliminar/<int:id>/", views.carrito_eliminar, name="carrito_eliminar"),
 	path("vaciar_carrito/", views.vaciar_carrito, name="vaciar_carrito"),
+	path("actualizar_totales_carrito/<int:id_producto>/", views.actualizar_totales_carrito, name="actualizar_totales_carrito"),
+
+#VENTAS
+	path("crear_venta/", views.crear_venta, name="crear_venta"),
+	path("ver_ventas/", views.ver_ventas, name="ver_ventas"),
+	path("ver_detalles/<int:id>/", views.ver_detalles, name="ver_detalles"),
+
 
 
 

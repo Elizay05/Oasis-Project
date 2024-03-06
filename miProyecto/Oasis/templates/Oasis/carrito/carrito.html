@@ -14,12 +14,13 @@
                 <div class="card-body">
                     <h5 class="card-title" style="font-family: Nunito;">{{ p.producto }}</h5>
                     <div class="d-flex justify-content-between">
-                        <h6 class="card-text" style="font-family: Nunito;"><strong>{{ p.subtotal|intcomma }}</strong></h6>
-                        <input type="number" min="1" class="form-control" value="{{ p.cantidad }}" style="max-width: 100px; font-family: Nunito;">
+                        <h6 class="card-text" style="font-family: Nunito;"><strong>{{ p.subtotal|intcomma }}</strong></h6>                        
+                        <input type="hidden" name="id" id="id_{{ p.id }}" value="{{ p.id }}" />
+                        <input type="number" name="cantidad" id="cantidad_carrito_{{ p.id }}" min="1" class="form-control" value="{{ p.cantidad }}" style="max-width: 100px; font-family: Nunito;" onchange="actualizar_totales_carrito(`{% url 'actualizar_totales_carrito' p.id %}`, {{ p.id }});">
                     </div>
                 </div>
             </div>
-            <a type="button" href="javascript:remove_producto(`{% url 'carrito_eliminar' p.id %}`)" class="btn-close position-absolute top-0 end-0" style="padding: 3%; font-size: 10px;" aria-label="Close"></a>
+            <a type="button" href="javascript:carrito_eliminar(`{% url 'carrito_eliminar' p.id %}`)" class="btn-close position-absolute top-0 end-0" style="padding: 3%; font-size: 10px;" aria-label="Close"></a>
         </div>
     </div>
     {% endfor %}
@@ -32,7 +33,7 @@
     </div>
     <br>
     <div class="d-flex">
-        <a class="btn btn-success w-100" style="background-color: #fc4664; border-color: #fc4664"> Pagar</a>
+        <a class="btn btn-success w-100" href="{% url 'crear_venta' %}" style="background-color: #fc4664; border-color: #fc4664"> Pagar</a>
     </div>
 
 
