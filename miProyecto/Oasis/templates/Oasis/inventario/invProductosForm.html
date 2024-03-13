@@ -1,0 +1,69 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Agregar Producto{% endblock %}
+
+{% block Opciones %}
+  <!--<li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'inventario' %}">
+      Inicio                    
+    </a>
+  </li>-->
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'Productos' %}">
+      Productos                    
+    </a>
+  </li>
+{% endblock %}
+
+
+{% block contenedor %}
+<style>
+
+    form h1{
+        margin-left: 0%;
+    }
+
+    form label{
+        font-size: 2.2vh;
+    }
+
+
+</style>
+        <div class="container">
+            <form action="{% url 'crearProducto' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h1 style="margin-top: 0%;">Agregar Producto</h1>
+                <br>
+                <input type="hidden" name="id">
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre">
+                </div>
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Descripción</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="descripcion">
+                </div>
+                <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
+                  <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Categoria</label>
+                      <select class="form-control" name="categoria">
+                          <option value="">Seleccione</option>
+                          {% for i in data %}
+                              <option value="{{ i.id }}">{{ i.nombre }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Precio</label>
+                    <input type="float" class="form-control" id="exampleFormControlInput1" name="precio">
+                  </div>
+                </div>
+                <div class="mb-3 col-5">
+                  <label for="exampleFormControlInput1" class="form-label">Foto</label>
+                  <input type="file" class="form-control" id="exampleFormControlInput1" name="foto">
+                </div>
+                <button class="btn btn-success">Agregar Producto</button>
+            </form>
+        </div>
+{% endblock %}

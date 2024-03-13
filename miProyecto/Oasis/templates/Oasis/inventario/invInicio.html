@@ -1,23 +1,25 @@
-{% extends 'Oasis/barNav.html' %}
+<!--{% extends 'Oasis/barNav.html' %}
 {% load static %}
+{{data}}
+{{producto}}
 
 {% block titulo %}Inventario{% endblock %}
 
 {% block Opciones %}
   <li id='primeraOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'invInicio' %}">
+    <a class="nav-link text-white" href="{% url 'inventario' %}">
       Inicio                    
     </a>
   </li>
   <li id='segundaOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'invCategorias' %}">
-      Categorias                    
+    <a class="nav-link text-white" href="{% url 'Productos' %}">
+      Productos                    
     </a>
   </li>
 {% endblock %}
 
 {% block contenedor %}
-  <h1 style="margin-top: 0%;">Inventario</h1>
+  <h1 style="margin-top: 0.5em;">Inventario</h1>
   <div class="Contenido">
       <div class="conteos">
       <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -28,29 +30,32 @@
       </div>
   </div>
   <div class="Agregar">
-    <a type="button" class="btn btn-success" href="{% url 'invInicioForm' %}">Agregar Producto</a>
+    <a type="button" class="btn btn-success" href="{% url 'invForm' %}">Registrar Producto</a>
   </div>
-  <div id="contenedorTabla" class="container mt-3">            
+  <div id="contenedorTabla" class="contenedorTabla">            
       <table id="tabla" class="table table-striped">
         <thead>
           <tr>
-            <th>Nombre</th>
+            <th>ID</th>
+            <th>Producto</th>
             <th>Cantidad</th>
             <th>Fecha de Caducidad</th>
-            <th>Acciones</th>
+            <th class="acciones">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Tequila Don Julio Blanco Reserva 700ml</td>
-            <td>10 unidades</td>
-            <td>1 unidades</td>
-            <td>
-              <button type="button" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>
-              <a type="button" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
-              <a type="button" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
-            </td>
-          </tr>
+            {% for i in data %}
+              <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.producto }}</td>
+                <td>{{ i.cantidad }}</td>
+                <td>{{ i.fecha_caducidad }}</td>
+                <td>
+                  <a class="btn btn-warning" href="{% url 'invFormActualizar' i.id %}"><i class="bi bi-pencil"></i></a>
+                  <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarInventario' i.id %}')"><i class="bi bi-x-lg"></i></a>
+                </td>
+              </tr>
+            {% endfor %}
         </tbody>
       </table>
     </div>
@@ -206,5 +211,5 @@
       </div>
     </div>
 {% endblock %}
-
+  -->
 

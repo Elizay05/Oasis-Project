@@ -1,19 +1,19 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
+{{data}}
 
 {% block titulo %}Eventos{% endblock %}
 
 {% block Opciones %}
   <li id='primeraOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'eveInicio' %}">
+    <a class="nav-link text-white" href="{% url 'Eventos' %}">
       Inicio                    
     </a>
   </li>
 {% endblock %}
 
 {% block contenedor %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <h1>Eventos</h1>
+    <h1 style="margin-top: 0.5em;" >Eventos</h1>
     <div class="Contenido">
         <div class="conteos">
             <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -28,70 +28,24 @@
     </div>
 
     <div class="bloqueEvento">
-        <div class="evento">
-            <h2>Evento Amor y Amistad</h2>
-            <p>Fecha: 10 de Noviembre</p>
-            <p>Hora: 20:00 - 02:00</p>
-            <div class="botones">
-                <a href="{% url 'eveReserva' %}">
-                    <button id="verReservaciones" class="btn btn-primary">Reservas</button>
-                </a>
-                <div class="botonesCrud">
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal"><i class="bi bi-eye-fill"></i></button>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal2"><i class="bi bi-pencil"></i></button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal3"><i class="bi bi-x-lg"></i></button>
+        {% for i in data %}
+            <div class="evento">
+                <h2>{{ i.id}} - {{ i.nombre }}</h2>
+                <p>Fecha: {{ i.fecha}}</p>
+                <p>Hora de Inicio: {{ i.hora_incio }}</p>
+                <p>{{ i.descripcion }}</p>
+                <div class="botonesEvento">
+                    <a href="{% url 'eveReserva' %}">
+                        <button id="verReservaciones" class="btn btn-primary">Reservas</button>
+                    </a>
+                    <div class="botonesCrud">
+                        <a type="button" class="btn btn-warning" href="{% url 'eveFormActualizar' i.id %}"><i class="bi bi-pencil"></i></a>
+                        <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarEvento' i.id %}')"><i class="bi bi-x-lg"></i></a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="evento">
-            <h2>Evento Amor y Amistad</h2>
-            <p>Fecha: 10 de Noviembre</p>
-            <p>Hora: 20:00 - 02:00</p>
-            <div class="botones">
-                <a href="{% url 'eveReserva' %}">
-                    <button id="verReservaciones" class="btn btn-primary">Reservas</button>
-                </a>
-                <div class="botonesCrud">
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal"><i class="bi bi-eye-fill"></i></button>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal2"><i class="bi bi-pencil"></i></button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal3"><i class="bi bi-x-lg"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="evento">
-            <h2>Evento Amor y Amistad</h2>
-            <p>Fecha: 10 de Noviembre</p>
-            <p>Hora: 20:00 - 02:00</p>
-            <div class="botones">
-                <a href="{% url 'eveReserva' %}">
-                    <button id="verReservaciones" class="btn btn-primary">Reservas</button>
-                </a>
-                <div class="botonesCrud">
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal"><i class="bi bi-eye-fill"></i></button>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal2"><i class="bi bi-pencil"></i></button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal3"><i class="bi bi-x-lg"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="evento">
-            <h2>Evento Amor y Amistad</h2>
-            <p>Fecha: 10 de Noviembre</p>
-            <p>Hora: 20:00 - 02:00</p>
-            <div class="botones">
-                <a href="{% url 'eveReserva' %}">
-                    <button id="verReservaciones" class="btn btn-primary">Reservas</button>
-                </a>
-                <div class="botonesCrud">
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal"><i class="bi bi-eye-fill"></i></button>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal2"><i class="bi bi-pencil"></i></button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal3"><i class="bi bi-x-lg"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
+        {% endfor %}
+        
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -174,9 +128,4 @@
             </div>
         </div>
     </div>
-
-
-
-
-</main>
 {% endblock %}

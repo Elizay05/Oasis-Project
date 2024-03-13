@@ -7,7 +7,7 @@
     margin-bottom: 20px;
     margin-top: 5px;
     width: 450px;
-    height: 370px;
+    height: 420px;
     text-align: center;
     transition: filter 0.2s;
     overflow: hidden
@@ -32,4 +32,8 @@
 }
 .pedido-item3:hover{
     filter: grayscale(70%);
+}
+.fecha{
+    height: 10%;
+    margin-top: 11%;
 }

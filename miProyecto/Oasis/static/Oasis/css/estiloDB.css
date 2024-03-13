@@ -1,21 +1,45 @@
+  body{
+    width: 100%;
+  }
+  #contenedorTabla{
+    width: 97%;
+    height: auto;
+  }
+
   #tabla{
-      width: 1500px;
-      margin-top: 40px;
+      width: 100%;
+      margin: 0%;
   }
   #tabla thead tr th{
-      background-color: #c5d7e8;
-      line-height: 40px;
+    background-color: black;
+      line-height: 2.5em;
       text-align: center;
+      color: white;
+      font-weight: 600;
+      font-family: Nunito;
   }
   #tabla thead tr .acciones{
     width: 100%;
     text-align: center;
   }
   #tabla tbody tr td{
-      line-height: 40px;
+      line-height: 2.5em;
+      text-align: center;
+      font-family: Nunito;
+      color: #6e6e6e;
+      font-weight: 100;
   }
+
+  #tabla tbody tr .tablaProductosHistorial{
+    line-height: 2.5em;
+    text-align: start;
+    font-family: Nunito;
+    color: #6e6e6e;
+    font-weight: 100;
+}
+
   #contenedorTabla{
-      margin-left: 20px;
+      margin-left: 1.3em;
       padding: 0%;
   } 
 
@@ -41,4 +65,7 @@
     text-align: center;
     vertical-align: middle;
     font-size: 17px;
+  }
+  input .descripcion{
+    height: 50%;
   }

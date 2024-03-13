@@ -1,7 +1,7 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
 
-{% block titulo %}Editar Usuario{% endblock %}
+{% block titulo %}Agregar Usuario{% endblock %}
 
 {% block Opciones %}
   <li id='primeraOpcion' class="nav-item">
@@ -22,23 +22,11 @@
 {% endblock %}
 
 {% block contenedor %}
-<style>
 
-    form h1{
-        margin-left: 0%;
-    }
-
-    form label{
-        font-size: 2.2vh;
-    }
-
-
-</style>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 ">
         <div class="container">
-            <form>
+            <form action="{% url 'guUsuariosCrear' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <h1>Agregar Usuario</h1>
+                <h1 style="margin-top: 0.5em;" >Agregar Usuario</h1>
                 <br>
                 <input type="hidden" name="id">
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
@@ -55,28 +43,43 @@
                     <label for="exampleFormControlTextarea1" class="form-label">Email</label>
                     <input type="email" class="form-control" id="exampleFormControlInput2" name="email">
                 </div>
-                <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
-                    <div class="mb-3 col-6">
-                        <label for="exampleFormControlInput1" class="form-label">Telefono</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" name="Telefono">
-                    </div>
-                    <div class="mb-3 col-5">
-                        <label for="exampleFormControlInput1" class="form-label">fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="exampleFormControlInput1" name="fechaNacimiento">
-                    </div>
+                <div class="mb-3 col-5">
+                  <label for="exampleFormControlTextarea1" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="exampleFormControlInput2" name="clave">
+                </div>
+                <div class="mb-3 col-5">
+                  <label for="exampleFormControlTextarea1" class="form-label">Confirmar contraseña</label>
+                  <input type="password" class="form-control" id="exampleFormControlInput2" name="clave2">
                 </div>
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
-                    <div class="mb-3 col-6">
-                        <label for="exampleFormControlInput1" class="form-label">Rol</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" name="rol">
-                    </div>
-                    <div class="mb-3 col-5">
-                        <label for="exampleFormControlInput1" class="form-label">Estado</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" name="Estado">
-                    </div>
+                  <div class="mb-3 col-6">
+                    <label for="exampleFormControlInput1" class="form-label">Rol</label>
+                    <select class="form-control" name="rol">
+                        <option value="">Seleccione</option>
+                        {% for rol_value, rol_nombre in roles %}
+                            <option value="{{ rol_value }}">{{ rol_nombre }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <button class="btn btn-success">Crear Usuario</button>
+                  <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Estado</label>
+                    <select class="form-control" name="Estado">
+                      <option value="">Seleccione</option>
+                        {% for estado_value, estado_nombre in estado %}
+                            <option value="{{ estado_value }}">{{ estado_nombre}}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                  <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="exampleFormControlInput1" name="fechaNacimiento">
+                  </div>
+                  <div class="mb-3 col-5">
+                      <label for="exampleFormControlInput1" class="form-label">Foto</label>
+                      <input type="file" class="form-control" id="exampleFormControlInput1" name="foto">
+                  </div>
+                <button class="btn btn-success" type="submit">Crear Usuario</button>
             </form>
         </div>
-    </main>
 {% endblock %}

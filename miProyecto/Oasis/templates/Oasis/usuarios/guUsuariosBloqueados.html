@@ -23,8 +23,7 @@
 
 
 {% block contenedor %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <h1>Usuarios Bloqueados</h1>
+    <h1 style="margin-top: 0.5em;">Usuarios Bloqueados</h1>
     <div class="Contenido">
         <div class="conteos">
         <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -34,7 +33,7 @@
             <button type="submit">Buscar</button>
           </div>
     </div>
-    <div id="contenedorTabla" class="container mt-3">            
+    <div id="contenedorTabla" class="contenedorTabla">            
         <table id="tabla" class="table table-striped">
           <thead>
             <tr>
@@ -186,6 +185,5 @@
           </div>
         </div>
       </div>
-</main>
 {% endblock %}
 

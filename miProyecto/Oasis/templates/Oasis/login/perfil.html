@@ -1,0 +1,132 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+{% block titulo %}Mi Perfil{% endblock %}
+
+{% block Opciones %}
+    <li id='primeraOpcion' class="nav-item lateralOpciones">
+        <a class="nav-link text-white" href="{% url 'ver_perfil' %}">
+          Inicio                    
+        </a>
+    </li>
+    {% if user.rol == 4 %}
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Historial de pedidos                   
+            </a>
+        </li>
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="#">
+            Reservas                    
+            </a>
+        </li>
+    {% else %}
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Historial de Ventas                   
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block contenedor %}
+    <div class="card mb-3 mt-5 w-100 ml-0 mr-0 mx-auto" style="max-width: 540px; margin-top: 2.5em;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{ data.foto.url }}" class="img-fluid rounded-start" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ data.nombre }}</h5>
+          <br>
+          <p class="card-text">
+            <strong>Correo:</strong> {{ data.email }} <br>
+            <strong>Cedula:</strong> {{ data.cedula }} <br>
+            <strong>Fecha Nacimiento:</strong> {{ data.fecha_nacimiento }}
+          </p>
+          <p class="card-text"><small class="text-body-secondary">{{ data.get_rol_display }}</small></p>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 3%; margin-right: 3%;">
+                <a class="card-link" href="{% url 'cc_formulario' %}">Cambiar contraseña</a>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editarPerfil"><i class="bi bi-pencil"></i></button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editarPerfil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Perfil</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'editar_perfil' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+                <input type="hidden" name="id" value="{{ data.id }}">
+                <div class="mb-2d-flex flex-row justify-content-between align-items-center">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{ data.nombre }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Cedula</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="cedula" value="{{ data.cedula }}" readonly>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="exampleFormControlInput2" name="email" value="{{ data.email }}">
+                </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Rol</label>
+                    <select class="form-control" name="rol">
+                      <option value="">Seleccione</option>
+                        {% for rol_value, rol_nombre in roles %}
+                          <option value="{{ rol_value }}" {% if data.rol == rol_value %}selected{% endif %}>{{ rol_nombre }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Estado</label>
+                    <select class="form-control" name="Estado">
+                      <option value="">Seleccione</option>
+                        {% for estado_value, estado_nombre in estado %}
+                        <option value="{{ estado_value }}" {% if data.estado == estado_value %}selected{% endif %}>{{ estado_nombre }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="exampleFormControlInput1" name="fechaNacimiento" value="{{ data.fecha_nacimiento|date:'Y-m-d' }}">
+                  </div>
+                  <div class="mb-3">
+                      <label for="exampleFormControlInput1" class="form-label">Foto Actual</label>
+                      {% if data.foto %}
+                          <input type="text" class="form-control" value="{{ data.foto.url }}" name="foto_actual" readonly>
+                          <div class="card" style="width: 18rem;">
+                            {% load static %}
+                              <img src="{{ data.foto.url }}" class="card-img-top" alt="foto_producto" style="max-height: 300px;">
+                          </div>
+                      {% else %}
+                          <p>No hay imagen asociada</p>
+                      {% endif %}
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Actualizar Foto</label>
+                    <input type="file" class="form-control" id="exampleFormControlInput1" name="foto_nueva">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-success">Guardar cambios</button>
+            </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

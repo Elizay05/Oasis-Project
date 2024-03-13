@@ -5,7 +5,7 @@
 
 {% block Opciones %}
   <li id='primeraOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'eveInicio' %}">
+    <a class="nav-link text-white" href="{% url 'Eventos' %}">
       Inicio                    
     </a>
   </li>
@@ -24,33 +24,35 @@
 
 
 </style>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 ">
         <div class="container">
-            <form>
+            <form action="{% url 'crearEvento' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <h1>Agregar Evento</h1>
+                <h1 style="margin-top: 0.5em;" >Agregar Evento</h1>
                 <br>
                 <input type="hidden" name="id">
-                <div class="mb-3 col-6">
+                <div class="mb-3 col-5">
                     <label for="exampleFormControlInput1" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" name="nombreEvento">
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre">
                 </div>
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
-                    <div class="mb-3 col-6">
+                    <div class="mb-3 col-5">
                         <label for="exampleFormControlInput1" class="form-label">Fecha</label>
-                        <input type="date" class="form-control" id="exampleFormControlInput1" name="fechaEvento">
+                        <input type="date" class="form-control" id="exampleFormControlInput1" name="fecha">
                     </div>
                     <div class="mb-3 col-5">
                         <label for="exampleFormControlInput1" class="form-label">Hora Inicio</label>
-                        <input type="time" class="form-control" id="exampleFormControlInput1" name="horaInicio">
+                        <input type="time" class="form-control" id="exampleFormControlInput1" name="hora_incio">
                     </div>
                 </div>
-                <div class="mb-3 col-6">
+                <div class="mb-3 col-5">
                     <label for="exampleFormControlInput1" class="form-label">Descripción</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" name="descripcionEvento">
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="descripcion">
+                </div>
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Flyer</label>
+                    <input type="file" accept="image/jpeg, image/png" class="form-control" id="exampleFormControlInput1" name="foto">
                 </div>
                 <button class="btn btn-success">Crear Evento</button>
             </form>
         </div>
-    </main>
 {% endblock %}

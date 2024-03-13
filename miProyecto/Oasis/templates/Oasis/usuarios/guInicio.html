@@ -4,17 +4,17 @@
 {% block titulo %}Usuarios{% endblock %}
 
 {% block Opciones %}
-  <li id='primeraOpcion' class="nav-item">
+  <li id='primeraOpcion' class="nav-item lateralOpciones">
     <a class="nav-link text-white" href="{% url 'guInicio' %}">
       Inicio                    
     </a>
   </li>
-  <li id='segundaOpcion' class="nav-item">
+  <li id='segundaOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="{% url 'guUsuariosBloqueados' %}">
       Usuarios Bloqueados                    
     </a>
   </li>
-  <li id='terceraOpcion' class="nav-item">
+  <li id='terceraOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="#">
       Auditoria                    
     </a>
@@ -22,8 +22,7 @@
 {% endblock %}
 
 {% block contenedor %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-  <h1>Usuarios</h1>
+  <h1 style="margin-top: 0.5em;">Usuarios</h1>
   <div class="Contenido">
       <div class="conteos">
       <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -42,30 +41,35 @@
   <div class="Agregar">
     <a type="button" class="btn btn-success" href="{% url 'guInicioForm' %}">Agregar Usuario</a>
   </div>
-  <div id="contenedorTabla" class="container mt-3 contenedorTabla">            
+  <div id="contenedorTabla" class="contenedorTabla">            
       <table id="tabla" class="table table-striped">
         <thead>
           <tr>
             <th>Nombre de usuario</th>
             <th>Email</th>
             <th>Rol</th>
-            <th>Fecha de Creación</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Cédula</th>
+            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
+          {% for c in data %}
           <tr>
-            <td>John</td>
-            <td>john@example.com</td>
-            <td>Administrador</td>
-            <td>01/05/2023</td>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.email }}</td>
+            <td>{{ c.get_rol_display }}</td>
+            <td>{{ c.fecha_nacimiento}}</td>
+            <td>{{ c.cedula}}</td>
+            <td>{{ c.get_estado_display }}</td>
             <td>
-              <button type="button" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>
-              <a type="button" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
-              <a type="button" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
+              <a type="button" class="btn btn-warning" href="{% url 'guUsuariosFormEditar' c.id %}"><i class="bi bi-pencil"></i></a>
+              <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'guUsuariosEliminados' c.id %}')"><i class="bi bi-x-lg"></i></a>
             </td>
           </tr>
         </tbody>
+        {% endfor %}
       </table>
     </div>
     <div class="modal" id="myModal">
@@ -187,6 +191,5 @@
         </div>
       </div>
     </div>
-</main>
 {% endblock %}
 
