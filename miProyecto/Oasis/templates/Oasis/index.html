@@ -5,32 +5,32 @@
 
 {% block opciones %}
 <li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'guInicio' %}" role="button">
+  <a class="nav-item opcionesNav" href="{% url 'guInicio' %}" role="button">
     Seguridad
   </a>
 </li>
 <li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'inventario' %}" role="button">
+  <a class="opcionesNav" href="{% url 'inventario' %}" role="button">
     Inventario
   </a>
 </li>
 <li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'peInicio' %}" role="button">
+  <a class="opcionesNav" href="{% url 'peInicio' %}" role="button">
     Pedidos
   </a>
 </li>
 <li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'Eventos' %}" role="button">
+  <a class="opcionesNav" href="{% url 'Eventos' %}" role="button">
     Eventos
   </a>
 </li>
 <li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'meInicio' %}" role="button">
+  <a class="opcionesNav" href="{% url 'Menu' %}" role="button">
     Menú
   </a>
 </li>
 <li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'gaInicio' %}" role="button">
+  <a class="opcionesNav" href="{% url 'gaInicio' %}" role="button">
     Galería
   </a>
 </li>
@@ -38,43 +38,75 @@
 
 
 {% block botones %}
-<li class="nav-item">
-  <button class="btn1" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin">
-    Iniciar Sesión
-  </button>
-
-  <button class="btn2" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin">Reservar
-    Ahora
-  </button>
-</li>
+  {% if data %}
+    {% if data.rol == 4 %}
+      <button class="btn2" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin">Reservar Ahora</button>
+      <div class="dropdown dropstart">
+        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+          <img src="{{ data.foto.url }}" alt="LogoUsuario" width="45px" height="45px" class="rounded-circle">
+        </button>
+        <ul class="dropdown-menu cerrar">
+          {% if data.rol == 4 %}
+            <li><a class="dropdown-item" href="{% url 'ver_perfil' %}">Perfil</a></li>
+          {% endif %}
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Salir</a></li>
+        </ul>
+      </div>
+    {% else %}
+    <button class="btn2" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin" hidden>Reservar Ahora</button>
+      <div class="dropdown dropstart">
+        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+          <img src="{{ data.foto.url }}" alt="LogoUsuario" width="45px" height="45px" class="rounded-circle">
+        </button>
+        <ul class="dropdown-menu cerrar">
+          {% if data.rol == 1 %}
+            <li><a class="dropdown-item" href="{% url 'ver_perfil' %}">Administrador</a></li>
+          {% elif data.rol == 2 %}
+            <li><a class="dropdown-item" href="{% url 'ver_perfil' %}">Bartender</a></li>
+          {% elif data.rol == 3 %}
+            <li><a class="dropdown-item" href="{% url 'ver_perfil' %}">Mesero</a></li>
+          {% endif %}
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Salir</a></li>
+        </ul>
+      </div>
+    {% endif %}
+  {% else %}
+    <button class="btn1" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin">Iniciar Sesión</button>
+    <button class="btn2" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin">Reservar Ahora</button>
+  {% endif %}
 {% endblock %}
 
 {% block lateral %}
-<div class="offcanvas offcanvas-end bg-dark" id="pantallaLogin">
-  <div class="offcanvas-header cabecera">
-    <p class="offcanvas-title titulo">Iniciar Sesión</p>
-    <button id="botonCerrar" type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body text-white cuerpo">
-    <p>Ingresa con tu email y contraseña.</p>
-    <div class="input-container inputEdit1">
-      <input type="text" required="">
-      <label for="input" class="label">Escribe tu correo electrónico</label>
-      <div class="underline"></div>
+  <div class="offcanvas offcanvas-end bg-dark" id="pantallaLogin">
+    <div class="offcanvas-header cabecera">
+      <p class="offcanvas-title titulo">Iniciar Sesión</p>
+      <button id="botonCerrar" type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
-    <div class="input-container inputEdit2">
-      <input type="password" required="">
-      <label for="input" class="label">Escribe tu contraseña</label>
-      <div class="underline"></div>
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <div class="offcanvas-body text-white cuerpo">
+        <p>Ingresa con tu email y contraseña.</p>
+        <div class="input-container inputEdit1">
+          <input type="text" required="" name="correo">
+          <label for="input" class="label">Escribe tu correo electrónico</label>
+          <div class="underline"></div>
+        </div>
+        <div class="input-container inputEdit2">
+          <input type="password" required="" name="clave">
+          <label for="input" class="label">Escribe tu contraseña</label>
+          <div class="underline"></div>
+        </div>
+        <a class="olvidarContraseña">Olvidé mi contraseña</a>
+        <button type="submit" class="btn-normal">Entrar</button>
+        <p class="p1">¿No tiene una cuenta?</p>
+        <a href="{% url 'registro' %}">
+          <button class="btn-normal2">Registrarse</button>
+        </a>
+      </form>
     </div>
-    <a class="olvidarContraseña">Olvidé mi contraseña</a>
-    <button class="btn-normal">Entrar</button>
-    <p class="p1">¿No tiene una cuenta?</p>
-    <a href="{% url 'registro' %}">
-      <button class="btn-normal2">Registrarse</button>
-    </a>
   </div>
-</div>
 {% endblock %}
 
 {% block contenedor %}

@@ -6,10 +6,14 @@ from .models import *
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','cedula','fecha_nacimiento','email','telefono','rol','estado']
+    list_display = ['id','nombre','cedula','fecha_nacimiento','email','clave','rol','estado','foto']
     search_fields = ['id','nombre','cedula','email','telefono','rol','estado']
     list_filter = ['rol']
     list_editable = ['estado']
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+
 
 @admin.register(Evento)
 class EventoAdmin(admin.ModelAdmin):
@@ -40,19 +44,26 @@ class ReservaAdmin(admin.ModelAdmin):
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion']
+    list_display = ['id','nombre','descripcion', 'foto']
     search_fields = ['nombre']
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion','foto','categoria', 'precio']
-    search_fields = ['id','nombre','categoria', 'precio']
-    list_filter = ['categoria']
+    list_display = ['id','nombre','descripcion', 'precio','ver_foto']
+    search_fields = ['id','nombre', 'precio']
     list_editable = ['precio']
     
 
     def ver_foto(self, obj):
         return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+
+    def ver_foto(self, obj):
+        if obj.foto:
+            return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='15%'></a>")
+        
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):

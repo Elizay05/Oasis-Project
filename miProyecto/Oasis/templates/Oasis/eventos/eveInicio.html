@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block contenedor %}
-    <h1>Eventos</h1>
+    <h1 style="margin-top: 0.5em;" >Eventos</h1>
     <div class="Contenido">
         <div class="conteos">
             <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -34,7 +34,7 @@
                 <p>Fecha: {{ i.fecha}}</p>
                 <p>Hora de Inicio: {{ i.hora_incio }}</p>
                 <p>{{ i.descripcion }}</p>
-                <div class="botones">
+                <div class="botonesEvento">
                     <a href="{% url 'eveReserva' %}">
                         <button id="verReservaciones" class="btn btn-primary">Reservas</button>
                     </a>

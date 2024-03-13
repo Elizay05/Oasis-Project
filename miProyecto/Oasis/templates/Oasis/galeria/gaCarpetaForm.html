@@ -12,22 +12,10 @@
 {% endblock %}
 
 {% block contenedor %}
-<style>
-
-    form h1{
-        margin-left: 0%;
-    }
-
-    form label{
-        font-size: 2.2vh;
-    }
-
-
-</style>
         <div class="container">
-            <form action="{% url 'crearCarpeta' %}" method="post">
+            <form action="{% url 'crearCarpeta' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <h1>Agregar Carpeta</h1>
+                <h1 style="margin-top: 0.5em;" >Agregar Carpeta</h1>
                 <br>
                 <input type="hidden" name="id">
                 <div class="mb-3 col-6">
@@ -44,7 +32,7 @@
                     <label for="exampleFormControlInput1" class="form-label">Imagen Portada</label>
                     <input type="file" accept="image/jpeg, image/png" class="form-control" id="exampleFormControlInput1" name="foto">
                 </div>
-                <button class="btn btn-success">Crear Evento</button>
+                <button class="btn btn-success">Crear Carpeta</button>
             </form>
         </div>
 {% endblock %}

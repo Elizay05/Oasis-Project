@@ -12,14 +12,14 @@
     </a>
   </li>
   <li id='segundaOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'invCategorias' %}">
-      Categorias                    
+    <a class="nav-link text-white" href="{% url 'Productos' %}">
+      Productos                    
     </a>
   </li>
 {% endblock %}
 
 {% block contenedor %}
-  <h1 style="margin-top: 0%;">Inventario</h1>
+  <h1 style="margin-top: 0.5em;">Inventario</h1>
   <div class="Contenido">
       <div class="conteos">
       <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -30,9 +30,13 @@
       </div>
   </div>
   <div class="Agregar">
+<<<<<<< HEAD
     <a type="button" class="btn btn-success" href="{% url 'invForm' %}">Agregar Producto</a>
+=======
+    <a type="button" class="btn btn-success" href="{% url 'invForm' %}">Registrar Producto</a>
+>>>>>>> main
   </div>
-  <div id="contenedorTabla" class="container mt-3">            
+  <div id="contenedorTabla" class="contenedorTabla">            
       <table id="tabla" class="table table-striped">
         <thead>
           <tr>

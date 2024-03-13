@@ -24,8 +24,7 @@
 
 
 {% block contenedor %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-  <h1>Historial de Pedidos</h1>
+  <h1 style="margin-top: 0.5em;" >Historial de Pedidos</h1>
   <div class="Contenido">
       <div class="conteos">
       <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -35,7 +34,7 @@
           <button id="searchButton" type="submit">Buscar</button>
       </div>
   </div>
-  <div id="contenedorTabla" class="container mt-3">            
+  <div id="contenedorTabla" class="contenedorTabla">            
       <table id="tabla" class="table table-striped">
         <thead>
           <tr>
@@ -53,7 +52,7 @@
             <td>Mesa 1</td>
             <td>Juan Pérez</td>
             <td>1127653204</td>
-            <td>
+            <td class="tablaProductosHistorial">
               <ul>
                 <li>x1 Tequila Don Julio Blanco Reserva 700ml</li>
                 <li>x3 Martini</li>
@@ -67,7 +66,7 @@
             <td>Mesa 7</td>
             <td>Daniela Medina</td>
             <td>1450987365</td>
-            <td>
+            <td class="tablaProductosHistorial">
               <ul>
                 <li>x3 Tacos</li>
                 <li>x2 Moscow Mule</li>
@@ -82,7 +81,7 @@
             <td>Mesa 14</td>
             <td>Yeison Grisales</td>
             <td>1468942301</td>
-            <td>
+            <td class="tablaProductosHistorial">
               <ul>
                 <li>x1 Litro Ron</li>
                 <li>x5 Michelada</li>
@@ -95,5 +94,4 @@
         </tbody>
       </table>
     </div>
-</main>
 {% endblock %}

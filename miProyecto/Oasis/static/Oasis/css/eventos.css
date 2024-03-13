@@ -38,12 +38,13 @@
   #verReservaciones:hover {
       background-color: #0004d8;
   }
-  .botones{
+  .botonesEvento{
       display: flex;
       justify-content: space-between;
+      width: 100%;
   }
   .botonesCrud{
       display: flex;
       justify-content: space-between;
-      width: 170px;
+      width: 20%;
   }

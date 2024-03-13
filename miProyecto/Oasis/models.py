@@ -3,19 +3,23 @@ from django.db import models
 # Create your models here.
 class Usuario(models.Model):
     nombre = models.CharField(max_length=150)
+    email = models.EmailField(unique=True)
+    clave = models.CharField(max_length=254)
     cedula = models.CharField(max_length=10, unique=True)
     fecha_nacimiento = models.DateField()
-    email = models.EmailField(unique=True)
-    telefono = models.CharField(max_length=10)
-    rol = models.CharField(max_length=100)
-    ACTIVO = 'Activo'
-    BLOQUEADO = 'Bloqueado'
-
-    ESTADO_CHOICES = (
-        (ACTIVO, 'Activo'),
-        (BLOQUEADO, 'Bloqueado'),
+    ROLES = (
+        (1, "Administrador"),
+        (2, "Bartender"),
+        (3, "Mesero"),
+        (4, "Cliente"),
     )
-    estado = models.CharField(max_length=9, choices=ESTADO_CHOICES)
+    rol = models.IntegerField(choices=ROLES, default=4)
+    ESTADO = (
+        (1, "Activo"),
+        (2, "Bloqueado"),
+    )
+    estado = models.IntegerField(choices=ESTADO, default=1)
+    foto = models.ImageField(upload_to="Img_usuarios/", default="Img_usuarios/default.png")
 
     def __str__(self):
         return self.nombre
@@ -25,7 +29,7 @@ class Evento(models.Model):
     fecha = models.DateField()
     hora_incio = models.TimeField() 
     descripcion = models.TextField()
-    foto = models.ImageField(upload_to="fotos/", default= 'No_Image')
+    foto = models.ImageField(upload_to="Img_eventos/", default="Img_eventos/default.png")
 
     def __str__(self):
         return self.nombre
@@ -59,6 +63,7 @@ class Reserva(models.Model):
 class Categoria(models.Model):
     nombre = models.CharField(max_length=150)
     descripcion = models.TextField()
+    foto = models.ImageField(upload_to="Img_categorias/", default="Img_categorias/default.png")
 
     def __str__(self):
         return self.nombre
@@ -66,7 +71,7 @@ class Categoria(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=150)
     descripcion = models.TextField()
-    foto = models.ImageField(upload_to="fotos/", default="No_image")
+    foto = models.ImageField(upload_to="Img_productos/", default="Img_productos/default.png")
     categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -113,9 +118,9 @@ class Inventario(models.Model):
 class Galeria(models.Model):
     nombre = models.CharField(max_length=254)
     fecha = models.DateField()
-    foto = models.ImageField(upload_to="fotos/", default= 'No_Image')
+    foto = models.ImageField(upload_to="Img_carpeta/", default="Img_carpeta/default.png")
 
 
 class Fotos(models.Model):
-    foto = models.ImageField(upload_to="fotos/", default= 'No_Image')
+    foto = models.ImageField(upload_to="Img_galeria/", default="Img_galeria/default.png")
     carpeta = models.ForeignKey(Galeria, on_delete=models.DO_NOTHING)

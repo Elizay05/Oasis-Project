@@ -17,32 +17,37 @@
 <body>
   <header>
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-      <div class="container-fluid"> 
-          <img src="{% static 'Oasis/img/logoOasisBlanco.png' %}" alt="logo_oasis" width="15%">
+      <div class="container-fluid">
+        <a id="enlace_logo" href="{% url 'index' %}"><img src="{% static 'Oasis/img/logoOasisBlanco.png' %}" alt="logo_oasis"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse " id="navbarSupportedContent">
-          <div id="pru">
-            
-              <ul class="navbar-nav mb-2 mb-lg-0 navIzquierda">
-                {% block opciones %}
-                {% endblock %}
-              </ul>
-              <ul class="navbar-nav mb-2 mb-lg-0 botones">
-                {% block botones %}
-                {% endblock %}
-              </ul>
-           
+          <ul class="navbar-nav d-flex justify-content-around align-items-center mx-auto mb-2 mb-lg-0" id="Opciones">
+            {% block opciones %}
+            {% endblock %}
+          </ul>
+          <div class="d-flex" id="botones">
+            {% block botones %}
+            {% endblock %}
           </div>
-      </div>
-      </div>
+        </div>
     </nav>
     {% block lateral %}
     {% endblock %}
   </header>
+  {% if messages %}
+  {% for message in messages %}
+  <div
+    class="alert alert-{% if message.tags and message.tags != 'error' %}{{ message.tags }}{% else %}danger{% endif %} alert-dismissible fade show"
+    role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
   {% block contenedor %}
   {% endblock %}
 </body>
+
 </html>
-      
