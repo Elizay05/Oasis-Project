@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block contenedor %}
-  <h1 style="margin-top: 0%;">Productos</h1>
+  <h1 style="margin-top: 0.5em;">Productos</h1>
   <div class="Contenido">
       <div class="conteos">
       <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
@@ -32,7 +32,7 @@
   <div class="Agregar">
     <a type="button" class="btn btn-success" href="{% url 'invProductosForm' %}">Agregar Producto</a>
   </div>
-  <div id="contenedorTabla" class="container mt-3">            
+  <div id="contenedorTabla" class="contenedorTabla">            
       <table id="tabla" class="table table-striped">
         <thead>
           <tr>
@@ -41,8 +41,8 @@
             <th>Descripción</th>
             <th>Categoria</th>
             <th>Precio</th>
-            <th>Foto</th>
-            <th class="acciones">Acciones</th>
+            <!--<th>Foto</th>-->
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -53,9 +53,9 @@
                     <td>{{ i.descripcion }}</td>
                     <td>{{ i.categoria }}</td>
                     <td>${{ i.precio|intcomma }}</td>
-                    <td>
-                      <img src="{{ i.foto.url }}" class="card-img-top" alt="foto_producto" style="max-height: 80px;">
-                    </td>
+                    <!--<td>
+                      <img src="{{ i.foto.url }}" class="card-img-top" alt="foto_producto" style="max-height: 100px;">
+                    </td>-->
                     <td>
                     <a class="btn btn-warning" href="{% url 'invFormProductosActualizar' i.id %}"><i class="bi bi-pencil"></i></a>
                     <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarProducto' i.id %}')"><i class="bi bi-x-lg"></i></a>
