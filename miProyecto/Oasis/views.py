@@ -780,6 +780,27 @@ def front_productos(request):
     
     contexto = {"data": user,"productos": productos, "categorias": categorias}
     return render(request, "Oasis/front_productos/front_productos.html", contexto)
+
+
+def front_eventos(request):
+    logueo = request.session.get("logueo", False)
+    user = None
+    if logueo:
+        user = Usuario.objects.get(pk = logueo["id"])
+    eventos = Evento.objects.all()
+
+    contexto = {"data": user, "eventos": eventos}
+    return render(request, "Oasis/front_eventos/front_eventos.html", contexto)
+
+def front_eventos_info(request, id):
+    logueo = request.session.get("logueo", False)
+    user = None
+    if logueo:
+        user = Usuario.objects.get(pk = logueo["id"])
+    evento = Evento.objects.get(pk=id)
+
+    contexto = {"data": user, "evento": evento}
+    return render(request, "Oasis/front_eventos/front_eventos_info.html", contexto)
     
 
 def carrito_add(request):

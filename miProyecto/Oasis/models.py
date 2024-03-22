@@ -29,6 +29,7 @@ class Evento(models.Model):
     fecha = models.DateField()
     hora_incio = models.TimeField() 
     descripcion = models.TextField()
+    aforo = models.IntegerField(default=500)
     foto = models.ImageField(upload_to="Img_eventos/", default="Img_eventos/default.png")
 
     def __str__(self):

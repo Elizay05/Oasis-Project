@@ -115,6 +115,10 @@ urlpatterns = [
 #   FRONT PRODUCTOS
     path('front_productos/', views.front_productos, name='front_productos'),
 
+#   FRONT EVENTOS
+    path('front_eventos/', views.front_eventos, name='front_eventos'),
+    path('front_eventos_info/<int:id>/', views.front_eventos_info, name='front_eventos_info'),
+
 
 # CARRITO DE COMPRA
 	path("carrito_add/", views.carrito_add, name="carrito_add"),
