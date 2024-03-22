@@ -132,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 FORMAT_MODULE_PATH = [
     "Oasis.formats"
 ]
+
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'tienda.utils.custom_exception_handler'
 }
-    

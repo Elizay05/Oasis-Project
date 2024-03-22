@@ -765,23 +765,21 @@ def gaFotos(request):
 
 def front_productos(request):
     logueo = request.session.get("logueo", False)
-    user = Usuario.objects.get(pk=logueo["id"])
-
+    user = None
     if logueo:
-        categorias = Categoria.objects.all()
+        user = Usuario.objects.get(pk = logueo["id"])
+    categorias = Categoria.objects.all()
 
-        cat = request.GET.get("cat")
+    cat = request.GET.get("cat")
 
-        if cat == None:
-            productos = Producto.objects.all()
-        else:
-            c = Categoria.objects.get(pk=cat)
-            productos = Producto.objects.filter(categoria=c)
-        
-        contexto = {"data": user, "productos": productos, "categorias": categorias}
-        return render(request, "Oasis/front_productos/front_productos.html", contexto)
+    if cat == None:
+        productos = Producto.objects.all()
     else:
-        return redirect("inicio")
+        c = Categoria.objects.get(pk=cat)
+        productos = Producto.objects.filter(categoria=c)
+    
+    contexto = {"data": user,"productos": productos, "categorias": categorias}
+    return render(request, "Oasis/front_productos/front_productos.html", contexto)
     
 
 def carrito_add(request):
