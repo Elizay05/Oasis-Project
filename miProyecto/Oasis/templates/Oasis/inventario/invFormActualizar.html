@@ -10,19 +10,43 @@
     </a>
   </li>
   <li id='segundaOpcion' class="nav-item">
+<<<<<<< HEAD
+    <a class="nav-link text-white" href="{% url 'invCategorias' %}">
+      Categorias                    
+=======
     <a class="nav-link text-white" href="{% url 'Productos' %}">
       Productos                    
+>>>>>>> main
     </a>
   </li>
 {% endblock %}
 
 
 {% block contenedor %}
+<<<<<<< HEAD
+<style>
+
+    form h1{
+        margin-left: 0%;
+    }
+
+    form label{
+        font-size: 2.2vh;
+    }
+
+
+</style>
+        <div class="container">
+            <form action="{% url 'actualizarInventario' %}" method="post">
+                {% csrf_token %}
+                <h1 style="margin-top: 0%;" >Actualizar Producto</h1>
+=======
 
         <div class="container">
             <form action="{% url 'actualizarInventario' %}" method="post">
                 {% csrf_token %}
                 <h1 style="margin-top: 0.5em;">Actualizar Inventario</h1>
+>>>>>>> main
                 <br>
                 <input type="hidden" name="id" value="{{data.id}}">
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">

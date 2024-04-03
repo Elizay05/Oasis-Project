@@ -55,6 +55,10 @@ class ProductoAdmin(admin.ModelAdmin):
     list_display = ['id','nombre','descripcion', 'precio','ver_foto']
     search_fields = ['id','nombre', 'precio']
     list_editable = ['precio']
+    
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
 
     def ver_foto(self, obj):
         if obj.foto:
