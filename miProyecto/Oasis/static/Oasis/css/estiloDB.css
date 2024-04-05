@@ -18,10 +18,6 @@
       font-weight: 600;
       font-family: Nunito;
   }
-  #tabla thead tr .acciones{
-    width: 100%;
-    text-align: center;
-  }
   #tabla tbody tr td{
       line-height: 2.5em;
       text-align: center;

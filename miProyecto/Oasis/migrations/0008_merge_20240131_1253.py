@@ -6,7 +6,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Oasis', '0002_usuario_clave'),
         ('Oasis', '0007_alter_categoria_foto_alter_evento_foto_and_more'),
     ]
 

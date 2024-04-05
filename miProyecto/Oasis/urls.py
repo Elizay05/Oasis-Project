@@ -15,9 +15,11 @@ router.register(r'categoria', views.CategoriaViewSet)
 router.register(r'producto', views.ProductoViewSet)
 router.register(r'pedido', views.PedidoViewSet)
 router.register(r'pedido_mesa', views.PedidoMesaViewSet)
-router.register(r'inventario', views.InventarioViewSet)
+#router.register(r'inventario', views.InventarioViewSet)
 router.register(r'galeria', views.GaleriaViewSet)
 router.register(r'fotos', views.FotosViewSet)
+router.register(r'venta', views.VentaViewSet)
+router.register(r'detalle_venta', views.DetalleVentaViewSet)
 
 
 urlpatterns = [
@@ -57,12 +59,12 @@ urlpatterns = [
 
 
     #CRUD INVENTARIO
-    path('Gestion_Inventario/', views.invInicio, name='inventario'),
-    path('Agregar_Producto/', views.invForm, name='invForm'),
-    path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
-    path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
-    path('Inventario_Actualizar/<int:id>', views.invFormActualizar, name='invFormActualizar'),
-    path('Actualizar_Inventario/', views.actualizarInventario, name='actualizarInventario'),
+    #path('Gestion_Inventario/', views.invInicio, name='inventario'),
+    #path('Agregar_Producto/', views.invForm, name='invForm'),
+    #path('Crear_Inventario/', views.crearInventario, name='crearInventario'),
+    #path('Eliminar_Inventario/<int:id>', views.eliminarInventario, name='eliminarInventario'),
+    #path('Inventario_Actualizar/<int:id>', views.invFormActualizar, name='invFormActualizar'),
+    #path('Actualizar_Inventario/', views.actualizarInventario, name='actualizarInventario'),
 
 
     #CRUD PRODUCTOS
@@ -107,6 +109,30 @@ urlpatterns = [
     path('Eliminar_Carpeta/<int:id>', views.eliminarCarpeta, name='eliminarCarpeta'),
     path('Actualizar_Carpeta_Form/<int:id>', views.gaCarpetaFormActualizar, name='gaCarpetaFormActualizar'),
     path('Actualizar_Carpeta/', views.actualizarCarpeta, name='actualizarCarpeta'),
+
+
+
+#   FRONT PRODUCTOS
+    path('front_productos/', views.front_productos, name='front_productos'),
+
+#   FRONT EVENTOS
+    path('front_eventos/', views.front_eventos, name='front_eventos'),
+    path('front_eventos_info/<int:id>/', views.front_eventos_info, name='front_eventos_info'),
+
+
+# CARRITO DE COMPRA
+	path("carrito_add/", views.carrito_add, name="carrito_add"),
+	path("carrito_ver/", views.carrito_ver, name="carrito_ver"),
+    path("carrito_eliminar/<int:id>/", views.carrito_eliminar, name="carrito_eliminar"),
+	path("vaciar_carrito/", views.vaciar_carrito, name="vaciar_carrito"),
+	path("actualizar_totales_carrito/<int:id_producto>/", views.actualizar_totales_carrito, name="actualizar_totales_carrito"),
+
+#VENTAS
+	path("crear_venta/", views.crear_venta, name="crear_venta"),
+	path("ver_ventas/", views.ver_ventas, name="ver_ventas"),
+	path("ver_detalles/<int:id>/", views.ver_detalles, name="ver_detalles"),
+
+
 
 
 ]   
