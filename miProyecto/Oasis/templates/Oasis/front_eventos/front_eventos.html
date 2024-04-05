@@ -20,7 +20,7 @@
             {% for i in eventos %}
                 <div class="card bg-transparent text-light" style="width: 30rem; margin-right: 3%; border: none;">
                     <a style="text-decoration: none;" href="{% url 'front_eventos_info' i.id %}">
-                        <img src="{{ i.foto.url }}" class="card-img-top rounded" alt="Evento" style="height: 270px; width: 100%;padding: 16px;"> 
+                        <img src="{{ i.foto.url }}" class="card-img-top" alt="Evento" style="height: 270px; width: 100%;padding: 16px; border-radius: 30px;"> 
                         <div class="card-body">
                             <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>{{ i.nombre }}</strong></h5>
                             <h6 class="card-text" style="font-family: Quicksand; color: white;"><strong>Fecha: </strong>{{ i.fecha }}</h6>
