@@ -52,7 +52,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion', 'precio','ver_foto']
+    list_display = ['id','nombre','descripcion','inventario','precio','ver_foto']
     search_fields = ['id','nombre', 'precio']
     list_editable = ['precio']
     
@@ -78,12 +78,12 @@ class PedidoMesaAdmin(admin.ModelAdmin):
     search_fields = ['id','mesa','producto','cantidad']
     list_filter = ['mesa']
 
-@admin.register(Inventario)
+"""@admin.register(Inventario)
 class InventarioAdmin(admin.ModelAdmin):
     list_display = ['id','producto','cantidad','fecha_caducidad']
     search_fields = ['id','producto','cantidad','fecha_caducidad']
     list_filter = ['fecha_caducidad']
-    list_editable = ['cantidad','fecha_caducidad']
+    list_editable = ['cantidad','fecha_caducidad']"""
 
 
 @admin.register(Galeria)
@@ -101,3 +101,15 @@ class FotosAdmin(admin.ModelAdmin):
 
     def ver_foto(self, obj):
         return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+
+
+@admin.register(Venta)
+class VentaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'fecha_venta', 'usuario']
+
+@admin.register(DetalleVenta)
+class DetalleVentaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'venta', 'producto', 'cantidad', 'precio_historico', 'subtotal']
+
+    def subtotal(self, obj):
+        return f"{obj.cantidad * obj.precio_historico}"

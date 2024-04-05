@@ -1,0 +1,67 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block titulo %}Mi Perfil{% endblock %}
+
+{% block Opciones %}
+    <li id='primeraOpcion' class="nav-item lateralOpciones">
+        <a class="nav-link text-white" href="{% url 'ver_perfil' %}">
+          Inicio                    
+        </a>
+    </li>
+    {% if user.rol == 4 %}
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Historial de pedidos                   
+            </a>
+        </li>
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Reservas                    
+            </a>
+        </li>
+    {% else %}
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="#">
+            Historial de Ventas                   
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+
+{% block contenedor %}
+    <h1 style="margin-top: 0.5em;">Detalles del Pedido</h1>
+    <div class="Contenido">
+        <div class="conteos">
+            <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+        </div>
+        <div class="search">
+            <input placeholder="Buscar usuarios..." type="text">
+            <button type="submit">Buscar</button>
+        </div>
+    </div>
+    <div id="contenedorTabla" class="contenedorTabla">            
+        <table id="tabla" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID Venta</th>
+                    <th>Productos</th>
+                    <th>Cantidad</th>
+                    <th>Precio historico</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in venta %}
+                <tr>
+                    <td>{{ v.venta }}</td>
+                    <td>{{ v.producto }}</td>
+                    <td>{{ v.cantidad }}</td>
+                    <td>{{ v.precio_historico|floatformat:0|intcomma }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

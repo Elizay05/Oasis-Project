@@ -1,0 +1,41 @@
+{% extends 'Oasis/barNavInicio.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block titulo %}Eventos{% endblock %}
+
+{% block contenedor %}
+    <div class="d-flex">
+        <img src="{% static 'Oasis/img/fiesta.png' %}" alt="cerveza" class="d-block w-50" style="height: 300px;">
+        <div class="w-50" style="background-color: black;">
+            <h1 style="color: white; font-family: Camingo; margin-top: 5%;">EVENTOS OASIS</h1>
+            <div style="height: 2%; background-color: blueviolet; width: 30%;"></div>
+            <br>
+            <br>
+            <h5 style="color: white; font-family: Quicksand; width: 80%;">¡Prepárate para la fiesta de tu vida! Explora nuestros próximos eventos en la discoteca y únete a la diversión nocturna. Desde DJs internacionales hasta noches temáticas, cada evento promete una experiencia inigualable. ¡No te lo pierdas!</h5>
+        </div>
+    </div>
+    <div class="bg-dark text-light w-100 d-flex" style="height:auto; padding: 3%; gap: 32px;">
+        <div class="d-flex justify-content-end" style="width: 50%;">
+            <img src="{{ evento.foto.url }}" class="card-img-top" alt="Evento" style="height: 300px; width: 70%; border-radius: 30px;"> 
+        </div>
+        <div style="width: 35%">
+            <h3 class="card-text" style="font-family: Quicksand; color: white;"><strong>{{ evento.nombre }}</strong></h3>
+            <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Fecha: </strong>{{ evento.fecha }}</h5>
+            <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Cupos Disponibles: </strong>{{ evento.aforo }} personas</h5>
+            <br>
+            <h6 class="card-text" style="font-family: Quicksand; color: white;">{{ evento.descripcion }}</h6>
+            <br>
+        </div>
+    </div>
+    <div class="bg-dark text-light w-100 d-flex justify-content-center" style="height:auto; padding: 3%;">
+        <div style="border-right: 2px solid white; width: 50%; ">
+            <h5 style="font-family: Quicksand; text-align: center;"><strong>Comprar Entradas</strong></h5>
+            <h6>Ingrese la cantidad de entradas que desea comprar</h6>
+        </div>
+        <div style="width: 50%;">
+            <h5 style="font-family: Quicksand; text-align: center;"><strong>Reservar Mesas</strong></h5>
+        </div>
+    </div>
+
+{% endblock %}
