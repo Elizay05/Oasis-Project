@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'Oasis/css/botonesDiseño.css' %}">
   <link rel="stylesheet" href="{% static 'Oasis/css/index.css' %}">
   <link rel="stylesheet" href="{% static 'Oasis/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'Oasis/css/front_eventos/front_eventos_info.css' %}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
@@ -36,7 +37,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="opcionesNav" href="#" role="button">
+              <a class="opcionesNav" href="{% url 'front_eventos' %}" role="button">
                 EVENTOS
               </a>
             </li>

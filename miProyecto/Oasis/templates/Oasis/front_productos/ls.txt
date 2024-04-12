@@ -1,0 +1,17 @@
+<div class="FrtEveInfoBlockReservaEntrada bg-dark text-light">
+        <form id="form-add-carrito">
+            {% csrf_token %}
+            <input type="hidden" name="id" id="id_{{ i.id }}" value="{{ i.id }}">
+            <input type="number" name="cantidad" id="cantidad_{{ i.id }}" class="form-control bg-dark text-light text-center" min="1" value="1" size="3">
+            <br>
+            <button type="button" onclick="add_carrito(`{% url 'carrito_add' %}`, {{ i.id }});" class="btn" style="background-color: #fc4664; color: white; width: 100%;"><i class="bi bi-cart2"></i> Agregar</button>
+        </form>
+    </div>
+
+    style="background-color:#212529;"
+
+
+    botones pequeños 
+
+    titulo parecidos a lo eventos 
+    
