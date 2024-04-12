@@ -1,5 +1,40 @@
-.FrtEveInfoBlockReservaEntrada{
-    display: block;
+.BlockReservaEntrada{
+    display: flex;
+    width: 100%;
+    padding-left: 10%;
+    padding-right: 10%;
+    justify-content: space-around;
+    height: auto;
+}
+
+.BlockReservaEntrada h4{
+    font-family: Quicksand; 
+    margin-bottom: 3%;
+}
+.contenedorReservas{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulosyDescEntradas{
+    text-align: center;
+    margin-bottom: 5%;
+    margin-top: 3%;
+}
+
+.titulosyDescEntradas p{
+    color: #fc4664;
+}
+
+.reservarEntradaTabla{
+    width: 80%;
+}
+.reservarEntradaTabla td{
+    text-align: center;
     justify-content: center;
     align-items: center;
+}
+.inputCantidadEntradas{
+    width: 80px;
 }

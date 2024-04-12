@@ -12,12 +12,12 @@ class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
 class EventoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Evento
-        fields = ['id', 'nombre', 'fecha', 'hora_incio', 'descripcion', 'foto']
+        fields = ['id', 'nombre', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'precio_entrada', 'foto']
 
 class MesaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Mesa
-        fields = ['id', 'usuario', 'estado', 'codigo_qr']
+        fields = ['id', 'nombre', 'estado', 'estado_reserva', 'codigo_qr']
 
 class ReservaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
