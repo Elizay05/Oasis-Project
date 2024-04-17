@@ -31,10 +31,10 @@ class EventoAdmin(admin.ModelAdmin):
 
 @admin.register(Mesa)
 class MesaAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','estado','estado_reserva','codigo_qr']
-    search_fields = ['id','estado', 'estado_reserva']
-    list_filter = ['estado', 'estado_reserva']
-    list_editable = ['estado', 'estado_reserva']
+    list_display = ['id','nombre', 'capacidad', 'estado','estado_reserva','codigo_qr']
+    search_fields = ['id','estado', 'capacidad','estado_reserva']
+    list_filter = ['estado', 'capacidad','estado_reserva']
+    list_editable = ['estado', 'capacidad', 'estado_reserva']
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):

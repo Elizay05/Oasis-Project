@@ -32,20 +32,25 @@
         <div style="border-right: 1px solid white; width: 50%;" class="contenedorReservas">
             <div class="titulosyDescEntradas">
                 <h4><strong>Comprar Entradas</strong></h4>
-                <p style="font-family: Nunito;">(El valor de la entrada por persona para este Evento es de 50.000)</p>
             </div>
             <table class="table table-dark reservarEntradaTabla">
                 <tbody>
-                    <tr>
+                    <tr style="height: 100px;">
                         <td style="font-family: Nunito;">Entrada</td>
-                        <td><input style="font-family: Nunito;" type="number" class="form-control bg-dark text-light inputCantidadEntradas" min="1" max="4" value="1" size="1"></td>
+                        <td style="display: flex; align-items: center; height: 100px;"><input style="font-family: Nunito;" type="number" class="form-control bg-dark text-light inputCantidadEntradas" min="1" max="4" value="1" size="1"></td>
                         <td style="font-family: Nunito;">50.000</td>
+                    </tr>
+                    <tr style="height: 70px;">
+                        <td style="font-family: Nunito;">Entrada Vip</td>
+                        <td style="display: flex; align-items: center; height: 100px;"><input style="font-family: Nunito;" type="number" class="form-control bg-dark text-light inputCantidadEntradas" min="1" max="4" value="1" size="1"></td>
+                        <td style="font-family: Nunito;">80.000</td>
                     </tr>
                 </tbody>
             </table>
-            <div style="display: flex; width: 80%; justify-content: right;">
+            <br>
+            <div style="display: flex; width: 80%; justify-content: right; gap: 50px; margin-right: 15%;">
                 <h5 style="font-family: Nunito"><strong>Total</strong></h5>
-                <h5 style="font-family: Nunito"><strong>50.000</strong></h5>
+                <h5 style="font-family: Nunito"><strong>130.000</strong></h5>
             </div>
             <br>
             <button type="button" class="btn" style="background-color: #fc4664; color: white; width: 50%;">Comprar</button>

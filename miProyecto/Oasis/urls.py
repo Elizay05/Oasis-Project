@@ -78,8 +78,13 @@ urlpatterns = [
 
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
     path('Historial_Pedidos/', views.peHistorial, name='peHistorial'),
-    path('Gestion_Mesas/', views.peGestionMesas, name='peGestionMesas'),
+    path('Mesas/', views.peGestionMesas, name='peGestionMesas'),
     path('Agregar_Pedido/', views.pedidoEmpleado, name='pedidoEmpleado'),
+
+    #CRUD MESAS
+    path('Gestion_Mesas/', views.mesaInicio, name='Mesas'),
+    path('Mesa_Form/', views.mesaForm, name='mesaForm'),
+    path('Agregar_Mesa/', views.crearMesa, name='crearMesa'),
 
 
 #   CRUD EVENTOS

@@ -34,6 +34,7 @@
     text-align: center;
     justify-content: center;
     align-items: center;
+    vertical-align: middle;
 }
 .inputCantidadEntradas{
     width: 80px;

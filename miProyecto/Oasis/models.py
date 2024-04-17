@@ -53,9 +53,10 @@ class Mesa(models.Model):
         (DISPONIBLE, 'Disponible'),
     )
     nombre = models.CharField(max_length=300)
-    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES)
+    capacidad = models.IntegerField(default=5)
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default=DISPONIBLE)
     estado_reserva = models.CharField(max_length=10, choices=RESERVA_CHOICES , default=DISPONIBLE)
-    codigo_qr = models.CharField(max_length=100, unique=True)
+    codigo_qr = models.CharField(max_length=100) #Add atribute -> unique=True
 
     def __str__(self):
         return f'{self.id}'

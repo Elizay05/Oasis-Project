@@ -475,6 +475,47 @@ def pedidoEmpleado(request):
     contexto = {'user':user}
     return render (request, "Oasis/pedidos/pedidoEmpleado.html", contexto)
 
+#MESAS
+
+def mesaInicio(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    #SELECT * FROM Mesas
+    q = Mesa.objects.all()
+    contexto = {'data' : q , 'user':user}
+    return render(request, "Oasis/mesas/mesasInicio.html", contexto)
+
+
+def mesaForm(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, "Oasis/mesas/mesasForm.html", contexto)
+
+def crearMesa(request):
+    if request.method == "POST":
+        try:
+            nom = request.POST.get('nombre')
+            cap = int(request.POST.get('capacidad'))
+            qr = request.POST.get('codigo_qr')
+
+            if 4 <= cap <= 8:
+                q = Mesa(
+                nombre = nom,
+                capacidad = cap,
+                codigo_qr = qr
+                )
+                q.save()
+                messages.success(request, "Mesa Registrada Correctamente!")
+            else:
+                messages.warning (request, f'Incorrecto: La capacidad de cada mesa debe ser mayor a 4 o menor a 8')
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+        return redirect('Mesas')
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        return redirect('Mesas')
+
 
 
 #EVENTOS
@@ -482,7 +523,7 @@ def pedidoEmpleado(request):
 def eveInicio(request):
     logueo = request.session.get("logueo", False)
     user = Usuario.objects.get(pk = logueo["id"])
-#SELECT * FROM Eventos
+    #SELECT * FROM Eventos
     q = Evento.objects.all()
     contexto = {'data' : q , 'user':user}
     return render(request, "Oasis/eventos/eveInicio.html", contexto)
