@@ -71,7 +71,6 @@ def inicio(request):
         return redirect("index")
     
 
-
 def registro(request):
     return render(request, 'Oasis/registro.html')
 
@@ -498,23 +497,69 @@ def crearMesa(request):
             nom = request.POST.get('nombre')
             cap = int(request.POST.get('capacidad'))
             qr = request.POST.get('codigo_qr')
-
-            if 4 <= cap <= 8:
-                q = Mesa(
-                nombre = nom,
-                capacidad = cap,
-                codigo_qr = qr
-                )
-                q.save()
-                messages.success(request, "Mesa Registrada Correctamente!")
+            
+            if Mesa.objects.filter(nombre=nom).count() == 0:
+                if 4 <= cap <= 8:
+                    q = Mesa(
+                    nombre = nom,
+                    capacidad = cap,
+                    codigo_qr = qr
+                    )
+                    q.save()
+                    messages.success(request, "Mesa Registrada Correctamente!")
+                else:
+                    messages.warning (request, f'Incorrecto: La capacidad de cada mesa debe ser mayor a 4 o menor a 8.')
             else:
-                messages.warning (request, f'Incorrecto: La capacidad de cada mesa debe ser mayor a 4 o menor a 8')
+                messages.warning (request, f'Incorrecto: Esta mesa ya esta creada en el sistema.')
         except Exception as e:
             messages.error(request, f'Error: {e}')
         return redirect('Mesas')
     else:
         messages.warning (request, f'Error: No se enviaron datos...')
         return redirect('Mesas')
+
+def mesaFormActualizar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    q = Mesa.objects.get(pk = id)
+    contexto = {'data': q, 'user':user}
+    return render(request, 'Oasis/mesas/mesasFormActualizar.html', contexto)
+
+def mesaActualizar(request):
+    if request.method == "POST":
+        id = request.POST.get('id')
+        nom = request.POST.get('nombre')
+        cap = int(request.POST.get('capacidad'))
+        qr = request.POST.get('codigo_qr')
+        try:
+            if Mesa.objects.filter(nombre=nom).exclude(pk=id).exists():
+                messages.warning(request, f'Incorrecto: Esta mesa ya está creada en el sistema con otro ID.')
+            elif cap > 9 or cap < 4:
+                messages.warning (request, f'Incorrecto: La capacidad de cada mesa debe ser mayor a 4 o menor a 8')
+            else:
+                q = Mesa.objects.get(pk=id)
+                q.nombre = nom
+                q.capacidad = cap
+                q.codigo_qr = qr
+                q.save()
+                messages.success(request, "Mesa Actualizada Correctamente!")
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        
+    return redirect('Mesas')
+
+def eliminarMesa(request, id):
+    try:
+        q = Mesa.objects.get(pk = id)
+        q.delete()
+        messages.success(request, "Mesa Eliminada Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('Mesas')
 
 
 
@@ -540,6 +585,9 @@ def crearEvento(request):
             nom = request.POST.get('nombre')
             date = request.POST.get('fecha')
             time = request.POST.get('hora_incio')
+            general = request.POST.get('entrada_general')
+            vip = request.POST.get('entrada_vip')
+            aforo = request.POST.get('aforo')
             desc = request.POST.get('descripcion')
             foto = request.FILES.get('foto')
 
@@ -551,6 +599,9 @@ def crearEvento(request):
                 nombre = nom,
                 fecha = date,
                 hora_incio = time,
+                precio_entrada = general,
+                precio_vip = vip,
+                aforo = aforo,
                 descripcion = desc,
                 foto = foto,
             )
@@ -587,6 +638,9 @@ def actualizarEvento(request):
         nom = request.POST.get('nombre')
         date = request.POST.get('fecha')
         time = request.POST.get('hora_incio')
+        general = request.POST.get('entrada_general')
+        vip = request.POST.get('entrada_vip')
+        aforo = request.POST.get('aforo')
         desc = request.POST.get('descripcion')
         foto_nueva = request.FILES.get('foto_nueva')
         try:
@@ -594,6 +648,9 @@ def actualizarEvento(request):
             q.nombre = nom
             q.fecha = date
             q.hora_incio = time
+            precio_entrada = general,
+            precio_vip = vip,
+            aforo = aforo,
             q.descripcion = desc
 
             if foto_nueva:
@@ -839,8 +896,11 @@ def front_eventos_info(request, id):
     if logueo:
         user = Usuario.objects.get(pk = logueo["id"])
     evento = Evento.objects.get(pk=id)
+    mesa = Mesa.objects.all()
 
-    contexto = {"data": user, "evento": evento}
+    total_defecto = evento.precio_entrada + evento.precio_vip
+
+    contexto = {"data": user, "evento": evento, "mesas": mesa, "total_defecto": total_defecto}
     return render(request, "Oasis/front_eventos/front_eventos_info.html", contexto)
     
 
@@ -1015,6 +1075,14 @@ def ver_detalles(request, id):
     detalles = DetalleVenta.objects.filter(venta=venta.id)
     contexto = {"user":user, "venta":detalles}
     return render(request, "Oasis/carrito/detalles.html", contexto)
+
+def comprar_entradas(request, id):
+    logueo = request.session.get("logueo", False)
+    if not logueo:
+        messages.warning(request, "Inicia sesión antes de comprar")
+        return redirect('front_eventos_info', id=id)
+    
+    return redirect('front_eventos_info', id=id)
 
 
 # Vistas para el conjunto de datos de las API

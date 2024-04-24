@@ -17,7 +17,7 @@ class UsuarioAdmin(admin.ModelAdmin):
 
 @admin.register(Evento)
 class EventoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre', 'nombre_plural', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'precio_entrada' , 'foto']
+    list_display = ['id','nombre', 'nombre_plural', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'precio_entrada', 'precio_vip' , 'foto']
     search_fields = ['id','nombre','fecha','hora_incio']
     list_filter = ['fecha']
     list_editable = ['nombre','fecha','hora_incio']
