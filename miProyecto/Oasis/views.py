@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.core.files.uploadedfile import SimpleUploadedFile
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+
 
 
 from rest_framework import viewsets
@@ -69,9 +73,17 @@ def inicio(request):
             messages.error(request, "El usuario no existe")
     else:
         return redirect("index")
-    
 
 def registro(request):
+    """
+    serializer = UsuarioSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        token = Token.objects.create(user=user)
+        return Response ({"token": token.key,"user":serializer.data},status = status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    """
     return render(request, 'Oasis/registro.html')
 
 
@@ -902,6 +914,14 @@ def front_eventos_info(request, id):
 
     contexto = {"data": user, "evento": evento, "mesas": mesa, "total_defecto": total_defecto}
     return render(request, "Oasis/front_eventos/front_eventos_info.html", contexto)
+
+def comprar_entradas(request, id):
+    logueo = request.session.get("logueo", False)
+    if not logueo:
+        messages.warning(request, "Inicia sesión antes de comprar")
+        return redirect('front_eventos_info', id=id)
+    
+    return redirect('front_eventos_info', id=id)
     
 
 def carrito_add(request):
@@ -1076,13 +1096,6 @@ def ver_detalles(request, id):
     contexto = {"user":user, "venta":detalles}
     return render(request, "Oasis/carrito/detalles.html", contexto)
 
-def comprar_entradas(request, id):
-    logueo = request.session.get("logueo", False)
-    if not logueo:
-        messages.warning(request, "Inicia sesión antes de comprar")
-        return redirect('front_eventos_info', id=id)
-    
-    return redirect('front_eventos_info', id=id)
 
 
 # Vistas para el conjunto de datos de las API
