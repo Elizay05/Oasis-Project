@@ -5,12 +5,6 @@
 {% block titulo %}Productos{% endblock %}
 
 {% block contenedor %}
-<style>
-    body {
-        background-color: #212529;
-    }
-</style>
-
     <div class="d-flex">
         <img src="{% static 'Oasis/img/cerveza.png' %}" alt="cerveza" class="d-block w-50" style="height: 300px;">
         <div class="w-50" style="background-color: black;">
@@ -33,7 +27,7 @@
             <div class="d-flex w-100" style="padding-left: 8%;">
                 {% for i in productos %}
                     <div class="card bg-transparent text-light" style="width: 17rem; margin-right: 3%; border: none;">
-                        <a href="{% url 'front_productos_info' i.id %}">
+                        <a href="">
                             <img src="{{ i.foto.url }}" class="card-img-top rounded" alt="Producto" style="height: 230px; padding: 16px;"> 
                         </a>
                         <div class="card-body">

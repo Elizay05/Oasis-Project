@@ -44,6 +44,20 @@
                         <input type="time" class="form-control" id="exampleFormControlInput1" name="hora_incio" value="{{data.hora_incio}}">
                     </div>
                 </div>
+                <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
+                    <div class="mb-3 col-5">
+                        <label for="exampleFormControlInput1" class="form-label">Precio Entrada general</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1" name="entrada_general" value="{{data.precio_entrada}}">
+                    </div>
+                    <div class="mb-3 col-5">
+                        <label for="exampleFormControlInput1" class="form-label">Precio Entrada Vip</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1" name="entrada_vip" value="{{data.precio_vip}}">
+                    </div>
+                </div>
+                <div class="mb-3 col-2">
+                    <label for="exampleFormControlInput1" class="form-label">Aforo de Evento</label>
+                    <input type="number" class="form-control" id="exampleFormControlInput1" name="aforo" value="{{data.aforo}}">
+                </div>
                 <div class="mb-3 col-5">
                     <label for="exampleFormControlInput1" class="form-label">Descripción</label>
                     <input type="text" class="form-control" id="exampleFormControlInput1" name="descripcion" value="{{data.descripcion}}">
@@ -66,5 +80,6 @@
                 </div>
                 <button class="btn btn-success">Actualizar Evento</button>
             </form>
+            <br>
         </div>
 {% endblock %}

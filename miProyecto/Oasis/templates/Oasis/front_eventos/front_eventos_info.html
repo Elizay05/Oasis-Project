@@ -28,9 +28,69 @@
             <br>
         </div>
     </div>
-    <div class="FrtEveInfoBlockReservaEntrada bg-dark text-light">
-        <div style="height:auto; width: 900px; padding: 20px; border: 2px solid red;">
-            <h5 style="font-family: Quicksand; text-align: center;"><strong>Comprar Entradas</strong></h5>
+    <div class="bg-dark text-light BlockReservaEntrada">
+        <div style="border-right: 1px solid white; width: 50%;" class="contenedorReservas">
+            <div class="titulosyDescEntradas">
+                <h4><strong>Comprar Entradas</strong></h4>
+            </div>
+            <form action="{% url 'comprar_entradas' evento.id %}" method="post" enctype="multipart/form-data" id="formEntradas">
+                {% csrf_token %}
+                <table class="table table-dark comprarEntradaTabla">
+                    <tbody>
+                        <tr style="height: 100px;">
+                            <td style="font-family: Nunito;">Entrada General</td>
+                            <td style="display: flex; align-items: center; height: 100px;">
+                                <input style="font-family: Nunito;" id="entrada-general-cantidad" type="number" class="form-control bg-dark text-light inputCantidadEntradas" min="0" max="4" value="1" size="1">
+                            </td>
+                            <td id="precio-entrada-general-oculto" hidden>{{ evento.precio_entrada }}</td>
+                            <td style="font-family: Nunito;" id="precio-entrada-general">{{ evento.precio_entrada|intcomma }}</td>
+                        </tr>
+                        <tr style="height: 70px;">
+                            <td style="font-family: Nunito;">Entrada Vip</td>
+                            <td style="display: flex; align-items: center; height: 100px;">
+                                <input style="font-family: Nunito;" id="entrada-vip-cantidad" type="number" class="form-control bg-dark text-light inputCantidadEntradas" min="0" max="4" value="1" size="1">
+                            </td>
+                            <td id="precio-entrada-vip-oculto" hidden>{{ evento.precio_vip }}</td>
+                            <td style="font-family: Nunito;" id="precio-entrada-vip">{{ evento.precio_vip|intcomma }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div style="display: flex; width: 100%; justify-content: right; gap: 50px; margin-right: 70px;">
+                    <h5 style="font-family: Nunito"><strong>Total</strong></h5>
+                    <h5 style="font-family: Nunito;" id="total-general"><strong></strong>{{ total_defecto|intcomma }}</h5>
+                </div>
+                <br>
+                <button type="submit" class="btn" style="background-color: #fc4664; color: white; width: 50%;">Comprar</button>
+            </form>
+        </div>
+        <div style = "width: 50%;" class="contenedorReservas">
+            <div class="titulosyDescEntradas">
+                <h4><strong>Reservar Mesa</strong></h4>
+                <p style="font-family: Nunito;">(Las entradas están incluídas para la cantidad de personas de la mesa)</p>
+                <img src="{% static 'Oasis/img/mapaMesas.png' %}" alt="cerveza" width="550px"/>
+            </div>
+            <table class="table table-dark reservarMesaTabla">
+                <tbody>
+                    <tr>
+                        <td style="font-family: Nunito;">Mesa</td>
+                        <td>
+                            <select class="form-control bg-dark text-light" name="mesa">
+                                <option>Seleccione</option>
+                                    {% for m in mesas %}
+                                        {% if m.estado_reserva == 'Reservada' %}
+                                            <option class="inputMesa" value="{{ m.id }}" disabled>{{ m.nombre }} - (Reservada)</option>
+                                        {% else %}
+                                            <option class="inputMesa" value="{{ m.id }}">{{ m.nombre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <button type="button" class="btn" style="background-color: #fc4664; color: white; width: 50%;">Reservar</button>
         </div>
     </div>
 
