@@ -9,12 +9,11 @@ from rest_framework import viewsets
 from .serializers import *
 
 
-
-
 #Importar todos los modelos de la base de datos.
 from .models import *
 
 # Create your views here.
+
 
 def index(request):
     logueo = request.session.get("logueo", False)

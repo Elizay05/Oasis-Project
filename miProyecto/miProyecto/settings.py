@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Oasis', 
     'rest_framework',
     'django.contrib.humanize',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -129,16 +130,9 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-<<<<<<< HEAD
-REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'tienda.utils.custom_exception_handler'
-}
-=======
 FORMAT_MODULE_PATH = [
     "Oasis.formats"
 ]
-
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'tienda.utils.custom_exception_handler'
 }
->>>>>>> origin/Sayira
