@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Oasis', 
     'rest_framework',
     'django.contrib.humanize',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,9 @@ FORMAT_MODULE_PATH = [
     "Oasis.formats"
 ]
 
-REST_FRAMEWORK = {
+AUTH_USER_MODEL = "Oasis.Usuario"
+AUTH_PROFILE_MODULE = "Oasis.Usuario"
+
+"""REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'tienda.utils.custom_exception_handler'
-}
+}"""

@@ -1,8 +1,8 @@
 from django.urls import path, include
 from rest_framework import routers
-
-
 from . import views
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as especial
 
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -24,6 +24,8 @@ router.register(r'detalle_venta', views.DetalleVentaViewSet)
 
 urlpatterns = [
     path('api/1.0/', include(router.urls)),
+    path('api/1.0/token-auth/', especial.obtain_auth_token),
+	path('api/1.0/api-auth/', include('rest_framework.urls')),
 
 
     path('', views.index, name="index"),

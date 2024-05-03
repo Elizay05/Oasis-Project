@@ -8,7 +8,10 @@ from rest_framework import viewsets
 
 from .serializers import *
 
-
+import datetime
+from django.utils.timezone import localtime
+import pytz  
+est = pytz.timezone('America/Bogota')
 
 
 #Importar todos los modelos de la base de datos.
@@ -1035,3 +1038,20 @@ class VentaViewSet(viewsets.ModelViewSet):
 class DetalleVentaViewSet(viewsets.ModelViewSet):
     queryset = DetalleVenta.objects.all()
     serializer_class = DetalleVentaSerializer
+
+# -------------------------------------------------------------------------------------------
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+class CategoriaViewSet(viewsets.ModelViewSet):
+	permission_classes = [IsAuthenticated]
+	queryset = Categoria.objects.all()
+	serializer_class = CategoriaSerializer
+
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+	# authentication_classes = [TokenAuthentication, SessionAuthentication]
+	authentication_classes = [TokenAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = Usuario.objects.all()
+	serializer_class = UsuarioSerializer

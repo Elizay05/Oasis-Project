@@ -7,7 +7,7 @@ from rest_framework import serializers
 class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'email', 'clave', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
+        fields = ['id', 'nombre', 'email', 'password', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
 
 class EventoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
