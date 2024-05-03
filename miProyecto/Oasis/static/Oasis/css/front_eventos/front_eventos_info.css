@@ -58,3 +58,28 @@
     width: 70%;
     height: 100%;
 }
+
+/* BOTONES */
+
+.btn-comprar{
+    background-color: #fc4664; 
+    color: white; 
+    width: 50%;
+}
+
+.btn-comprar:disabled{
+    background-color: #5c5c5c; 
+    color: white; 
+    width: 50%;
+}
+
+#detalle-general, #detalle-vip{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    background-color: #d4d4d4;
+    width: 100%;
+    height: 70px;
+    padding: 20px;
+    border-radius: 20px;
+}
