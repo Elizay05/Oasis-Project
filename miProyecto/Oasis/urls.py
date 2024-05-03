@@ -78,17 +78,8 @@ urlpatterns = [
 
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
     path('Historial_Pedidos/', views.peHistorial, name='peHistorial'),
-    path('Mesas/', views.peGestionMesas, name='peGestionMesas'),
+    path('Gestion_Mesas/', views.peGestionMesas, name='peGestionMesas'),
     path('Agregar_Pedido/', views.pedidoEmpleado, name='pedidoEmpleado'),
-
-    #CRUD MESAS
-    path('Gestion_Mesas/', views.mesaInicio, name='Mesas'),
-    path('Mesa_Form/', views.mesaForm, name='mesaForm'),
-    path('Agregar_Mesa/', views.crearMesa, name='crearMesa'),
-    path('Actualizar_Mesa_Form/<int:id>', views.mesaFormActualizar, name='mesaFormActualizar'),
-    path('Actualizar_Mesa/', views.mesaActualizar, name='mesaActualizar'),
-    path('Eliminar_Mesa/<int:id>', views.eliminarMesa, name='eliminarMesa'),
-
 
 
 #   CRUD EVENTOS
@@ -142,8 +133,7 @@ urlpatterns = [
 	path("ver_ventas/", views.ver_ventas, name="ver_ventas"),
 	path("ver_detalles/<int:id>/", views.ver_detalles, name="ver_detalles"),
 
-#COMPRAR ENTRADAS
-    path("comprar_entradas/<int:id>/", views.comprar_entradas, name="comprar_entradas"),
+
 
 
 ]   

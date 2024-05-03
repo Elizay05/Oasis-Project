@@ -26,33 +26,7 @@
     <div class="Agregar">
         <a type="button" class="btn btn-success" href="{% url 'eveForm' %}">Agregar Evento</a>
     </div>
-    <div id="contenedorTabla" class="contenedorTabla">            
-        <table id="tabla" class="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for e in data %}
-            <tr>
-              <td>{{ e.id }}</td>
-              <td>{{ e.nombre }}</td>
-              <td>{{ e.fecha }}</td>
-              <td>
-                <a type="button" class="btn btn-warning" href=""><i class="bi bi-pencil"></i></a>
-                <a type="button" class="btn btn-danger" href=""><i class="bi bi-x-lg"></i></a>
-              </td>
-            </tr>
-          </tbody>
-          {% endfor %}
-        </table>
-    </div>
 
-    <!-- 
     <div class="bloqueEvento">
         {% for i in data %}
             <div class="evento">
@@ -63,9 +37,6 @@
                 <div class="botonesEvento">
                     <a href="{% url 'eveReserva' %}">
                         <button id="verReservaciones" class="btn btn-primary">Reservas</button>
-                    </a>
-                    <a href="{% url 'eveReserva' %}">
-                        <button id="verReservaciones" class="btn btn-primary">Entradas</button>
                     </a>
                     <div class="botonesCrud">
                         <a type="button" class="btn btn-warning" href="{% url 'eveFormActualizar' i.id %}"><i class="bi bi-pencil"></i></a>
@@ -157,5 +128,4 @@
             </div>
         </div>
     </div>
-    -->
 {% endblock %}
