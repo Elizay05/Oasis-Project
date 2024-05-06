@@ -1,15 +1,10 @@
-from django.contrib.auth.models import AbstractUser
-
-from .authentication import CustomUserManager
-
 from django.db import models
 
 # Create your models here.
-class Usuario(AbstractUser):
-    username = None
+class Usuario(models.Model):
     nombre = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=254)
+    clave = models.CharField(max_length=254)
     cedula = models.CharField(max_length=10, unique=True)
     fecha_nacimiento = models.DateField()
     ROLES = (
@@ -26,10 +21,6 @@ class Usuario(AbstractUser):
     estado = models.IntegerField(choices=ESTADO, default=1)
     foto = models.ImageField(upload_to="Img_usuarios/", default="Img_usuarios/default.png")
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ["nombre", "cedula", "fecha_nacimiento"]
-    objects = CustomUserManager()
-
     def __str__(self):
         return self.nombre
 
@@ -39,6 +30,8 @@ class Evento(models.Model):
     hora_incio = models.TimeField() 
     descripcion = models.TextField()
     aforo = models.IntegerField(default=500)
+    precio_entrada = models.IntegerField(default=50000)
+    precio_vip = models.IntegerField(default=75000)
     foto = models.ImageField(upload_to="Img_eventos/", default="Img_eventos/default.png")
 
     def __str__(self):
@@ -52,9 +45,19 @@ class Mesa(models.Model):
         (ACTIVA, 'Activa'),
         (DISPONIBLE, 'Disponible'),
     )
-    usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
-    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES)
-    codigo_qr = models.CharField(max_length=100, unique=True)
+
+    RESERVADA = 'Reservada'
+    DISPONIBLE = 'Disponible'
+
+    RESERVA_CHOICES = (
+        (RESERVADA, 'Reservada'),
+        (DISPONIBLE, 'Disponible'),
+    )
+    nombre = models.CharField(max_length=300)
+    capacidad = models.IntegerField(default=5)
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default=DISPONIBLE)
+    estado_reserva = models.CharField(max_length=10, choices=RESERVA_CHOICES , default=DISPONIBLE)
+    codigo_qr = models.CharField(max_length=100) #Add atribute -> unique=True
 
     def __str__(self):
         return f'{self.id}'
@@ -158,14 +161,3 @@ class DetalleVenta(models.Model):
 
 	def __str__(self):
 		return f"{self.id} - {self.venta}"
-
-# ---------------------------------------------------
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)

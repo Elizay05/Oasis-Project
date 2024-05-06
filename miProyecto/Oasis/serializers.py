@@ -5,19 +5,20 @@ from rest_framework import serializers
 
 # Serializers define the API representation.
 class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
+    foto = serializers.ImageField(required=False)
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'email', 'password', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
+        fields = ['id', 'nombre', 'email', 'clave', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
 
 class EventoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Evento
-        fields = ['id', 'nombre', 'fecha', 'hora_incio', 'descripcion', 'foto']
+        fields = ['id', 'nombre', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'precio_entrada', 'precio_vip', 'foto']
 
 class MesaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Mesa
-        fields = ['id', 'usuario', 'estado', 'codigo_qr']
+        fields = ['id', 'nombre', 'capacidad', 'estado', 'estado_reserva', 'codigo_qr']
 
 class ReservaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

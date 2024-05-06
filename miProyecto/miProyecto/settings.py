@@ -134,9 +134,6 @@ FORMAT_MODULE_PATH = [
     "Oasis.formats"
 ]
 
-AUTH_USER_MODEL = "Oasis.Usuario"
-AUTH_PROFILE_MODULE = "Oasis.Usuario"
-
-"""REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'tienda.utils.custom_exception_handler'
-}"""
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'Oasis.utils.custom_exception_handler'
+}

@@ -41,8 +41,6 @@ function ver_carrito(url){
 }
 
 
-
-
 function add_carrito(url, id_producto){
     
     csrf_token = $("[name='csrfmiddlewaretoken']")[0].value;
@@ -108,7 +106,6 @@ function carrito_eliminar(url){
         location.href="/Oasis/front_productos/";
     });
 }
-
 
 
 function actualizar_totales_carrito(url,id){

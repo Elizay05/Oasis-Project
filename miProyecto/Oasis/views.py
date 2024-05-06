@@ -2,16 +2,17 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.core.files.uploadedfile import SimpleUploadedFile
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+
 
 
 from rest_framework import viewsets
 
 from .serializers import *
 
-import datetime
-from django.utils.timezone import localtime
-import pytz  
-est = pytz.timezone('America/Bogota')
+
 
 
 #Importar todos los modelos de la base de datos.
@@ -72,10 +73,17 @@ def inicio(request):
             messages.error(request, "El usuario no existe")
     else:
         return redirect("index")
-    
-
 
 def registro(request):
+    """
+    serializer = UsuarioSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        token = Token.objects.create(user=user)
+        return Response ({"token": token.key,"user":serializer.data},status = status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    """
     return render(request, 'Oasis/registro.html')
 
 
@@ -478,6 +486,93 @@ def pedidoEmpleado(request):
     contexto = {'user':user}
     return render (request, "Oasis/pedidos/pedidoEmpleado.html", contexto)
 
+#MESAS
+
+def mesaInicio(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    #SELECT * FROM Mesas
+    q = Mesa.objects.all()
+    contexto = {'data' : q , 'user':user}
+    return render(request, "Oasis/mesas/mesasInicio.html", contexto)
+
+
+def mesaForm(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    contexto = {'user':user}
+    return render (request, "Oasis/mesas/mesasForm.html", contexto)
+
+def crearMesa(request):
+    if request.method == "POST":
+        try:
+            nom = request.POST.get('nombre')
+            cap = int(request.POST.get('capacidad'))
+            qr = request.POST.get('codigo_qr')
+            
+            if Mesa.objects.filter(nombre=nom).count() == 0:
+                if 4 <= cap <= 8:
+                    q = Mesa(
+                    nombre = nom,
+                    capacidad = cap,
+                    codigo_qr = qr
+                    )
+                    q.save()
+                    messages.success(request, "Mesa Registrada Correctamente!")
+                else:
+                    messages.warning (request, f'Incorrecto: La capacidad de cada mesa debe ser mayor a 4 o menor a 8.')
+            else:
+                messages.warning (request, f'Incorrecto: Esta mesa ya esta creada en el sistema.')
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+        return redirect('Mesas')
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        return redirect('Mesas')
+
+def mesaFormActualizar(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    q = Mesa.objects.get(pk = id)
+    contexto = {'data': q, 'user':user}
+    return render(request, 'Oasis/mesas/mesasFormActualizar.html', contexto)
+
+def mesaActualizar(request):
+    if request.method == "POST":
+        id = request.POST.get('id')
+        nom = request.POST.get('nombre')
+        cap = int(request.POST.get('capacidad'))
+        qr = request.POST.get('codigo_qr')
+        try:
+            if Mesa.objects.filter(nombre=nom).exclude(pk=id).exists():
+                messages.warning(request, f'Incorrecto: Esta mesa ya está creada en el sistema con otro ID.')
+            elif cap > 9 or cap < 4:
+                messages.warning (request, f'Incorrecto: La capacidad de cada mesa debe ser mayor a 4 o menor a 8')
+            else:
+                q = Mesa.objects.get(pk=id)
+                q.nombre = nom
+                q.capacidad = cap
+                q.codigo_qr = qr
+                q.save()
+                messages.success(request, "Mesa Actualizada Correctamente!")
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+
+    else:
+        messages.warning (request, f'Error: No se enviaron datos...')
+        
+    return redirect('Mesas')
+
+def eliminarMesa(request, id):
+    try:
+        q = Mesa.objects.get(pk = id)
+        q.delete()
+        messages.success(request, "Mesa Eliminada Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('Mesas')
+
 
 
 #EVENTOS
@@ -485,7 +580,7 @@ def pedidoEmpleado(request):
 def eveInicio(request):
     logueo = request.session.get("logueo", False)
     user = Usuario.objects.get(pk = logueo["id"])
-#SELECT * FROM Eventos
+    #SELECT * FROM Eventos
     q = Evento.objects.all()
     contexto = {'data' : q , 'user':user}
     return render(request, "Oasis/eventos/eveInicio.html", contexto)
@@ -502,6 +597,9 @@ def crearEvento(request):
             nom = request.POST.get('nombre')
             date = request.POST.get('fecha')
             time = request.POST.get('hora_incio')
+            general = request.POST.get('entrada_general')
+            vip = request.POST.get('entrada_vip')
+            aforo = request.POST.get('aforo')
             desc = request.POST.get('descripcion')
             foto = request.FILES.get('foto')
 
@@ -513,6 +611,9 @@ def crearEvento(request):
                 nombre = nom,
                 fecha = date,
                 hora_incio = time,
+                precio_entrada = general,
+                precio_vip = vip,
+                aforo = aforo,
                 descripcion = desc,
                 foto = foto,
             )
@@ -549,6 +650,9 @@ def actualizarEvento(request):
         nom = request.POST.get('nombre')
         date = request.POST.get('fecha')
         time = request.POST.get('hora_incio')
+        general = request.POST.get('entrada_general')
+        vip = request.POST.get('entrada_vip')
+        aforo = request.POST.get('aforo')
         desc = request.POST.get('descripcion')
         foto_nueva = request.FILES.get('foto_nueva')
         try:
@@ -556,6 +660,9 @@ def actualizarEvento(request):
             q.nombre = nom
             q.fecha = date
             q.hora_incio = time
+            precio_entrada = general,
+            precio_vip = vip,
+            aforo = aforo,
             q.descripcion = desc
 
             if foto_nueva:
@@ -795,6 +902,7 @@ def front_productos_info(request, id):
     contexto = {"data": user, "producto": producto, "categorias": categorias}
     return render(request, "Oasis/front_productos/front_productos_info.html", contexto)
 
+
 def front_eventos(request):
     logueo = request.session.get("logueo", False)
     user = None
@@ -811,9 +919,20 @@ def front_eventos_info(request, id):
     if logueo:
         user = Usuario.objects.get(pk = logueo["id"])
     evento = Evento.objects.get(pk=id)
+    mesa = Mesa.objects.all()
 
-    contexto = {"data": user, "evento": evento}
+    total_defecto = evento.precio_entrada + evento.precio_vip
+
+    contexto = {"data": user, "evento": evento, "mesas": mesa, "total_defecto": total_defecto}
     return render(request, "Oasis/front_eventos/front_eventos_info.html", contexto)
+
+def comprar_entradas(request, id):
+    logueo = request.session.get("logueo", False)
+    if not logueo:
+        messages.warning(request, "Inicia sesión antes de comprar")
+        return redirect('front_eventos_info', id=id)
+    
+    return redirect('front_eventos_info', id=id)
     
 
 def carrito_add(request):
@@ -989,6 +1108,7 @@ def ver_detalles(request, id):
     return render(request, "Oasis/carrito/detalles.html", contexto)
 
 
+
 # Vistas para el conjunto de datos de las API
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
@@ -1038,20 +1158,3 @@ class VentaViewSet(viewsets.ModelViewSet):
 class DetalleVentaViewSet(viewsets.ModelViewSet):
     queryset = DetalleVenta.objects.all()
     serializer_class = DetalleVentaSerializer
-
-# -------------------------------------------------------------------------------------------
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-
-class CategoriaViewSet(viewsets.ModelViewSet):
-	permission_classes = [IsAuthenticated]
-	queryset = Categoria.objects.all()
-	serializer_class = CategoriaSerializer
-
-
-class UsuarioViewSet(viewsets.ModelViewSet):
-	# authentication_classes = [TokenAuthentication, SessionAuthentication]
-	authentication_classes = [TokenAuthentication]
-	permission_classes = [IsAuthenticated]
-	queryset = Usuario.objects.all()
-	serializer_class = UsuarioSerializer

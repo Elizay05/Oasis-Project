@@ -1,8 +1,8 @@
 from django.urls import path, include
 from rest_framework import routers
+
+
 from . import views
-from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken import views as especial
 
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -24,8 +24,6 @@ router.register(r'detalle_venta', views.DetalleVentaViewSet)
 
 urlpatterns = [
     path('api/1.0/', include(router.urls)),
-    path('api/1.0/token-auth/', especial.obtain_auth_token),
-	path('api/1.0/api-auth/', include('rest_framework.urls')),
 
 
     path('', views.index, name="index"),
@@ -80,8 +78,17 @@ urlpatterns = [
 
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
     path('Historial_Pedidos/', views.peHistorial, name='peHistorial'),
-    path('Gestion_Mesas/', views.peGestionMesas, name='peGestionMesas'),
+    path('Mesas/', views.peGestionMesas, name='peGestionMesas'),
     path('Agregar_Pedido/', views.pedidoEmpleado, name='pedidoEmpleado'),
+
+    #CRUD MESAS
+    path('Gestion_Mesas/', views.mesaInicio, name='Mesas'),
+    path('Mesa_Form/', views.mesaForm, name='mesaForm'),
+    path('Agregar_Mesa/', views.crearMesa, name='crearMesa'),
+    path('Actualizar_Mesa_Form/<int:id>', views.mesaFormActualizar, name='mesaFormActualizar'),
+    path('Actualizar_Mesa/', views.mesaActualizar, name='mesaActualizar'),
+    path('Eliminar_Mesa/<int:id>', views.eliminarMesa, name='eliminarMesa'),
+
 
 
 #   CRUD EVENTOS
@@ -118,6 +125,7 @@ urlpatterns = [
     path('front_productos/', views.front_productos, name='front_productos'),
     path('front_productos_info/<int:id>/', views.front_productos_info, name='front_productos_info'),
 
+
 #   FRONT EVENTOS
     path('front_eventos/', views.front_eventos, name='front_eventos'),
     path('front_eventos_info/<int:id>/', views.front_eventos_info, name='front_eventos_info'),
@@ -135,7 +143,8 @@ urlpatterns = [
 	path("ver_ventas/", views.ver_ventas, name="ver_ventas"),
 	path("ver_detalles/<int:id>/", views.ver_detalles, name="ver_detalles"),
 
-
+#COMPRAR ENTRADAS
+    path("comprar_entradas/<int:id>/", views.comprar_entradas, name="comprar_entradas"),
 
 
 ]   
