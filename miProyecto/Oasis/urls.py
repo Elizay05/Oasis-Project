@@ -1,12 +1,12 @@
 from django.urls import path, include
-from rest_framework import routers
-
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as especial
 
 from . import views
 
 
 # Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
+router = DefaultRouter()
 router.register(r'usuario', views.UsuarioViewSet)
 router.register(r'evento', views.EventoViewSet)
 router.register(r'mesa', views.MesaViewSet)
@@ -24,6 +24,9 @@ router.register(r'detalle_venta', views.DetalleVentaViewSet)
 
 urlpatterns = [
     path('api/1.0/', include(router.urls)),
+    path('api/1.0/token-auth/', especial.obtain_auth_token),
+	path('api/1.0/api-auth/', include('rest_framework.urls')),
+
 
 
     path('', views.index, name="index"),

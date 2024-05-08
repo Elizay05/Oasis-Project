@@ -6,19 +6,31 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
+# Para tomar el from desde el settings
+from django.conf import settings
+from django.core.mail import BadHeaderError, EmailMessage
+# Importamos todos los modelos de la base de datos
+from django.db import IntegrityError, transaction
+
+
 
 
 from rest_framework import viewsets
 
 from .serializers import *
-
-
+from rest_framework import viewsets
 
 
 #Importar todos los modelos de la base de datos.
 from .models import *
 
 # Create your views here.
+
+def view_404(request, exception=None):
+    # make a redirect to homepage
+    # you can use the name of url or just the plain link
+    return redirect('/')
+
 
 def index(request):
     logueo = request.session.get("logueo", False)
@@ -30,10 +42,10 @@ def index(request):
 def login(request):
 	if request.method == "POST":
 		user = request.POST.get("correo")
-		passw = request.POST.get("clave")
+		password = request.POST.get("clave")
 		#Select * from Usuario where correo = "user" and clave = "passw"
 		try:
-			q = Usuario.objects.get(email = user, clave = passw)
+			q = Usuario.objects.get(email = user, password = password)
 			# Crear variable de sesión.
 			request.session["logueo"] = {
 				"id": q.id,
@@ -66,7 +78,7 @@ def inicio(request):
     if logueo:
         try:
             usuario_id = request.session['logueo']['id']
-            usuario = Usuario.objects.get(id=usuario_id)
+            usuario = Usuario.objects.get(pk=usuario_id)
             contexto = {'data': usuario}
             return render(request, "Oasis/index.html", contexto)
         except Usuario.DoesNotExist:
@@ -147,10 +159,11 @@ def cambiar_clave(request):
         c1 = request.POST.get("nueva1")
         c2 = request.POST.get("nueva2")
 
-        if q.clave == request.POST.get("clave"):
+        #Puedes intentar cambiando "Clave" por "Password" - Sale un error diferente. JAJAJA
+        if q.password == request.POST.get("password"):
             if c1 == c2:
                 #Cambiar clave en DB
-                q.clave = c1
+                q.password = c1
                 q.save()
                 messages.success(request, "Contraseña guardada correctamente!")
                 return redirect('ver_perfil')
@@ -1096,12 +1109,19 @@ def ver_detalles(request, id):
     contexto = {"user":user, "venta":detalles}
     return render(request, "Oasis/carrito/detalles.html", contexto)
 
-
+# -------------------------------------------------------------------------------------------
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # Vistas para el conjunto de datos de las API
+
 class UsuarioViewSet(viewsets.ModelViewSet):
-    queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
+    # authentication_classes = [TokenAuthentication, SessionAuthentication]
+	authentication_classes = [TokenAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = Usuario.objects.all()
+	serializer_class = UsuarioSerializer
+
 class EventoViewSet(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
@@ -1113,6 +1133,7 @@ class ReservaViewSet(viewsets.ModelViewSet):
     queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
 class CategoriaViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
 

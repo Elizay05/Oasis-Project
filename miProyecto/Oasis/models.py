@@ -1,10 +1,15 @@
 from django.db import models
 
+from django.contrib.auth.models import AbstractUser
+
+from .authentication import CustomUserManager
+
 # Create your models here.
-class Usuario(models.Model):
-    nombre = models.CharField(max_length=150)
-    email = models.EmailField(unique=True)
-    clave = models.CharField(max_length=254)
+class Usuario(AbstractUser):    
+    username = None                                                                                                                                                                                                                                                                                                                                    
+    nombre = models.CharField(max_length=254)
+    email = models.EmailField(max_length=254, unique=True)
+    password = models.CharField(max_length=254)
     cedula = models.CharField(max_length=10, unique=True)
     fecha_nacimiento = models.DateField()
     ROLES = (
@@ -19,7 +24,13 @@ class Usuario(models.Model):
         (2, "Bloqueado"),
     )
     estado = models.IntegerField(choices=ESTADO, default=1)
-    foto = models.ImageField(upload_to="Img_usuarios/", default="Img_usuarios/default.png")
+    foto = models.ImageField(upload_to="Img_usuarios/", default="Img_usuarios/default.png", blank=True)
+    token_recuperar = models.CharField(max_length=254, default="", blank=True, null=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["nombre", "cedula", "fecha_nacimiento"]
+    objects = CustomUserManager()
+
 
     def __str__(self):
         return self.nombre
@@ -63,7 +74,7 @@ class Mesa(models.Model):
         return f'{self.id}'
 
 class Reserva(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+    # usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
     evento = models.ForeignKey(Evento, on_delete=models.DO_NOTHING)
     mesa = models.ForeignKey(Mesa, on_delete=models.DO_NOTHING)
     fecha_compra = models.DateField()
@@ -141,7 +152,7 @@ class Fotos(models.Model):
 
 class Venta(models.Model):
 	fecha_venta = models.DateTimeField(auto_now=True)
-	usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+	#usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
 	ESTADOS = (
 		(1, 'Pendiente'),
 		(2, 'Enviado'),
@@ -161,3 +172,16 @@ class DetalleVenta(models.Model):
 
 	def __str__(self):
 		return f"{self.id} - {self.venta}"
+
+
+# ---------------------------------------------------------------------------------
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+

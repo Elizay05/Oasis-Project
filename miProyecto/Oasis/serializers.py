@@ -8,7 +8,7 @@ class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     foto = serializers.ImageField(required=False)
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'email', 'clave', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
+        fields = ['id', 'nombre', 'email', 'password', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto', 'token_recuperar']
 
 class EventoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -23,7 +23,8 @@ class MesaSerializer(serializers.HyperlinkedModelSerializer):
 class ReservaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reserva
-        fields = ['id', 'usuario', 'evento', 'mesa', 'fecha_compra', 'hora_compra', 'codigo_qr']
+        #Agregar el 'usuario' cuando funcione
+        fields = ['id', 'evento', 'mesa', 'fecha_compra', 'hora_compra', 'codigo_qr']
 
 class CategoriaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -63,7 +64,8 @@ class FotosSerializer(serializers.HyperlinkedModelSerializer):
 class VentaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Venta
-        fields = ['fecha_venta', 'usuario', 'estado']
+        #Agregar el 'usuario' cuando funcione
+        fields = ['fecha_venta', 'estado']
 
 class DetalleVentaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
