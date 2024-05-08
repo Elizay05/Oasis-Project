@@ -891,7 +891,6 @@ def front_productos(request):
     contexto = {"data": user,"productos": productos, "categorias": categorias}
     return render(request, "Oasis/front_productos/front_productos.html", contexto)
 
-
 def front_productos_info(request, id):
     logueo = request.session.get("logueo", False)
     user = None
