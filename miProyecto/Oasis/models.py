@@ -153,7 +153,6 @@ class Venta(models.Model):
 		return f"{self.id} - {self.usuario}"
 
 
-
 class DetalleVenta(models.Model):
 	venta = models.ForeignKey(Venta, on_delete=models.DO_NOTHING)
 	producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
