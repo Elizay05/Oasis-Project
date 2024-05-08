@@ -133,14 +133,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 FORMAT_MODULE_PATH = [
     "Oasis.formats"
 ]
-<<<<<<< HEAD
 
 AUTH_USER_MODEL = "Oasis.Usuario"
 AUTH_PROFILE_MODULE = "Oasis.Usuario"
 
-
-=======
->>>>>>> 0b62dd6d4eb6dca631f42cd007617de990081831
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
