@@ -207,7 +207,7 @@ def guUsuariosCrear(request):
             nombre = request.POST.get('nombre')
             fecha_nacimiento = request.POST.get('fechaNacimiento')
             email = request.POST.get('email')
-            clave = request.POST.get('clave')
+            password = request.POST.get('password')
             cedula = request.POST.get('cedula')
             foto = request.FILES.get('foto')
             rol = int(request.POST.get('rol'))
@@ -220,7 +220,7 @@ def guUsuariosCrear(request):
                 nombre=nombre,
                 fecha_nacimiento=fecha_nacimiento,
                 email=email,
-                clave=clave,
+                password=password,
                 rol=rol,
                 cedula=cedula,
                 estado=estado,
