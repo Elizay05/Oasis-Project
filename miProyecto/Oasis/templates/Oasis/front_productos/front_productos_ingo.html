@@ -1,0 +1,31 @@
+{% extends 'Oasis/barNavInicio.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block titulo %}Productos{% endblock %}
+
+{% block contenedor %}
+    <div class="d-flex">
+        <img src="{% static 'Oasis/img/cerveza.png' %}" alt="cerveza" class="d-block w-50" style="height: 300px;">
+        <div class="w-50" style="background-color: black;">
+            <h1 style="color: white; font-family: Camingo; margin-top: 5%;">MENÚ OASIS</h1>
+            <div style="height: 2%; background-color: blueviolet; width: 30%;"></div>
+            <br>
+            <br>
+            <h5 style="color: white; font-family: Quicksand; width: 80%;">Tus celebraciones no serían lo mismo sin licor, por eso tenemos para tí los mejores del mercado, elige el que con tu evento combine mejor.</h5>
+        </div>
+    </div>
+
+    <div class="bg-dark text-light w-100 d-flex" style="height:auto; padding: 3%; gap: 32px;">
+        <div class="d-flex justify-content-end" style="width: 50%;">
+            <img src="{{ evento.foto.url }}" class="card-img-top" alt="Evento" style="height: 300px; width: 70%; border-radius: 30px;"> 
+        </div>
+        <div style="width: 35%">
+            <h3 class="card-text" style="font-family: Quicksand; color: white;"><strong>{{ evento.nombre }}</strong></h3>
+            <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Fecha: </strong>{{ evento.fecha }}</h5>
+            <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Cupos Disponibles: </strong>{{ evento.aforo }} personas</h5>
+            <br>
+            <h6 class="card-text" style="font-family: Quicksand; color: white;">{{ evento.descripcion }}</h6>
+            <br>
+        </div>
+    </div>
