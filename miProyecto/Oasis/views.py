@@ -33,10 +33,10 @@ def index(request):
 def login(request):
 	if request.method == "POST":
 		user = request.POST.get("correo")
-		passw = request.POST.get("clave")
+		password = request.POST.get("password")
 		#Select * from Usuario where correo = "user" and clave = "passw"
 		try:
-			q = Usuario.objects.get(email = user, clave = passw)
+			q = Usuario.objects.get(email = user, password = password)
 			# Crear variable de sesión.
 			request.session["logueo"] = {
 				"id": q.id,
