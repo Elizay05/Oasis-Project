@@ -137,3 +137,14 @@ FORMAT_MODULE_PATH = [
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'Oasis.utils.custom_exception_handler'
 }
+
+
+AUTH_USER_MODEL = "Oasis.Usuario"
+AUTH_PROFILE_MODULE = "Oasis.Usuario"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}

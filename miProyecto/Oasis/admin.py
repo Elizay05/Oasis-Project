@@ -6,7 +6,7 @@ from .models import *
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','cedula','fecha_nacimiento','email','clave','rol','estado','foto']
+    list_display = ['id','nombre','cedula','fecha_nacimiento','email','password','rol','estado','foto']
     search_fields = ['id','nombre','cedula','email','telefono','rol','estado']
     list_filter = ['rol']
     list_editable = ['estado']
