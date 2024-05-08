@@ -1,0 +1,82 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+
+
+{% block titulo %}Actualizar Producto{% endblock %}
+
+{% block Opciones %}
+  <!--<li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="#">
+      Inicio                    
+    </a>
+  </li>-->
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'Productos' %}">
+      Productos          
+    </a>
+  </li>
+{% endblock %}
+
+
+{% block contenedor %}
+<style>
+
+    form h1{
+        margin-left: 0%;
+    }
+
+    form label{
+        font-size: 2.2vh;
+    }
+
+
+</style>
+        <div class="container">
+          <form action="{% url 'actualizarProducto' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1 style="margin-top: 0%;">Actualizar Producto</h1>
+            <br>
+            <input type="hidden" name="id" value="{{ data.id }}">
+            <div class="mb-3 col-5">
+                <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{ data.nombre }}">
+            </div>
+            <div class="mb-3 col-5">
+                <label for="exampleFormControlInput1" class="form-label">Descripción</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" name="descripcion" value="{{ data.descripcion }}">
+            </div>
+            <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Categoria</label>
+                    <select class="form-control" name="categoria">
+                        <option value="">Seleccione</option>
+                        {% for i in categorias %}
+                            <option value="{{ i.id }}" {% if data.categoria.id == i.id %}selected{% endif %}>{{ i.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Precio</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="precio" value="{{ data.precio }}">
+                </div>
+            </div>
+            <div class="mb-3 col-5">
+                <label for="exampleFormControlInput1" class="form-label">Foto Actual</label>
+                {% if data.foto %}
+                    <input type="text" class="form-control" value="{{ data.foto.url }}" name="foto_actual" readonly>
+                    <div class="card" style="width: 18rem;">
+                      {% load static %}
+                        <img src="{{ data.foto.url }}" class="card-img-top" alt="foto_producto" style="max-height: 300px;">
+                    </div>
+                {% else %}
+                    <p>No hay imagen asociada</p>
+                {% endif %}
+            </div>
+            <div class="mb-3 col-5">
+                <label for="exampleFormControlInput1" class="form-label">Actualizar Foto</label>
+                <input type="file" class="form-control" id="exampleFormControlInput1" name="foto_nueva">
+            </div>
+            <button class="btn btn-success">Actualizar Producto</button>
+        </form>
+        </div>
+{% endblock %}

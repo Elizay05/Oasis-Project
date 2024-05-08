@@ -6,14 +6,17 @@ from .models import *
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','cedula','fecha_nacimiento','email','telefono','rol','estado']
+    list_display = ['id','nombre','cedula','fecha_nacimiento','email','password','rol','estado','foto','last_login']
     search_fields = ['id','nombre','cedula','email','telefono','rol','estado']
     list_filter = ['rol']
     list_editable = ['estado']
 
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 @admin.register(Evento)
 class EventoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre', 'nombre_plural', 'fecha', 'hora_incio', 'descripcion', 'foto']
+    list_display = ['id','nombre', 'nombre_plural', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'precio_entrada', 'precio_vip' , 'foto']
     search_fields = ['id','nombre','fecha','hora_incio']
     list_filter = ['fecha']
     list_editable = ['nombre','fecha','hora_incio']
@@ -27,32 +30,40 @@ class EventoAdmin(admin.ModelAdmin):
 
 @admin.register(Mesa)
 class MesaAdmin(admin.ModelAdmin):
-    list_display = ['id','estado','codigo_qr']
-    search_fields = ['id','estado']
-    list_filter = ['estado']
-    list_editable = ['estado']
+    list_display = ['id','nombre', 'capacidad', 'estado','estado_reserva','codigo_qr']
+    search_fields = ['id','estado', 'capacidad','estado_reserva']
+    list_filter = ['estado', 'capacidad','estado_reserva']
+    list_editable = ['estado', 'capacidad', 'estado_reserva']
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = ['id','usuario','evento','mesa','fecha_compra','hora_compra','codigo_qr']
+    #Agregar 'usuario' cuando funcione
+    list_display = ['id','evento','mesa','fecha_compra','hora_compra','codigo_qr']
     search_fields =['id','usuario','evento','mesa','fecha_compra']
     list_filter = ['evento','fecha_compra']
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion']
+    list_display = ['id','nombre','descripcion', 'foto']
     search_fields = ['nombre']
+
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre','descripcion','foto','categoria', 'precio']
-    search_fields = ['id','nombre','categoria', 'precio']
-    list_filter = ['categoria']
+    list_display = ['id','nombre','descripcion','inventario','precio','ver_foto']
+    search_fields = ['id','nombre', 'precio']
     list_editable = ['precio']
     
 
     def ver_foto(self, obj):
         return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+
+    def ver_foto(self, obj):
+        if obj.foto:
+            return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='15%'></a>")
+        
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
@@ -67,12 +78,12 @@ class PedidoMesaAdmin(admin.ModelAdmin):
     search_fields = ['id','mesa','producto','cantidad']
     list_filter = ['mesa']
 
-@admin.register(Inventario)
+"""@admin.register(Inventario)
 class InventarioAdmin(admin.ModelAdmin):
     list_display = ['id','producto','cantidad','fecha_caducidad']
     search_fields = ['id','producto','cantidad','fecha_caducidad']
     list_filter = ['fecha_caducidad']
-    list_editable = ['cantidad','fecha_caducidad']
+    list_editable = ['cantidad','fecha_caducidad']"""
 
 
 @admin.register(Galeria)
@@ -90,3 +101,16 @@ class FotosAdmin(admin.ModelAdmin):
 
     def ver_foto(self, obj):
         return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='10%'></a>")
+
+
+@admin.register(Venta)
+class VentaAdmin(admin.ModelAdmin):
+    #Agregar 'usuario' cuando funcione
+    list_display = ['id', 'fecha_venta']
+
+@admin.register(DetalleVenta)
+class DetalleVentaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'venta', 'producto', 'cantidad', 'precio_historico', 'subtotal']
+
+    def subtotal(self, obj):
+        return f"{obj.cantidad * obj.precio_historico}"

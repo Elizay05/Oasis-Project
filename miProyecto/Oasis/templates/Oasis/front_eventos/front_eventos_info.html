@@ -1,0 +1,139 @@
+{% extends 'Oasis/barNavInicio.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block titulo %}Eventos{% endblock %}
+
+{% block contenedor %}
+    <div class="d-flex">
+        <img src="{% static 'Oasis/img/fiesta.png' %}" alt="cerveza" class="d-block w-50" style="height: 300px;">
+        <div class="w-50" style="background-color: black;">
+            <h1 style="color: white; font-family: Camingo; margin-top: 5%;">EVENTOS OASIS</h1>
+            <div style="height: 2%; background-color: blueviolet; width: 30%;"></div>
+            <br>
+            <br>
+            <h5 style="color: white; font-family: Quicksand; width: 80%;">¡Prepárate para la fiesta de tu vida! Explora nuestros próximos eventos en la discoteca y únete a la diversión nocturna. Desde DJs internacionales hasta noches temáticas, cada evento promete una experiencia inigualable. ¡No te lo pierdas!</h5>
+        </div>
+    </div>
+    <div class="bg-dark text-light w-100 d-flex" style="height:auto; padding: 3%; gap: 32px;">
+        <div class="d-flex justify-content-end" style="width: 50%;">
+            <img src="{{ evento.foto.url }}" class="card-img-top" alt="Evento" style="height: 300px; width: 70%; border-radius: 30px;"> 
+        </div>
+        <div style="width: 35%">
+            <h3 class="card-text" style="font-family: Quicksand; color: white;"><strong>{{ evento.nombre }}</strong></h3>
+            <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Fecha: </strong>{{ evento.fecha }}</h5>
+            <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Cupos Disponibles: </strong>{{ evento.aforo }} personas</h5>
+            <br>
+            <h6 class="card-text" style="font-family: Quicksand; color: white;">{{ evento.descripcion }}</h6>
+            <br>
+        </div>
+    </div>
+    <div class="bg-dark text-light BlockReservaEntrada">
+        <div style="border-right: 1px solid white; width: 50%;" class="contenedorReservas">
+            <div class="titulosyDescEntradas">
+                <h4><strong>Comprar Entradas</strong></h4>
+            </div>
+            <form action="{% url 'comprar_entradas' evento.id %}" method="post" enctype="multipart/form-data" id="formEntradas">
+                {% csrf_token %}
+                <table class="table table-dark comprarEntradaTabla">
+                    <tbody>
+                        <tr style="height: 100px;">
+                            <td style="font-family: Nunito; width: 200px;">Entrada General</td>
+                            <td style="display: flex; align-items: center; height: 100px; width: 200px;">
+                                <input style="font-family: Nunito;" id="entrada-general-cantidad" type="number" class="form-control bg-dark text-light inputCantidadEntradas" min="0" max="4" value="1" size="1">
+                            </td>
+                            <td id="precio-entrada-general-oculto" hidden>{{ evento.precio_entrada }}</td>
+                            <td style="font-family: Nunito; width: 200px;" id="precio-entrada-general">{{ evento.precio_entrada|intcomma }}</td>
+                        </tr>
+                        <tr style="height: 70px;">
+                            <td style="font-family: Nunito;">Entrada Vip</td>
+                            <td style="display: flex; align-items: center; height: 100px;">
+                                <input style="font-family: Nunito;" id="entrada-vip-cantidad" type="number" class="form-control bg-dark text-light inputCantidadEntradas" min="0" max="4" value="1" size="1">
+                            </td>
+                            <td id="precio-entrada-vip-oculto" hidden>{{ evento.precio_vip }}</td>
+                            <td style="font-family: Nunito;" id="precio-entrada-vip">{{ evento.precio_vip|intcomma }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div style="display: flex; width: 100%; justify-content: right; gap: 50px; margin-right: 115px;">
+                    <h5 style="font-family: Nunito"><strong>Total</strong></h5>
+                    <h5 style="font-family: Nunito;" id="total-general"><strong></strong>{{ total_defecto|intcomma }}</h5>
+                </div>
+                <br>
+                <button type="button" class="btn btn-comprar" data-bs-toggle="modal" data-bs-target="#confirmModal" id="botonComprar" disabled>Comprar</button>
+
+            </form>
+        </div>
+        <div style="width: 50%;" class="contenedorReservas">
+            <div class="titulosyDescEntradas">
+                <h4><strong>Reservar Mesa</strong></h4>
+                <p style="font-family: Nunito;">(Las entradas están incluídas para la cantidad de personas de la mesa)</p>
+                <img src="{% static 'Oasis/img/mapaMesas.png' %}" alt="cerveza" width="550px"/>
+            </div>
+            <table class="table table-dark reservarMesaTabla">
+                <tbody>
+                    <tr>
+                        <td style="font-family: Nunito;">Mesa</td>
+                        <td>
+                            <select class="form-control bg-dark text-light" name="mesa">
+                                <option>Seleccione</option>
+                                    {% for m in mesas %}
+                                        {% if m.estado_reserva == 'Reservada' %}
+                                            <option class="inputMesa" value="{{ m.id }}" disabled>{{ m.nombre }} - (Reservada)</option>
+                                        {% else %}
+                                            <option class="inputMesa" value="{{ m.id }}">{{ m.nombre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <button type="button" class="btn" style="background-color: #fc4664; color: white; width: 50%;">Reservar</button>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 style="font-family: Nunito; font-weight: bold;" class="modal-title" id="modalLabel">Confirmación de Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                    <img  src="{{ evento.foto.url }}" alt="martini" class="img-fluid" style="height: 180px; width: 80%; border-radius: 30px;">
+                    <br>
+                    <h3 style="font-family: Nunito; font-weight: bold;">{{ evento.nombre }}</h3>
+                    <div style="display: flex; gap: 10px;"> 
+                        <p style="font-family: Nunito; font-weight: bold;">Usuario: </p>
+                        <p style="font-family: Nunito;">{{ data.nombre }}</p>
+                    </div>
+                    <br>
+                    <div id="detalle-general">
+                        <p style="font-family: Nunito; font-weight: bold;">Entrada General: <span id="modal-entrada-general-cantidad"></p>
+                        <p style="font-family: Nunito; font-weight: bold;"><span id="modal-entrada-general-precio"></span></p>
+                    </div>
+                    <br>
+                    <div id="detalle-vip">
+                        <p style="font-family: Nunito; font-weight: bold;">Entrada VIP: <span id="modal-entrada-vip-cantidad"></p>
+                        <p style="font-family: Nunito; font-weight: bold;"><span id="modal-entrada-vip-precio"></span></p>
+                    </div>
+                    <br>
+                    <p style="font-family: Nunito; font-weight: bold;">Total a pagar</p>
+                    <h5 style="font-family: Nunito; font-weight: bold; color: #fc4664;"><strong><span id="modal-total"></span></strong></h5>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Confirmar compra</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+      </div>
+
+{% endblock %}

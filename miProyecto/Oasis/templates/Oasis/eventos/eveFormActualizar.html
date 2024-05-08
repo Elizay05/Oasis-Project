@@ -25,17 +25,17 @@
 
 </style>
         <div class="container">
-            <form action="{% url 'actualizarEvento' %}" method="post">
+            <form action="{% url 'actualizarEvento' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <h1>Agregar Evento</h1>
+                <h1 style="margin-top: 0.5em;" >Actualizar Evento</h1>
                 <br>
                 <input type="hidden" name="id" value="{{data.id}}">
-                <div class="mb-3 col-6">
+                <div class="mb-3 col-5">
                     <label for="exampleFormControlInput1" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{data.nombre}}">
                 </div>
                 <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
-                    <div class="mb-3 col-6">
+                    <div class="mb-3 col-5">
                         <label for="exampleFormControlInput1" class="form-label">Fecha</label>
                         <input type="date" class="form-control" id="exampleFormControlInput1" name="fecha" value="{{ data.fecha|date:'Y-m-d' }}" required>
                     </div>
@@ -44,15 +44,42 @@
                         <input type="time" class="form-control" id="exampleFormControlInput1" name="hora_incio" value="{{data.hora_incio}}">
                     </div>
                 </div>
-                <div class="mb-3 col-6">
+                <div class="mb-2 col-5 d-flex flex-row justify-content-between align-items-center">
+                    <div class="mb-3 col-5">
+                        <label for="exampleFormControlInput1" class="form-label">Precio Entrada general</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1" name="entrada_general" value="{{data.precio_entrada}}">
+                    </div>
+                    <div class="mb-3 col-5">
+                        <label for="exampleFormControlInput1" class="form-label">Precio Entrada Vip</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1" name="entrada_vip" value="{{data.precio_vip}}">
+                    </div>
+                </div>
+                <div class="mb-3 col-2">
+                    <label for="exampleFormControlInput1" class="form-label">Aforo de Evento</label>
+                    <input type="number" class="form-control" id="exampleFormControlInput1" name="aforo" value="{{data.aforo}}">
+                </div>
+                <div class="mb-3 col-5">
                     <label for="exampleFormControlInput1" class="form-label">Descripción</label>
                     <input type="text" class="form-control" id="exampleFormControlInput1" name="descripcion" value="{{data.descripcion}}">
                 </div>
-                <div class="mb-3 col-6">
-                    <label for="exampleFormControlInput1" class="form-label">Flyer</label>
-                    <input type="file" accept="image/jpeg, image/png" class="form-control" id="exampleFormControlInput1" name="foto" value="{{data.foto}}">
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Flyer Actual</label>
+                    {% if data.foto %}
+                        <input type="text" class="form-control" value="{{ data.foto.url }}" name="foto_actual" readonly>
+                        <div class="card" style="width: 18rem;">
+                          {% load static %}
+                            <img src="{{ data.foto.url }}" class="card-img-top" alt="foto_producto" style="max-height: 300px;">
+                        </div>
+                    {% else %}
+                        <p>No hay imagen asociada</p>
+                    {% endif %}
+                </div>
+                <div class="mb-3 col-5">
+                    <label for="exampleFormControlInput1" class="form-label">Actualizar Flyer</label>
+                    <input type="file" class="form-control" id="exampleFormControlInput1" name="foto_nueva">
                 </div>
                 <button class="btn btn-success">Actualizar Evento</button>
             </form>
+            <br>
         </div>
 {% endblock %}

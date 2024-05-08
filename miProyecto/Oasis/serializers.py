@@ -1,0 +1,73 @@
+from .models import *
+
+from rest_framework import serializers
+
+
+# Serializers define the API representation.
+class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
+    foto = serializers.ImageField(required=False)
+    class Meta:
+        model = Usuario
+        fields = ['id', 'nombre', 'email', 'password', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto', 'token_recuperar']
+
+class EventoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Evento
+        fields = ['id', 'nombre', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'precio_entrada', 'precio_vip', 'foto']
+
+class MesaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Mesa
+        fields = ['id', 'nombre', 'capacidad', 'estado', 'estado_reserva', 'codigo_qr']
+
+class ReservaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Reserva
+        #Agregar el 'usuario' cuando funcione
+        fields = ['id', 'evento', 'mesa', 'fecha_compra', 'hora_compra', 'codigo_qr']
+
+class CategoriaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Categoria
+        fields = ['id', 'nombre', 'descripcion', 'foto']
+
+class ProductoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['id', 'nombre', 'descripcion', 'foto', 'categoria', 'precio']
+
+class PedidoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Pedido
+        fields = ['id', 'mesa', 'producto', 'detalles', 'estado', 'precio']
+
+class PedidoMesaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PedidoMesa
+        fields = ['id', 'mesa', 'producto', 'cantidad']
+
+"""class InventarioSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Inventario
+        fields = ['id', 'producto', 'cantidad', 'fecha_caducidad']"""
+
+class GaleriaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Galeria
+        fields = ['id', 'nombre', 'fecha', 'foto']
+
+class FotosSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Fotos
+        fields = ['id', 'foto', 'carpeta']
+
+class VentaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Venta
+        #Agregar el 'usuario' cuando funcione
+        fields = ['fecha_venta', 'estado']
+
+class DetalleVentaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = DetalleVenta
+        fields = ['venta', 'producto', 'cantidad', 'precio_historico']

@@ -1,0 +1,9 @@
+.container form h1{
+    margin-left: 0%;
+}
+
+.container form label{
+    font-size: 1em;
+    font-family: Nunito;
+    color: #6e6e6e;
+}

@@ -5,7 +5,7 @@
 
 {% block Opciones %}
   <li id='primeraOpcion' class="nav-item">
-    <a class="nav-link text-white" href="{% url 'meInicio' %}">
+    <a class="nav-link text-white" href="{% url 'Menu' %}">
       Inicio                    
     </a>
   </li>
@@ -13,11 +13,10 @@
 
 
 {% block contenedor %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="contenedor2">
         <div class="titulo">
-            <h1>COCTELES</h1>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#nombre"><i class="bi bi-pencil"></i></button>
+            <h1 style="margin-top: 0.5em;" >COCTELES</h1>
+            <button style="margin-top: 0.5em;" type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#nombre"><i class="bi bi-pencil"></i></button>
         </div>
         <div class="search">
             <input  type="text" id="myInput" placeholder="Buscar producto...">
@@ -244,6 +243,4 @@
           </div>
         </div>
       </div>
-
-</main>
 {% endblock %}
