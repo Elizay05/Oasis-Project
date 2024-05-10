@@ -262,7 +262,7 @@ def guUsuariosActualizar(request):
         nombre = request.POST.get('nombre')
         fecha_nacimiento = request.POST.get('fechaNacimiento')
         email = request.POST.get('email')
-        clave = request.POST.get('clave')
+        password = request.POST.get('password')
         cedula = request.POST.get('cedula')
         rol = request.POST.get('rol')
         estado = request.POST.get('Estado')
@@ -272,7 +272,7 @@ def guUsuariosActualizar(request):
             q = Usuario.objects.get(pk = id)
             q.nombre = nombre
             q.email = email
-            q.clave = clave
+            q.password = password
             q.fecha_nacimiento = fecha_nacimiento
             q.rol = rol
             q.cedula = cedula

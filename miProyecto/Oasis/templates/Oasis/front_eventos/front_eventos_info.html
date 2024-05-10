@@ -19,7 +19,7 @@
         <div class="d-flex justify-content-end" style="width: 50%;">
             <img src="{{ evento.foto.url }}" class="card-img-top" alt="Evento" style="height: 300px; width: 70%; border-radius: 30px;"> 
         </div>
-        <div style="width: 35%">
+        <div style="width: 35%; overflow-wrap: break-word; word-wrap: break-word">
             <h3 class="card-text" style="font-family: Quicksand; color: white;"><strong>{{ evento.nombre }}</strong></h3>
             <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Fecha: </strong>{{ evento.fecha }}</h5>
             <h5 class="card-text" style="font-family: Quicksand; color: white;"><strong>Cupos Disponibles: </strong>{{ evento.aforo }} personas</h5>
