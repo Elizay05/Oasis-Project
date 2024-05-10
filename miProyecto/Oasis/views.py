@@ -33,7 +33,7 @@ def index(request):
 def login(request):
 	if request.method == "POST":
 		user = request.POST.get("correo")
-		password = request.POST.get("password")
+		password = request.POST.get("clave")
 		#Select * from Usuario where correo = "user" and clave = "passw"
 		try:
 			q = Usuario.objects.get(email = user, password = password)
@@ -52,7 +52,6 @@ def login(request):
 	else:
 		messages.warning(request, "Error: No se enviaron datos.")
 		return redirect("index")
-
 
 def logout(request):
 	try:
