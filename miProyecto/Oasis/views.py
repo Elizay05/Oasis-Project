@@ -558,14 +558,14 @@ def crearMesa(request):
         try:
             nom = request.POST.get('nombre')
             cap = int(request.POST.get('capacidad'))
-            qr = request.POST.get('codigo_qr')
+            precio = int(request.POST.get('precio'))
             
             if Mesa.objects.filter(nombre=nom).count() == 0:
                 if 4 <= cap <= 8:
                     q = Mesa(
                     nombre = nom,
                     capacidad = cap,
-                    codigo_qr = qr
+                    precio = precio,
                     )
                     q.save()
                     messages.success(request, "Mesa Registrada Correctamente!")
@@ -592,7 +592,7 @@ def mesaActualizar(request):
         id = request.POST.get('id')
         nom = request.POST.get('nombre')
         cap = int(request.POST.get('capacidad'))
-        qr = request.POST.get('codigo_qr')
+        precio = int(request.POST.get('precio'))
         try:
             if Mesa.objects.filter(nombre=nom).exclude(pk=id).exists():
                 messages.warning(request, f'Incorrecto: Esta mesa ya está creada en el sistema con otro ID.')
@@ -602,7 +602,7 @@ def mesaActualizar(request):
                 q = Mesa.objects.get(pk=id)
                 q.nombre = nom
                 q.capacidad = cap
-                q.codigo_qr = qr
+                q.precio = precio
                 q.save()
                 messages.success(request, "Mesa Actualizada Correctamente!")
         except Exception as e:
@@ -989,11 +989,17 @@ def front_eventos_info(request, id):
     if logueo:
         user = Usuario.objects.get(pk = logueo["id"])
     evento = Evento.objects.get(pk=id)
-    mesa = Mesa.objects.all()
+    reservas = Reserva.objects.filter(evento=evento)
+    mesas = Mesa.objects.all()
+
+    listMesas = []
+
+    for reserva in reservas:
+        listMesas.append(reserva.mesa)
 
     total_defecto = evento.precio_entrada + evento.precio_vip
 
-    contexto = {"data": user, "evento": evento, "mesas": mesa, "total_defecto": total_defecto}
+    contexto = {"data": user, "evento": evento, "mesas": mesas, "total_defecto": total_defecto, "listMesas": listMesas}
     return render(request, "Oasis/front_eventos/front_eventos_info.html", contexto)
 
 def comprar_entradas(request, id):
@@ -1016,7 +1022,7 @@ def comprar_entradas(request, id):
         precio_entrada_vip = evento.precio_vip
         total = (cantidad_general * precio_entrada_general) + (cantidad_vip * precio_entrada_vip)
 
-        if evento.aforo >= cantidad_general + cantidad_vip:
+        if evento.entradas_disponibles >= cantidad_general + cantidad_vip:
             compra = CompraEntrada.objects.create(
                 usuario=user, 
                 evento=evento,
@@ -1033,6 +1039,41 @@ def comprar_entradas(request, id):
             messages.append({'message_type': 'error', 'message': 'No hay suficientes entradas disponibles'})
 
     return JsonResponse({'messages': messages})
+
+
+def reservar_mesa(request, id):
+    logueo = request.session.get("logueo", False)
+    messages = []
+
+    if not logueo:
+        messages.append({'message_type': 'warning', 'message': 'Inicia sesión antes de comprar'})
+        return JsonResponse({'messages': messages}) 
+
+    user = Usuario.objects.get(pk=logueo["id"])
+    evento = Evento.objects.get(pk=id)
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        mesa = Mesa.objects.get(pk=data.get("id_mesa", 0))
+        total = int(data.get("total_general", 0))
+        if evento.entradas_disponibles >= mesa.capacidad:
+            reserva = Reserva.objects.create(
+                usuario=user, 
+                evento=evento,  
+                mesa=mesa,
+                total=total,
+            )
+            evento.entradas_disponibles -= mesa.capacidad
+            evento.save()
+            mesa.estado_reserva = 'Reservada'
+            mesa.save()
+
+            messages.append({'message_type': 'success', 'message': 'Mesa reservada correctamente'})
+        else:
+            messages.append({'message_type': 'error', 'message': 'No hay suficientes entradas disponibles'})
+
+    return JsonResponse({'messages': messages}) 
     
 
 def carrito_add(request):

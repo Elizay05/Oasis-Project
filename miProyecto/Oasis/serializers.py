@@ -23,13 +23,13 @@ class CompraEntradaSerializer(serializers.HyperlinkedModelSerializer):
 class MesaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Mesa
-        fields = ['id', 'nombre', 'capacidad', 'estado', 'estado_reserva', 'codigo_qr']
+        fields = ['id', 'nombre', 'capacidad', 'precio', 'estado', 'estado_reserva', 'codigo_qr']
 
 class ReservaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reserva
         #Agregar el 'usuario' cuando funcione
-        fields = ['id', 'evento', 'mesa', 'fecha_compra', 'hora_compra', 'codigo_qr']
+        fields = ['id', 'evento', 'mesa', 'fecha_compra', 'total', 'codigo_qr']
 
 class CategoriaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

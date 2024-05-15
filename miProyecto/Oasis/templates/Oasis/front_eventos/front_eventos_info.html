@@ -64,7 +64,6 @@
                 <br>
                 <button type="button" class="btn btn-comprar" data-bs-toggle="modal" data-bs-target="#confirmModal" id="botonComprar">
                 Comprar</button>
-
             </div>
         </div>
         <div style="width: 50%;" class="contenedorReservas">
@@ -79,12 +78,12 @@
                         <td style="font-family: Nunito;">Mesa</td>
                         <td>
                             <select class="form-control bg-dark text-light" name="mesa">
-                                <option>Seleccione</option>
+                                <option value="">Seleccione</option>
                                     {% for m in mesas %}
-                                        {% if m.estado_reserva == 'Reservada' %}
-                                            <option class="inputMesa" value="{{ m.id }}" disabled>{{ m.nombre }} - (Reservada)</option>
+                                        {% if m in listMesas %}
+                                            <option class="inputMesa" value="{{ m.id }}" data-nombre="{{ m.nombre }}" data-capacidad="{{ m.capacidad }}" data-precio="{{ m.precio }}" data-entrada="{{ evento.precio_entrada }}" disabled>{{ m.nombre }} - (Reservada)</option>
                                         {% else %}
-                                            <option class="inputMesa" value="{{ m.id }}">{{ m.nombre }}</option>
+                                            <option class="inputMesa" value="{{ m.id }}" data-nombre="{{ m.nombre }}" data-capacidad="{{ m.capacidad }}" data-precio="{{ m.precio }}" data-entrada="{{ evento.precio_entrada }}">{{ m.nombre }}</option>
                                         {% endif %}
                                     {% endfor %}
                             </select>
@@ -93,7 +92,7 @@
                 </tbody>
             </table>
             <br>
-            <button type="button" class="btn" style="background-color: #fc4664; color: white; width: 50%;">Reservar</button>
+            <button type="button" class="btn btn-comprar" data-bs-toggle="modal" data-bs-target="#confirmCompraMesa" id="botonReservar">Reservar</button>
         </div>
     </div>
 
@@ -134,8 +133,44 @@
         </div>
     </div>
 
-{% endblock %}
 
-<script>
-    const csrfToken = '{{ csrf_token }}';
-</script>
+    <div class="modal fade" id="confirmCompraMesa" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="font-family: Nunito; font-weight: bold;" class="modal-title" id="modalLabel">Confirmación de Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                    <img  src="{{ evento.foto.url }}" alt="martini" class="img-fluid" style="height: 180px; width: 80%; border-radius: 30px;">
+                    <br>
+                    <h3  name="evento_nombre" value="{{ evento.id }}">{{ evento.nombre }}</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <p style="font-family: Nunito; font-weight: bold;">Usuario: </p>
+                        <p style="font-family: Nunito;">{{ data.nombre }}</p>
+                    </div>
+                    <br>
+                    <div class="detalles">
+                        <div id="circle-mesa">
+                            <p style="font-family: Nunito; font-weight: bold;"><span id="nombre-mesa-seleccionada"></span></p>
+                        </div>
+                        <div class="info-mesa">
+                            <p hidden><span id="id-mesa-seleccionada"></span></p>
+                            <h5><span id="nombree-mesa-seleccionada"></span></h5>
+                            <p>- La mesa que haz seleccionado tiene una capacidad de <strong><span id="capacidad-mesa-seleccionada"></span></strong> personas</p>
+                            <p>- La compra de esta mesa incluye las <strong><span id="capacidaad-mesa-seleccionada"></span></strong> entradas</p>
+                        </div>
+                    </div>
+                    <br>
+                    <h5 hidden><span id="total-reserva-mesa"></span></h5>
+                    <h5 class="total_reserva">Total: <strong><span id="total-front-reserva-mesa"></span></strong></h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="confirmarReservaBtn" data-evento-id="{{ evento.id }}">Confirmar compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -35,14 +35,14 @@ class CompraEntradaAdmin(admin.ModelAdmin):
 
 @admin.register(Mesa)
 class MesaAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre', 'capacidad', 'estado','estado_reserva','codigo_qr']
+    list_display = ['id','nombre', 'capacidad', 'precio','estado','estado_reserva','codigo_qr']
     search_fields = ['id','estado', 'capacidad','estado_reserva']
     list_filter = ['estado', 'capacidad','estado_reserva']
     list_editable = ['estado', 'capacidad', 'estado_reserva']
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = ['id', 'usuario','evento','mesa','fecha_compra','hora_compra','codigo_qr']
+    list_display = ['id', 'usuario','evento','mesa','fecha_compra','total','codigo_qr']
     search_fields =['id','usuario','evento','mesa','fecha_compra']
     list_filter = ['evento','fecha_compra']
 

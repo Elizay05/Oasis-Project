@@ -5,6 +5,8 @@ from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 
 from .authentication import CustomUserManager
+import uuid
+
 
 # Create your models here.
 class Usuario(AbstractUser):    
@@ -68,6 +70,9 @@ class CompraEntrada(models.Model):
     def __str__(self):
         return f'{self.id}'
 
+
+codigo_qr = str(uuid.uuid4())
+
 class Mesa(models.Model):
     ACTIVA = 'Activa'
     DISPONIBLE = 'Disponible'
@@ -86,23 +91,33 @@ class Mesa(models.Model):
     )
     nombre = models.CharField(max_length=300)
     capacidad = models.IntegerField(default=5)
+    precio = models.IntegerField(default=1000000)
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default=DISPONIBLE)
     estado_reserva = models.CharField(max_length=10, choices=RESERVA_CHOICES , default=DISPONIBLE)
-    codigo_qr = models.CharField(max_length=100) #Add atribute -> unique=True
+    codigo_qr = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return f'{self.id}'
+
+    def save(self, *args, **kwargs):
+        if not self.codigo_qr:
+            self.codigo_qr = str(uuid.uuid4())
+        super().save(*args, **kwargs)
 
 class Reserva(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None)
     evento = models.ForeignKey(Evento, on_delete=models.DO_NOTHING)
     mesa = models.ForeignKey(Mesa, on_delete=models.DO_NOTHING)
-    fecha_compra = models.DateField()
-    hora_compra = models.TimeField()
+    fecha_compra = models.DateTimeField(auto_now_add=True)
+    total = models.IntegerField(default=0)
     codigo_qr = models.CharField(max_length=100, unique=True)
-
     def __str__(self):
         return f'Mesa: {self.mesa} - Evento: {self.evento.nombre}'
+
+    def save(self, *args, **kwargs):
+        if not self.codigo_qr:
+            self.codigo_qr = str(uuid.uuid4())
+        super().save(*args, **kwargs)
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=150)

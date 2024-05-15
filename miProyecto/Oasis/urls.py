@@ -152,5 +152,7 @@ urlpatterns = [
 #COMPRAR ENTRADAS
     path("comprar_entradas/<int:id>/", views.comprar_entradas, name="comprar_entradas"),
 
+#RESERVAR MESAS
+    path("reservar_mesa/<int:id>/", views.reservar_mesa, name="reservar_mesa"),
 
 ]   
