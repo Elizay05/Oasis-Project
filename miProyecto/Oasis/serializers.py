@@ -4,12 +4,12 @@ from rest_framework import serializers
 
 
 # Serializers define the API representation.
-class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
+class UsuarioSerializer(serializers.HyperlinkedModelSerializer, serializers.ModelSerializer):
     foto = serializers.ImageField(required=False)
     class Meta:
         model = Usuario
         fields = ['id', 'nombre', 'email', 'password', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto', 'token_recuperar']
-
+        #fields = '__all__' Es la forma de importar todo los datos que se necesitan.
 class EventoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Evento

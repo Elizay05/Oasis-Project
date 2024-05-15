@@ -17,6 +17,8 @@ from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 import json
 
+#Encriptador de contraseña
+from .crypt import *
 
 
 
@@ -45,28 +47,33 @@ def index(request):
         return render(request, "Oasis/index.html")
     else:
         return redirect("inicio")
+    
+    
 
 def login(request):
 	if request.method == "POST":
 		user = request.POST.get("correo")
 		password = request.POST.get("clave")
-		#Select * from Usuario where correo = "user" and clave = "passw"
+		# select * from Usuario where correo = "user" and clave = "passw"
 		try:
-			q = Usuario.objects.get(email = user, password = password)
-			# Crear variable de sesión.
-			request.session["logueo"] = {
-				"id": q.id,
-				"nombre": q.nombre,
-				"rol": q.rol,
-                "nombre_rol":q.get_rol_display()
-			}
-			messages.success(request, f"Bienvendido {q.nombre}!!")
+			q = Usuario.objects.get(email=user)
+			if verify_password(password, q.password):
+				# Crear variable de sesión
+				request.session["logueo"] = {
+					"id": q.id,
+					"nombre": q.nombre,
+					"rol": q.rol,
+					"nombre_rol": q.get_rol_display()
+				}
+				messages.success(request, f"Bienvenido {q.nombre}!!")
+			else:
+				messages.error(request, "Error: Usuario o contraseña incorrectos...")
 			return redirect("inicio")
 		except Exception as e:
-			messages.error(request, f"Error: Usuario o contraseña incorrectos {e}")
+			messages.error(request, "Error: ocurrió un error, intente de nuevo...")
 			return redirect("index")
 	else:
-		messages.warning(request, "Error: No se enviaron datos.")
+		messages.warning(request, "Error: No se enviaron datos...")
 		return redirect("index")
 
 
@@ -183,6 +190,28 @@ def cambiar_clave(request):
     
     return redirect('cc_formulario')
 
+#RECUPERAR CONTRASEÑA
+"""def recuperar_clave(request):
+	if request.method == "POST":
+		correo = request.POST.get("correo")
+		try:
+			q = Usuario.objects.get(correo=correo)
+			from random import randint
+			import base64
+			token = base64.b64encode(str(randint(100000, 999999)).encode("ascii")).decode("ascii")
+			print(token)
+			q.token_recuperar = token
+			q.save()
+        except Usuario.DoesNotExist:
+			messages.error(request, "No existe el usuario....")"""
+
+        
+
+
+
+
+
+
 def entradas_usuario(request):
     logueo = request.session.get("logueo", False)
     user = Usuario.objects.get(pk = logueo["id"])
@@ -257,7 +286,7 @@ def guUsuariosCrear(request):
                 nombre=nombre,
                 fecha_nacimiento=fecha_nacimiento,
                 email=email,
-                password=password,
+                password=hash_password(password),
                 rol=rol,
                 cedula=cedula,
                 estado=estado,

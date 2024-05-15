@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'Oasis', 
     'rest_framework',
     'django.contrib.humanize',
-    'rest_framework.authtoken',
+    'rest_framework.authtoken', 
 ]
 
 MIDDLEWARE = [
@@ -52,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'miProyecto.urls'
 
