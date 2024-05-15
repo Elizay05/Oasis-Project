@@ -16,7 +16,7 @@ class UsuarioAdmin(admin.ModelAdmin):
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 @admin.register(Evento)
 class EventoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre', 'nombre_plural', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'precio_entrada', 'precio_vip' , 'foto']
+    list_display = ['id','nombre', 'nombre_plural', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'entradas_disponibles', 'precio_entrada', 'precio_vip' , 'foto']
     search_fields = ['id','nombre','fecha','hora_incio']
     list_filter = ['fecha']
     list_editable = ['nombre','fecha','hora_incio']
@@ -27,6 +27,11 @@ class EventoAdmin(admin.ModelAdmin):
     def nombre_plural(self, obj):
         return mark_safe(f"<span style='color:red'>{obj.nombre}'s<span>")
 
+@admin.register(CompraEntrada)
+class CompraEntradaAdmin(admin.ModelAdmin):
+    list_display = ['id','usuario', 'evento', 'entrada_general', 'entrada_vip', 'total', 'fecha_compra']
+    search_fields =['id','usuario','evento','fecha_compra']
+    list_editable = ['entrada_general', 'entrada_vip', 'total']
 
 @admin.register(Mesa)
 class MesaAdmin(admin.ModelAdmin):
@@ -37,8 +42,7 @@ class MesaAdmin(admin.ModelAdmin):
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    #Agregar 'usuario' cuando funcione
-    list_display = ['id','evento','mesa','fecha_compra','hora_compra','codigo_qr']
+    list_display = ['id', 'usuario','evento','mesa','fecha_compra','hora_compra','codigo_qr']
     search_fields =['id','usuario','evento','mesa','fecha_compra']
     list_filter = ['evento','fecha_compra']
 
@@ -106,7 +110,7 @@ class FotosAdmin(admin.ModelAdmin):
 @admin.register(Venta)
 class VentaAdmin(admin.ModelAdmin):
     #Agregar 'usuario' cuando funcione
-    list_display = ['id', 'fecha_venta']
+    list_display = ['id', 'usuario','fecha_venta']
 
 @admin.register(DetalleVenta)
 class DetalleVentaAdmin(admin.ModelAdmin):
