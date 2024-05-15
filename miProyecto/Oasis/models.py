@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from django.contrib.auth.models import AbstractUser
 
@@ -41,12 +43,30 @@ class Evento(models.Model):
     hora_incio = models.TimeField() 
     descripcion = models.TextField()
     aforo = models.IntegerField(default=500)
+    entradas_disponibles = models.IntegerField(default=500)
     precio_entrada = models.IntegerField(default=50000)
     precio_vip = models.IntegerField(default=75000)
     foto = models.ImageField(upload_to="Img_eventos/", default="Img_eventos/default.png")
 
     def __str__(self):
         return self.nombre
+    
+@receiver(post_save, sender=Evento)
+def actualizar_entradas_disponibles(sender, instance, created, **kwargs):
+    if created:
+        instance.entradas_disponibles = instance.aforo
+        instance.save()
+    
+class CompraEntrada(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None)
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
+    entrada_general = models.IntegerField(default=1)
+    entrada_vip = models.IntegerField(default=1)
+    total = models.IntegerField(default=0)
+    fecha_compra = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.id}'
 
 class Mesa(models.Model):
     ACTIVA = 'Activa'
@@ -74,7 +94,7 @@ class Mesa(models.Model):
         return f'{self.id}'
 
 class Reserva(models.Model):
-    # usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None)
     evento = models.ForeignKey(Evento, on_delete=models.DO_NOTHING)
     mesa = models.ForeignKey(Mesa, on_delete=models.DO_NOTHING)
     fecha_compra = models.DateField()
@@ -152,7 +172,7 @@ class Fotos(models.Model):
 
 class Venta(models.Model):
 	fecha_venta = models.DateTimeField(auto_now=True)
-	#usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+	usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None)
 	ESTADOS = (
 		(1, 'Pendiente'),
 		(2, 'Enviado'),

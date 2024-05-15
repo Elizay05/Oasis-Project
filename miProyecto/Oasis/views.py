@@ -6,11 +6,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
+from django.db.models import F
+
+
 # Para tomar el from desde el settings
 from django.conf import settings
 from django.core.mail import BadHeaderError, EmailMessage
 # Importamos todos los modelos de la base de datos
 from django.db import IntegrityError, transaction
+from django.http import JsonResponse
+import json
+
+
 
 
 
@@ -175,6 +182,36 @@ def cambiar_clave(request):
         messages.warning(request, "Error: No se enviaron datos...")
     
     return redirect('cc_formulario')
+
+def entradas_usuario(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    entrada = CompraEntrada.objects.filter(usuario = logueo["id"])
+
+    evento_info = [Evento.objects.get(id=entrada.evento.id) for entrada in entrada]
+    
+    entradas_info = []
+    for entrada, evento in zip(entrada, evento_info):
+        entradas_info.append({'entrada': entrada, 'evento': evento})
+
+    contexto = {'entrada_info': entradas_info, 'user': user}
+    return render(request, "Oasis/usuario/entradas.html", contexto)
+
+def entradas_usuario_info(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk=logueo["id"])
+    
+    try:
+        entrada = CompraEntrada.objects.get(pk=id, usuario=logueo["id"])
+        evento = Evento.objects.get(pk=entrada.evento.id)
+
+        total_personas = entrada.entrada_general + entrada.entrada_vip
+        
+        contexto = {'entrada': entrada, 'evento': evento, 'total_personas': total_personas,  'user': user}
+        return render(request, "Oasis/usuario/entradas_info.html", contexto)
+    except CompraEntrada.DoesNotExist:
+        messages.error(request, f'La compra de entrada con el ID {id} no existe o no pertenece al usuario actual.')
+        return redirect('entradas_usuario')
 
 
 
@@ -642,9 +679,12 @@ def crearEvento(request):
 
 def eliminarEvento(request, id):
     try:
-        q = Evento.objects.get(pk = id)
-        q.delete()
-        messages.success(request, "Evento Eliminado Correctamente!")
+        evento = Evento.objects.get(pk=id)
+        if CompraEntrada.objects.filter(evento=evento).exists():
+            messages.warning(request, f'Incorrecto: No se puede eliminar este evento porque tiene entradas vendidas.')
+        else:
+            evento.delete()
+            messages.success(request, "Evento Eliminado Correctamente!")
     except Exception as e:
         messages.error(request, f'Error: {e}')
     
@@ -692,6 +732,34 @@ def actualizarEvento(request):
         
     return redirect('Eventos')
 
+def eveEntradas(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    evento = Evento.objects.get(pk = id)
+    entradas = CompraEntrada.objects.filter(evento = id)
+
+    correos = [Usuario.objects.get(nombre=entrada.usuario).email for entrada in entradas]
+    
+    entradas_con_correo = []
+    for entrada, correo in zip(entradas, correos):
+        entradas_con_correo.append({'entrada': entrada, 'correo': correo})
+
+    contexto = {'evento': evento, 'user':user, 'entradas_con_correo': entradas_con_correo}
+
+    return render(request, 'Oasis/eventos/eveEntradas.html', contexto)
+
+def eliminarEntrada(request, id):
+    try:
+        entrada = CompraEntrada.objects.get(pk=id)
+        entrada.delete()
+        evento = Evento.objects.filter(pk=entrada.evento.id).first()
+        evento.entradas_disponibles = F('entradas_disponibles') + entrada.entrada_general + entrada.entrada_vip
+        evento.save()
+        messages.success(request, "Entrada Eliminada Correctamente!")
+    except Exception as e:
+        messages.error(request, f'Error: {e}')
+    
+    return redirect('Eventos')
 
 
 def eveReserva(request):
@@ -930,11 +998,41 @@ def front_eventos_info(request, id):
 
 def comprar_entradas(request, id):
     logueo = request.session.get("logueo", False)
+    messages = []
+
     if not logueo:
-        messages.warning(request, "Inicia sesión antes de comprar")
-        return redirect('front_eventos_info', id=id)
-    
-    return redirect('front_eventos_info', id=id)
+        messages.append({'message_type': 'warning', 'message': 'Inicia sesión antes de comprar'})
+        return JsonResponse({'messages': messages}) 
+
+    user = Usuario.objects.get(pk=logueo["id"])
+    evento = Evento.objects.get(pk=id)
+
+    if request.method == "POST":    
+        data = json.loads(request.body)
+        
+        cantidad_general = int(data.get("cantidad_general", 0))
+        cantidad_vip = int(data.get("cantidad_vip", 0))
+        precio_entrada_general = evento.precio_entrada
+        precio_entrada_vip = evento.precio_vip
+        total = (cantidad_general * precio_entrada_general) + (cantidad_vip * precio_entrada_vip)
+
+        if evento.aforo >= cantidad_general + cantidad_vip:
+            compra = CompraEntrada.objects.create(
+                usuario=user, 
+                evento=evento,
+                entrada_general=cantidad_general,
+                entrada_vip=cantidad_vip,
+                total=total
+            )
+
+            evento.entradas_disponibles -= cantidad_general + cantidad_vip
+            evento.save()
+
+            messages.append({'message_type': 'success', 'message': 'Entradas compradas correctamente'})
+        else:
+            messages.append({'message_type': 'error', 'message': 'No hay suficientes entradas disponibles'})
+
+    return JsonResponse({'messages': messages})
     
 
 def carrito_add(request):
@@ -1109,6 +1207,7 @@ def ver_detalles(request, id):
     contexto = {"user":user, "venta":detalles}
     return render(request, "Oasis/carrito/detalles.html", contexto)
 
+
 # -------------------------------------------------------------------------------------------
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -1125,6 +1224,11 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 class EventoViewSet(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
+
+class CompraEntradaViewSet(viewsets.ModelViewSet):
+    queryset = CompraEntrada.objects.all()
+    serializer_class = CompraEntradaSerializer
+
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all()
     serializer_class = MesaSerializer
@@ -1132,6 +1236,7 @@ class MesaViewSet(viewsets.ModelViewSet):
 class ReservaViewSet(viewsets.ModelViewSet):
     queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
+
 class CategoriaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Categoria.objects.all()

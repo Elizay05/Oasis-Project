@@ -43,6 +43,9 @@ urlpatterns = [
     #PERFIL
     path('Perfil/', views.ver_perfil, name='ver_perfil'),
     path('editar_perfil', views.editar_perfil, name='editar_perfil'),
+    path('entradas/', views.entradas_usuario, name='entradas_usuario'),
+    path('entradas_info/<int:id>/', views.entradas_usuario_info, name='entrada_info'),
+
 
 
     #CAMBIAR CONTRASEÑA
@@ -102,6 +105,8 @@ urlpatterns = [
     path('Actualizar_Evento_Form/<int:id>', views.eveFormActualizar, name='eveFormActualizar'),
     path('Actualizar_Evento/', views.actualizarEvento, name='actualizarEvento'),
     path('Reservas/', views.eveReserva, name='eveReserva'),
+    path('Evento_Entradas/<int:id>', views.eveEntradas, name='eveEntradas'),
+    path('Eliminar_Entrada/<int:id>', views.eliminarEntrada, name='eliminarEntrada'),
 
 #   CRUD MENÚ (CATEGORÍAS)
     path('Gestion_Menu/', views.meInicio, name='Menu'),
