@@ -8,7 +8,7 @@ class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     foto = serializers.ImageField(required=False)
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'email', 'clave', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
+        fields = ['id', 'nombre', 'email', 'password', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
 
 class EventoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

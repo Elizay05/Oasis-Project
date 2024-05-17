@@ -175,6 +175,7 @@ def guInicio(request):
     contexto = {'data': q, 'user': user}
     return render(request, "Oasis/usuarios/guInicio.html", contexto)
 
+
 def guInicioForm(request):
     logueo = request.session.get("logueo", False)
     user = Usuario.objects.get(pk = logueo["id"])
@@ -1110,6 +1111,10 @@ def ver_detalles(request, id):
     return render(request, "Oasis/carrito/detalles.html", contexto)
 
 
+# Auditoria
+
+
+
 # Vistas para el conjunto de datos de las API
 
 class UsuarioViewSet(viewsets.ModelViewSet):
@@ -1166,8 +1171,8 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 class UsuarioViewSet(viewsets.ModelViewSet):
-	# authentication_classes = [TokenAuthentication, SessionAuthentication]
-	authentication_classes = [TokenAuthentication]
+	authentication_classes = [TokenAuthentication, SessionAuthentication]
+	#authentication_classes = [TokenAuthentication]
 	permission_classes = [IsAuthenticated]
 	queryset = Usuario.objects.all()
 	serializer_class = UsuarioSerializer
