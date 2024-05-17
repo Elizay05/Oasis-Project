@@ -24,9 +24,10 @@ router.register(r'detalle_venta', views.DetalleVentaViewSet)
 
 urlpatterns = [
     path('api/1.0/', include(router.urls)),
-    path('api/1.0/token-auth/', especial.obtain_auth_token),
 	path('api/1.0/api-auth/', include('rest_framework.urls')),
-
+    path('api/1.0/token-auth/', views.CustomAuthToken.as_view()),
+    # Ruta para login en API web
+	path('api/1.0/auth/', include("rest_framework.urls")),
 
 
     path('', views.index, name="index"),

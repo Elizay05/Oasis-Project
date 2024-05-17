@@ -31,6 +31,7 @@ class CategoriaSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'nombre', 'descripcion', 'foto']
 
 class ProductoSerializer(serializers.HyperlinkedModelSerializer):
+    categoria_name = serializers.StringRelatedField(many=False, source='categorias.nombre_cat')
     class Meta:
         model = Producto
         fields = ['id', 'nombre', 'descripcion', 'foto', 'categoria', 'precio']
