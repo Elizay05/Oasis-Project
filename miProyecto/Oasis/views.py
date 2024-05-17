@@ -101,16 +101,27 @@ def inicio(request):
         return redirect("index")
 
 def registro(request):
-    """
-    serializer = UsuarioSerializer(data = request.data)
-    if serializer.is_valid():
-        serializer.save()
-        token = Token.objects.create(user=user)
-        return Response ({"token": token.key,"user":serializer.data},status = status.HTTP_201_CREATED)
-    
-    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-    """
-    return render(request, 'Oasis/registro.html')
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        apellido = request.POST.get("apellido")
+        email = request.POST.get("email")
+        clave1 = request.POST.get("clave1")
+        clave2 = request.POST.get("clave2")
+        if clave1 == clave2:
+            q = Usuario(
+                nombre=nombre,
+                apellido=apellido,
+                email=email,
+                password=hash_password(clave1)
+            )
+            q.save()
+            messages.success(request, "Usuario registrado correctamente!!")
+            return redirect("index")
+        else:
+            messages.warning(request, "No concuerdan las contraseñas")
+            return redirect("registrar_usuario")
+    else:
+        return render(request, "Oasis/registro.html")
 
 
 #PERFIL
@@ -165,49 +176,107 @@ def cambio_clave_formulario(request):
     contexto = {"user":user}
     return render(request, "Oasis/login/cambio_clave.html", contexto)
 
+#Interfaz de recuperar clave
+def interfaz_cambiar_clave(request):
+    return render(request, "Oasis/login/recuperar_clave.html")
+
+
 def cambiar_clave(request):
-    if request.method == "POST":
-        logueo = request.session.get("logueo", False)
-        q = Usuario.objects.get(pk=logueo["id"])
+	if request.method == "POST":
+		logueo = request.session.get("logueo", False)
+		q = Usuario.objects.get(pk=logueo["id"])
 
-        c1 = request.POST.get("nueva1")
-        c2 = request.POST.get("nueva2")
+		c1 = request.POST.get("nueva1")
+		c2 = request.POST.get("nueva2")
 
-        #Puedes intentar cambiando "Clave" por "Password" - Sale un error diferente. JAJAJA
-        if q.password == request.POST.get("password"):
-            if c1 == c2:
-                #Cambiar clave en DB
-                q.password = c1
-                q.save()
-                messages.success(request, "Contraseña guardada correctamente!")
-                return redirect('ver_perfil')
-            else:
-               messages.info(request, "Las contraseñas nuevas no coinciden...")
-        else:
-            messages.error(request, "Contraseña no válida...")
-    else:
-        messages.warning(request, "Error: No se enviaron datos...")
-    
-    return redirect('cc_formulario')
+		if verify_password(request.POST.get("clave"), q.password):
+			if c1 == c2:
+				# cambiar clave en DB
+				q.password = hash_password(c1)
+				q.save()
+				messages.success(request, "Contraseña guardada correctamente!!")
+			else:
+				messages.info(request, "Las contraseñas nuevas no coinciden...")
+		else:
+			messages.error(request, "Contraseña no válida...")
+	else:
+		messages.warning(request, "Error: No se enviaron datos...")
+
+	return redirect('cc_formulario')
+
 
 #RECUPERAR CONTRASEÑA
-"""def recuperar_clave(request):
+def recuperar_clave(request):
 	if request.method == "POST":
 		correo = request.POST.get("correo")
 		try:
-			q = Usuario.objects.get(correo=correo)
+			q = Usuario.objects.get(email=correo)
 			from random import randint
 			import base64
 			token = base64.b64encode(str(randint(100000, 999999)).encode("ascii")).decode("ascii")
 			print(token)
 			q.token_recuperar = token
 			q.save()
-        except Usuario.DoesNotExist:
-			messages.error(request, "No existe el usuario....")"""
+			# enviar correo de recuperación
+			destinatario = correo
+			mensaje = f"""
+					<h1 style='color:blue;'>Tienda virtual</h1>
+					<p>Usted ha solicitado recuperar su contraseña, haga clic en el link y digite el token.</p>
+					<p>Token: <strong>{token}</strong></p>
+					<a href='http://127.0.0.1:8000/Oasis/verificar_recuperar/?correo={correo}'>Recuperar...</a>
+					"""
+			try:
+				msg = EmailMessage("Tienda ADSO", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+				msg.content_subtype = "html"  # Habilitar contenido html
+				msg.send()
+				messages.success(request, "Correo enviado!!")
+			except BadHeaderError:
+				messages.error(request, "Encabezado no válido")
+			except Exception as e:
+				messages.error(request, f"Error: {e}")
+			# fin -
+		except Usuario.DoesNotExist:
+			messages.error(request, "No existe el usuario....")
+		return redirect("recuperar_clave")
+	else:
+		return render(request, "Oasis/login/recuperar_clave.html")
 
-        
+     
+def verificar_recuperar(request):
+	if request.method == "POST":
+		if request.POST.get("check"):
+			# caso en el que el token es correcto
+			correo = request.POST.get("correo")
+			q = Usuario.objects.get(email=correo)
 
+			c1 = request.POST.get("nueva1")
+			c2 = request.POST.get("nueva2")
 
+			if c1 == c2:
+				# cambiar clave en DB
+				q.password = hash_password(c1)
+				q.token_recuperar = ""
+				q.save()
+				messages.success(request, "Contraseña guardada correctamente!!")
+				return redirect("index")
+			else:
+				messages.info(request, "Las contraseñas nuevas no coinciden...")
+				return redirect("verificar_recuperar")+"/?correo="+correo
+		else:
+			# caso en el que se hace clic en el correo-e para digitar token
+			correo = request.POST.get("correo")
+			token = request.POST.get("token")
+			q = Usuario.objects.get(email=correo)
+			if (q.token_recuperar == token) and q.token_recuperar != "":
+				contexto = {"check": "ok", "correo":correo}
+				return render(request, "Oasis/login/verificar_recuperar.html", contexto)
+			else:
+				messages.error(request, "Token incorrecto")
+				return redirect("verificar_recuperar")	# falta agregar correo como parametro url
+	else:
+		correo = request.GET.get("correo")
+		contexto = {"correo":correo}
+		return render(request, "Oasis/login/verificar_recuperar.html", contexto)
 
 
 

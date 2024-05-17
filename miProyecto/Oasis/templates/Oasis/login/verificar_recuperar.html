@@ -1,47 +1,32 @@
-{% extends 'Oasis/barNavInicio.html' %}
+{% extends 'Oasis/barNav.html' %}
 {% load static %}
 
-{% block titulo %}Registro{% endblock %}
+{% block titulo %}Login{% endblock %}
 
-{% block opciones %}
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'guInicio' %}" role="button">
-    Seguridad
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'invInicio' %}" role="button">
-    Inventario
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'peInicio' %}" role="button">
-    Pedidos
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'eveInicio' %}" role="button">
-    Eventos
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'meInicio' %}" role="button">
-    Menú
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'gaInicio' %}" role="button">
-    Galería
-  </a>
-</li>
+{% block contenedor %}
+
+{% if check %}
+    <form action="{% url 'verificar_recuperar' %}" method="post" class="mb-3 mt-5 w-100 h-100 ml-0 mr-0 mx-auto" style="max-width: 540px;">
+        {% csrf_token %}
+        <input type="hidden" name="check" value="{{ check }}"/>
+        <input type="hidden" name="correo" class="form-control" placeholder="Correo" required="" value="{{correo}}"><br>
+        <label>Contraseña nueva</label>
+        <input type="password" name="nueva1" required="" class="form-control"><br>
+        <label>Repetir Contraseña</label>
+        <input type="password" name="nueva2" required="" class="form-control"><br>
+
+        <button type="submit" class="btn btn-info">Guardar</button>
+    </form>
+{% else %}
+    <form action="{% url 'verificar_recuperar' %}" method="post" class="col-3 m-auto mt-5">
+        <h3>Ingrese el token enviado al correo</h3>
+        {% csrf_token %}
+        <input type="hidden" name="correo" class="form-control" placeholder="Correo" required="" value="{{correo}}"><br>
+        <input type="text" name="token" class="form-control" placeholder="Token" required=""><br>
+        <button type="submit" class="btn btn-info">Verificar...</button>
+    </form>
+{% endif %}
 {% endblock %}
-
-{% block botones %}
-<button class="btn2" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin" style="margin-left: 40%;">Reservar
-  Ahora
-</button>
-{% endblock %}
-
 {% block contenedor %}
 <section class="contenedorInicio">
   <div class="imagen">
@@ -51,10 +36,9 @@
     <div class="Registro">
       <h1>REGISTRO</h1>
       <div class="formulario">
-        <form action="{% url 'login' %}" class="form" method="post">
-          {% csrf_token %}
+        <form class="form">
           <div class="group">
-            <input required="true" class="main-input" type="text" name="nombre">
+            <input required="true" class="main-input" type="text">
             <span class="highlight-span"></span>
             <label class="lebal-email">Primer Nombre</label>
           </div>
@@ -67,7 +51,7 @@
           </div>
           <div class="container-1">
             <div class="group">
-              <input required="true" class="main-input" type="text" name="email">
+              <input required="true" class="main-input" type="text">
               <span class="highlight-span"></span>
               <label class="lebal-email">Email</label>
             </div>
@@ -96,10 +80,9 @@
         </form>
       </div>
       <div class="contentbutton">
-        <button type="submit" class="btn-normalpeque">Registrarse</button>
+        <button class="btn-normalpeque">Registrarse</button>
       </div>
     </div>
   </div>
 </section>
 {% endblock %}
-
