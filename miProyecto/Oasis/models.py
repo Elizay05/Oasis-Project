@@ -48,6 +48,7 @@ class Evento(models.Model):
     entradas_disponibles = models.IntegerField(default=500)
     precio_entrada = models.IntegerField(default=50000)
     precio_vip = models.IntegerField(default=75000)
+    reservas = models.BooleanField(default=False)
     foto = models.ImageField(upload_to="Img_eventos/", default="Img_eventos/default.png")
 
     def __str__(self):

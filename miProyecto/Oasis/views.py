@@ -188,6 +188,10 @@ def entradas_usuario(request):
     user = Usuario.objects.get(pk = logueo["id"])
     entrada = CompraEntrada.objects.filter(usuario = logueo["id"])
 
+    if not entrada:
+        contexto = {'entrada_info': None, 'user': user}
+        return render(request, "Oasis/usuario/entradas.html", contexto)
+
     evento_info = [Evento.objects.get(id=entrada.evento.id) for entrada in entrada]
     
     entradas_info = []
@@ -212,7 +216,38 @@ def entradas_usuario_info(request, id):
     except CompraEntrada.DoesNotExist:
         messages.error(request, f'La compra de entrada con el ID {id} no existe o no pertenece al usuario actual.')
         return redirect('entradas_usuario')
+    
+def reservas_usuario(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
+    reserva = Reserva.objects.filter(usuario = logueo["id"])
 
+    if not reserva:
+        contexto = {'reservas_info': None, 'user': user}
+        return render(request, "Oasis/usuario/reservas.html", contexto)
+
+    evento_info = [Evento.objects.get(id=reserva.evento.id) for reserva in reserva]
+    
+    reservas_info = []
+    for reserva, evento in zip(reserva, evento_info):
+        reservas_info.append({'reserva': reserva, 'evento': evento})
+
+    contexto = {'reservas_info': reservas_info, 'user': user}
+    return render(request, "Oasis/usuario/reservas.html", contexto)
+
+def reservas_usuario_info(request, id):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk=logueo["id"])
+    
+    try:
+        reserva = Reserva.objects.get(pk=id, usuario=logueo["id"])
+        evento = Evento.objects.get(pk=reserva.evento.id)
+        
+        contexto = {'reserva': reserva, 'evento': evento, 'user': user}
+        return render(request, "Oasis/usuario/reservas_info.html", contexto)
+    except CompraEntrada.DoesNotExist:
+        messages.error(request, f'La compra de entrada con el ID {id} no existe o no pertenece al usuario actual.')
+        return redirect('reservas_usuario')
 
 
 #USUARIOS
@@ -632,7 +667,7 @@ def eveInicio(request):
     user = Usuario.objects.get(pk = logueo["id"])
     #SELECT * FROM Eventos
     q = Evento.objects.all()
-    contexto = {'data' : q , 'user':user}
+    contexto = {'data' : q, 'user':user}
     return render(request, "Oasis/eventos/eveInicio.html", contexto)
 
 def eveForm(request):
@@ -762,11 +797,37 @@ def eliminarEntrada(request, id):
     return redirect('Eventos')
 
 
-def eveReserva(request):
+def eveReserva(request, id):
     logueo = request.session.get("logueo", False)
-    user = Usuario.objects.get(pk = logueo["id"])
-    contexto = {'user':user}
-    return render (request, 'Oasis/eventos/eveReserva.html', contexto)
+    user = Usuario.objects.get(pk=logueo["id"])
+    evento = Evento.objects.get(id=id)
+    reservas = Reserva.objects.filter(evento=evento)
+
+    reservas_info = []
+    for reserva in reservas:
+        reserva_info = {
+            'reserva': reserva,
+            'mesa_reservada': reserva.mesa,
+        }
+        reservas_info.append(reserva_info)
+
+    todas_las_mesas = Mesa.objects.all()
+
+    mesas_reservadas = [reserva.mesa for reserva in reservas]
+
+    mesas_no_reservadas = [mesa for mesa in todas_las_mesas if mesa not in mesas_reservadas]
+
+    total_reservadas = len(mesas_reservadas)
+
+    contexto = {
+        'user': user,
+        'evento': evento,
+        'totalReservadas': total_reservadas,
+        'reservasInfo': reservas_info,
+        'mesasNoReservadas': mesas_no_reservadas
+    }
+
+    return render(request, 'Oasis/eventos/eveReserva.html', contexto)
 
 
 # MENÚ (CATEGORÍAS)
@@ -1065,6 +1126,8 @@ def reservar_mesa(request, id):
                 total=total,
             )
             evento.entradas_disponibles -= mesa.capacidad
+            if evento.reservas == False:
+                evento.reservas = True
             evento.save()
             mesa.estado_reserva = 'Reservada'
             mesa.save()

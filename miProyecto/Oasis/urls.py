@@ -45,6 +45,8 @@ urlpatterns = [
     path('editar_perfil', views.editar_perfil, name='editar_perfil'),
     path('entradas/', views.entradas_usuario, name='entradas_usuario'),
     path('entradas_info/<int:id>/', views.entradas_usuario_info, name='entrada_info'),
+    path('reservas/', views.reservas_usuario, name='reservas_usuario'),
+    path('reservas_info/<int:id>/', views.reservas_usuario_info, name='reserva_info'),
 
 
 
@@ -104,7 +106,7 @@ urlpatterns = [
     path('Eliminar_Evento/<int:id>', views.eliminarEvento, name='eliminarEvento'),
     path('Actualizar_Evento_Form/<int:id>', views.eveFormActualizar, name='eveFormActualizar'),
     path('Actualizar_Evento/', views.actualizarEvento, name='actualizarEvento'),
-    path('Reservas/', views.eveReserva, name='eveReserva'),
+    path('Reservas/<int:id>', views.eveReserva, name='eveReserva'),
     path('Evento_Entradas/<int:id>', views.eveEntradas, name='eveEntradas'),
     path('Eliminar_Entrada/<int:id>', views.eliminarEntrada, name='eliminarEntrada'),
 

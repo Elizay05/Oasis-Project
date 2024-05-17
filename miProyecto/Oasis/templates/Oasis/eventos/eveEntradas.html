@@ -1,5 +1,6 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
+{% load humanize %}
 {{data}}
 
 {% block titulo %}Entradas{% endblock %}
@@ -19,6 +20,12 @@
             <p><b>Entradas disponibles</b> (<span id="totalUsuarios">{{ evento.entradas_disponibles }}</span>)</p>
         </div>
     </div>
+    <!--
+    <div class="nav_direccionamiento">
+      <a href="{% url 'Eventos' %}">Entradas</a>
+      <a href="{% url 'Eventos' %}">Reservas</a>
+    </div>
+    -->
     <div id="contenedorTabla" class="contenedorTabla">            
         <table id="tabla" class="table table-striped">
           <thead>
@@ -41,7 +48,7 @@
                 <td>{{ entrada_con_correo.correo }}</td>
                 <td>{{ entrada_con_correo.entrada.entrada_general }}</td>
                 <td>{{ entrada_con_correo.entrada.entrada_vip }}</td>
-                <td>{{ entrada_con_correo.entrada.total }}</td>
+                <td>{{ entrada_con_correo.entrada.total|intcomma }}</td>
                 <td>{{ entrada_con_correo.entrada.fecha_compra }}</td>
                 <td>
                   <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarEntrada' entrada_con_correo.entrada.id %}')"><i class="bi bi-x-lg"></i></a>

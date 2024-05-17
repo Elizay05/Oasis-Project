@@ -1,0 +1,59 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+{{data}}
+
+{% block titulo %}Entradas{% endblock %}
+
+{% block Opciones %}
+    <li id='primeraOpcion' class="nav-item lateralOpciones">
+        <a class="nav-link text-white" href="{% url 'ver_perfil' %}">
+          Inicio                    
+        </a>
+    </li>
+    {% if user.rol == 4 %}
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Historial de pedidos                   
+            </a>
+        </li>
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'reservas_usuario' %}">
+            Reservas                    
+            </a>
+        </li>
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+          <a class="nav-link text-white" href="{% url 'entradas_usuario' %}">
+          Entradas
+          </a>
+        </li>
+    {% else %}
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Historial de Ventas                   
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+
+
+{% block contenedor %}
+    <h1 style="margin-top: 0.5em;">Reservas</h1>
+    <div class="bloqueEvento">
+        {% if not reservas_info  %}
+            <p class="noDatos">No tienes reservas de mesas para ningún evento.</p>
+        {% else %}
+            {% for r in reservas_info %}
+                <div class="mesa">
+                    <div class="mesa__container">
+                        <p class="mesa__container__detalles">{{ r.reserva.mesa.nombre }}</p>
+                        <div>
+                            <img src="{{ r.evento.foto.url }}" alt="{{ r.evento }}" width="300" height="200" style="border-radius: 1em;">
+                        </div>
+                    </div>
+                    <a class="btn btn-primary w-100" href="{% url 'reserva_info' r.reserva.id %}">Más detalles</a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

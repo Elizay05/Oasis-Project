@@ -17,7 +17,7 @@
             </a>
         </li>
         <li id='segundaOpcion' class="nav-item lateralOpciones2">
-            <a class="nav-link text-white" href="#">
+            <a class="nav-link text-white" href="{% url 'reservas_usuario' %}">
             Reservas                    
             </a>
         </li>
@@ -40,25 +40,29 @@
 {% block contenedor %}
     <h1 style="margin-top: 0.5em;">Entradas Compradas</h1>
     <div class="bloqueEvento">
-        {% for e in entrada_info %}
-            <div class="evento">
-                <div class="evento__detalles">
-                    <h2><strong>{{ e.evento }}</strong></h2>
-                    <p><strong>Fecha:</strong> {{ e.evento.fecha }}</p>
-                    {% if e.entrada.entrada_general > 0 and e.entrada.entrada_vip > 0 %}
-                        <p><strong>Entrada General:</strong> {{ e.entrada.entrada_general }}</p>
-                        <p><strong>Entrada VIP:</strong> {{ e.entrada.entrada_vip }}</p>
-                    {% elif e.entrada.entrada_general > 0 and e.entrada.entrada_vip == 0 %}
-                        <p><strong>Entrada General:</strong> {{ e.entrada.entrada_general }}</p>
-                    {% elif e.entrada.entrada_vip > 0 and e.entrada.entrada_general == 0 %}
-                        <p><strong>Entrada VIP:</strong> {{ e.entrada.entrada_vip }}</p>
-                    {% endif %}
-                    <a class="btn btn-primary" href="{% url 'entrada_info' e.entrada.id %}">Más detalles</a>
+        {% if not entrada_info  %}
+            <p class="noDatos">No tienes entradas compradas para ningún evento.</p>
+        {% else %}
+            {% for e in entrada_info %}
+                <div class="evento">
+                    <div class="evento__detalles">
+                        <h4><strong>{{ e.evento }}</strong></h4>
+                        <p><strong>Fecha:</strong> {{ e.evento.fecha }}</p>
+                        {% if e.entrada.entrada_general > 0 and e.entrada.entrada_vip > 0 %}
+                            <p><strong>Entrada General:</strong> {{ e.entrada.entrada_general }}</p>
+                            <p><strong>Entrada VIP:</strong> {{ e.entrada.entrada_vip }}</p>
+                        {% elif e.entrada.entrada_general > 0 and e.entrada.entrada_vip == 0 %}
+                            <p><strong>Entrada General:</strong> {{ e.entrada.entrada_general }}</p>
+                        {% elif e.entrada.entrada_vip > 0 and e.entrada.entrada_general == 0 %}
+                            <p><strong>Entrada VIP:</strong> {{ e.entrada.entrada_vip }}</p>
+                        {% endif %}
+                        <a class="btn btn-primary" href="{% url 'entrada_info' e.entrada.id %}">Más detalles</a>
+                    </div>
+                    <div>
+                        <img src="{{ e.evento.foto.url }}" alt="Código QR" width="300" height="200" style="border-radius: 1em;">
+                    </div>
                 </div>
-                <div>
-                    <img src="{{ e.evento.foto.url }}" alt="Código QR" width="300" height="200" style="border-radius: 1em;">
-                </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
