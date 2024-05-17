@@ -1,5 +1,6 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block titulo %}Gestión de Mesas{% endblock %}
 
@@ -25,6 +26,7 @@
 
 {% block contenedor %}
     <div class="contenedor">
+        <a href="javascript:ver_carrito_admin(`{% url 'carrito_ver' %}` 'Oasis/carrito/carrito_admin.html');"></a>
         <h1 style="margin-top: 0.5em;">Mesa 3</h1>
         <div class="search">
             <input  type="text" id="myInput" placeholder="Buscar productos...">
@@ -32,97 +34,28 @@
         </div>
         <div class="row">
             <div  class="col-md-6 productos">
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
+                {% for i in productos %}
+                    <div class="pedido-item">
+                        <img src="{{ i.foto.url }}" class="card-img-top rounded" alt="Producto"  width="200px"> 
+                        <p style="font-family: Nunito;">{{ i.nombre }}</p>
+                        <p style="color: red; font-family: Nunito">{{ i.precio|intcomma }}</p>
+                        <form class="input-group">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" id="id_{{ i.id }}" value="{{ i.id }}">
+                            <input type="number" name="cantidad" id="cantidad_{{ i.id }}" class="form-control" placeholder="Cantidad" min="1" value="1" size="3">
+                            <br>
+                            <button type="button" onclick="add_carrito_admin(`{% url 'carrito_add' %}`, {{ i.id }}, 'Oasis/carrito/carrito_admin.html');" class="btn btn-primary">Agregar</button>
+                        </form>
                     </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
-                <div class="pedido-item">
-                    <img src="{% static 'Oasis/img/martini.jpg' %}" alt="martini" class="img-fluid" width="200px">
-                    <h3>Martini</h3>
-                    <h6 style="color: red;">30.000</h6>
-                    <div class="input-group">
-                        <input type="number" class="form-control" placeholder="Cantidad" min="1">
-                        <button class="btn btn-primary">Agregar</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
             <div class="col-md-6">
                 <div class="pedido-resumen">
                     <h2>Pedido en Curso</h2>
                     <div class="order-items">
-                        <h5>Productos</h5>
-                        <ul>
-                            <li>x1 Tequila Don Julio Blanco Reserva 700ml</li>
-                            <li>x3 Martini</li>
-                        </ul>
+                        <div id="respuesta_carrito">
+
+                        </div>
                     </div>
                     <div class="total">
                         <p>Total: $<span id="total">0.00</span></p>

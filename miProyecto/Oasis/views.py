@@ -467,6 +467,7 @@ def crearProducto(request):
             nom = request.POST.get('nombre')
             desc = request.POST.get('descripcion')
             cat_id = int(request.POST.get('categoria'))
+            inventario = int(request.POST.get('inventario'))
             pre = request.POST.get('precio')
             foto = request.FILES.get('foto')
 
@@ -479,6 +480,7 @@ def crearProducto(request):
                 nombre=nom,
                 descripcion=desc,
                 categoria=cat,
+                inventario=inventario,
                 precio=pre,
                 foto=foto,
             )
@@ -517,6 +519,7 @@ def actualizarProducto(request):
         cat = Categoria.objects.get(pk=request.POST.get('categoria'))
         nom = request.POST.get('nombre')
         desc = request.POST.get('descripcion')
+        inventario = int(request.POST.get('inventario'))
         precio_str = request.POST.get('precio')
         precio_str = precio_str.replace(',', '.')
         pre = float(precio_str)
@@ -527,6 +530,7 @@ def actualizarProducto(request):
             q.nombre = nom
             q.categoria = cat
             q.descripcion = desc
+            q.inventario = inventario
             q.precio = pre
 
             if foto_nueva:
@@ -568,7 +572,8 @@ def peGestionMesas(request):
 def pedidoEmpleado(request):
     logueo = request.session.get("logueo", False)
     user = Usuario.objects.get(pk = logueo["id"])
-    contexto = {'user':user}
+    productos = Producto.objects.all()
+    contexto = {'user':user, 'productos':productos}
     return render (request, "Oasis/pedidos/pedidoEmpleado.html", contexto)
 
 #MESAS
@@ -1142,53 +1147,50 @@ def reservar_mesa(request, id):
 def carrito_add(request):
     if request.method == "POST":
         try:
-            carrito = request.session.get("carrito", False)
+            carrito = request.session.get("carrito", [])
             if not carrito:
-                request.session["carrito"] =[]
+                request.session["carrito"] = []
                 request.session["items"] = 0
                 carrito = []
 
             id_producto = int(request.POST.get("id"))
-            cantidad = request.POST.get("cantidad")
-            #Consulto en DB..........................
+            cantidad = int(request.POST.get("cantidad", 1))
+            template_name = request.POST.get("template_name", "Oasis/carrito/carrito.html")
+            # Consulto en DB
             q = Producto.objects.get(pk=id_producto)
 
             for p in carrito:
                 if p["id"] == id_producto:
-                    if q.inventario >= (p["cantidad"] + int(cantidad)) and int(cantidad) > 0:
-                        p["cantidad"] += int(cantidad)
+                    if q.inventario >= (p["cantidad"] + cantidad) and cantidad > 0:
+                        p["cantidad"] += cantidad
                         p["subtotal"] = p["cantidad"] * q.precio
                     else:
-                        print("Cantidad supera inventario...")
                         messages.warning(request, "Cantidad supera inventario")
                     break
             else:
-                print("No existe en carrito... lo agregamos")
-                if q.inventario >= int(cantidad) and int(cantidad) > 0:
+                if q.inventario >= cantidad and cantidad > 0:
                     carrito.append({
                         "id": q.id,
                         "foto": q.foto.url,
                         "producto": q.nombre,
                         "precio": q.precio,
-                        "cantidad": int(cantidad),
-                        "subtotal": int(cantidad) * q.precio
+                        "cantidad": cantidad,
+                        "subtotal": cantidad * q.precio
                     })
                 else:
-                    print("Cantidad supera inventario...")
                     messages.warning(request, "No se puede agregar, no hay suficiente inventario.")
-            
-            
-            #Actualizamos variable de sesión carrito...
+
+            # Actualizamos variable de sesión carrito...
             request.session["carrito"] = carrito
             items = len(carrito)
             contexto = {
                 "items": items,
                 "total": sum(p["subtotal"] for p in carrito)
-                }
+            }
             request.session["items"] = len(carrito)
-            return render(request, "Oasis/carrito/carrito.html", contexto)
-        except ValueError as e:
-            messages.error(request, f"Error: Digite un valor correcto para cantidad...")
+            return render(request, template_name, contexto)
+        except ValueError:
+            messages.error(request, "Error: Digite un valor correcto para cantidad...")
             return HttpResponse("Error...")
         except Exception as e:
             messages.error(request, f"Ocurrió un error: {e}")
@@ -1198,10 +1200,9 @@ def carrito_add(request):
         return HttpResponse("Error...")
 
 
-
-
 def carrito_ver(request):
     carrito = request.session.get("carrito", False)
+    template_name = "template_name", "Oasis/carrito/carrito.html"
 
     if not carrito:
         request.session["carrito"] =[]
@@ -1216,8 +1217,27 @@ def carrito_ver(request):
             "total": sum(p["subtotal"] for p in carrito)
         }
         request.session["items"] = len(carrito)
-    return render(request, "Oasis/carrito/carrito.html", contexto)
+    return render(request, template_name, contexto)
 
+
+def carrito_ver_admin(request):
+    carrito = request.session.get("carrito", False)
+    template_name = "Oasis/carrito/carrito_admin.html"
+
+    if not carrito:
+        request.session["carrito"] =[]
+        request.session["items"] = 0
+        contexto = {
+        "items": 0,
+        "total": 0
+    }
+    else:
+        contexto = {
+            "items": len(carrito),
+            "total": sum(p["subtotal"] for p in carrito)
+        }
+        request.session["items"] = len(carrito)
+    return render(request, template_name, contexto)
 
 
 def carrito_eliminar(request, id):
@@ -1236,12 +1256,32 @@ def carrito_eliminar(request, id):
     except Exception as e:
         messages.error(request, f"Error: {e}")
 
+def carrito_eliminar_admin(request, id):
+    try:
+        carrito = request.session.get("carrito", False)
+        if carrito != False:
+            for i, item in enumerate(carrito):
+                if item["id"] == id:
+                    carrito.pop(i)
+                    break
+            else:
+                messages.warning(request, "No se encontró el item carrito")
+        request.session["carrito"] = carrito
+        request.session["items"] = len(carrito)
+        return redirect('carrito_ver_admin')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+
 
 def vaciar_carrito(request):
 	request.session["carrito"] = []
 	request.session["items"] = 0
 	return redirect('front_productos')
 
+def vaciar_carrito_admin(request):
+	request.session["carrito"] = []
+	request.session["items"] = 0
+	return redirect('pedidoEmpleado')
 
 def actualizar_totales_carrito(request, id_producto):
     carrito = request.session.get("carrito", False)
@@ -1257,6 +1297,21 @@ def actualizar_totales_carrito(request, id_producto):
     request.session["carrito"] = carrito
     request.session["items"] = len(carrito)
     return redirect('carrito_ver')
+
+def actualizar_totales_carrito_admin(request, id_producto):
+    carrito = request.session.get("carrito", False)
+    cantidad = request.GET.get("cantidad")
+    if carrito != False:
+        for i, item in enumerate(carrito):
+            if item["id"] == id_producto:
+                item["cantidad"] = int(cantidad)
+                item["subtotal"] = int(cantidad) * item["precio"]
+                break
+        else:
+            messages.warning(request, "No se encontró el item carrito")
+    request.session["carrito"] = carrito
+    request.session["items"] = len(carrito)
+    return redirect('carrito_ver_admin')
 
 def crear_venta(request):
 	try:

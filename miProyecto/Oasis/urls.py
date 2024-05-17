@@ -84,10 +84,12 @@ urlpatterns = [
     path('Actualizar_Producto/', views.actualizarProducto, name='actualizarProducto'),
 
 
+    #PEDIDOS
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
     path('Historial_Pedidos/', views.peHistorial, name='peHistorial'),
     path('Mesas/', views.peGestionMesas, name='peGestionMesas'),
     path('Agregar_Pedido/', views.pedidoEmpleado, name='pedidoEmpleado'),
+
 
     #CRUD MESAS
     path('Gestion_Mesas/', views.mesaInicio, name='Mesas'),
@@ -139,12 +141,20 @@ urlpatterns = [
     path('front_eventos_info/<int:id>/', views.front_eventos_info, name='front_eventos_info'),
 
 
-# CARRITO DE COMPRA
+# CARRITO DE COMPRA USUARIO
 	path("carrito_add/", views.carrito_add, name="carrito_add"),
 	path("carrito_ver/", views.carrito_ver, name="carrito_ver"),
     path("carrito_eliminar/<int:id>/", views.carrito_eliminar, name="carrito_eliminar"),
 	path("vaciar_carrito/", views.vaciar_carrito, name="vaciar_carrito"),
 	path("actualizar_totales_carrito/<int:id_producto>/", views.actualizar_totales_carrito, name="actualizar_totales_carrito"),
+
+#CARRITO DE COMPRA MESERO
+	path("carrito_ver_admin/", views.carrito_ver_admin, name="carrito_ver_admin"),
+	path("actualizar_totales_carrito_admin/<int:id_producto>/", views.actualizar_totales_carrito_admin, name="actualizar_totales_carrito_admin"),
+    path("carrito_eliminar_admin/<int:id>/", views.carrito_eliminar_admin, name="carrito_eliminar_admin"),
+	path("vaciar_carrito_admin/", views.vaciar_carrito_admin, name="vaciar_carrito_admin"),
+
+
 
 #VENTAS
 	path("crear_venta/", views.crear_venta, name="crear_venta"),

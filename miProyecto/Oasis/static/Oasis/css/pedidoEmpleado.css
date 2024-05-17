@@ -1,5 +1,4 @@
-
-  .contenedor {
+    .contenedor {
       margin-top: 5px;
       padding: 20px;
       background-color: #fff;
@@ -30,7 +29,8 @@
       border-radius: 5px;
       padding: 20px;
       margin-bottom: 20px;
-      width: 230px;
+      width: 180px;
+      height: 280px;
       background-color: #fff;
       text-align: center;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -42,7 +42,7 @@
   
   .pedido-item img {
       max-width: 100%;
-      height: auto;
+      height: 100px;
   }
   
   .pedido-item h3 {
@@ -52,12 +52,8 @@
   
   .pedido-item p {
       font-size: 16px;
-      margin-top: 10px;
   }
-  
-  .input-group {
-      margin-top: 10px;
-  }
+
   
   .pedido-resumen {
       border: 1px solid #ccc;
