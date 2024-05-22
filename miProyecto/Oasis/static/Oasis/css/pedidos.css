@@ -1,10 +1,11 @@
     .tarjetaOrden{
         display: flex;
         margin-top: 3%;
+        font-family: "Nunito";
     }
     .listaOrden{
         padding-top: 3%; 
-        width: 500px;
+        width: 700px;
         flex: 1;
         padding: 20px;
         background-color: #fff;

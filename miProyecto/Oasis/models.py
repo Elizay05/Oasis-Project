@@ -8,6 +8,7 @@ from .authentication import CustomUserManager
 import uuid
 
 
+
 # Create your models here.
 class Usuario(AbstractUser):    
     username = None                                                                                                                                                                                                                                                                                                                                    
@@ -141,8 +142,9 @@ class Producto(models.Model):
 
 class Pedido(models.Model):
     mesa = models.ForeignKey(Mesa, on_delete=models.DO_NOTHING)
-    producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
-    detalles = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None)
+    comentario = models.TextField(default="")
     PREPARACION = 'En preparación'
     ENTREGADO = 'Entregado'
     PAGADO = 'Pagado'
@@ -155,26 +157,25 @@ class Pedido(models.Model):
         (CANCELADO, 'Cancelado'),
     )
 
-    estado = models.CharField(max_length=14, choices=ESTADO_CHOICES)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    estado = models.CharField(max_length=14, choices=ESTADO_CHOICES, default=PREPARACION)
+    total = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'Mesa {self.mesa.id}'
+        return f'Pedido {self.id} - Mesa {self.mesa.nombre}'
 
 
-class PedidoMesa(models.Model):
-    mesa = models.ForeignKey(Mesa, on_delete=models.DO_NOTHING)
+class DetallePedido(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
     cantidad = models.IntegerField()
+    precio = models.IntegerField()
 
-
-"""class Inventario(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
-    cantidad = models.IntegerField()
-    fecha_caducidad = models.DateField()
+    @property
+    def subtotal(self):
+        return self.cantidad * self.precio
 
     def __str__(self):
-        return self.producto.nombre"""
+        return f'{self.cantidad} x {self.producto.nombre}'
 
 class Galeria(models.Model):
     nombre = models.CharField(max_length=254)

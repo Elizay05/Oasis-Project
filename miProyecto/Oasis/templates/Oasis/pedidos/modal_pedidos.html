@@ -1,0 +1,62 @@
+{% extends 'Oasis/barNav.html' %}
+{% load humanize %}
+
+{% load static %}
+
+{% block titulo %}Gestión de Mesas{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'peInicio' %}">Inicio</a>
+  </li>
+  <li id='segundaOpcion' class="nav-item lateralOpciones2">
+    <a class="nav-link text-white" href="{% url 'peHistorial' %}">Historial de Pedidos</a>
+  </li>
+  <li id='terceraOpcion' class="nav-item lateralOpciones2">
+    <a class="nav-link text-white" href="{% url 'peGestionMesas' %}">Gestión de Mesas</a>
+  </li>
+{% endblock %}
+
+
+
+{% block contenedor %}
+    <h1 style="margin-top: 0.5em;">Pedidos {{ mesa.nombre }}</h1>
+    <div class="Contenido">
+        <div class="conteos">
+            <p><b>Todos</b> (<span id="totalUsuarios">{{ total_pedidos }}</span>)</p>
+        </div>
+        <div class="search">
+            <input placeholder="Buscar usuarios..." type="text">
+            <button type="submit">Buscar</button>
+        </div>
+    </div>
+    <div class="Agregar">
+        <a type="button" class="btn btn-success" href="{% url 'pedidoEmpleado' mesa.id %}">Nuevo pedido</a>
+    </div>
+    <div style="margin-left: 2%; margin-right: 2%; margin-top: 3%; font-family: Nunito;">
+        {% for detalle_pedido in detalles_pedidos %}
+            <h6>Pedido {{ detalle_pedido.pedido.id }} - Fecha: {{ detalle_pedido.pedido.fecha }}</h6>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%">Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in detalle_pedido.detalles %}
+                        <tr>
+                            <td>{{ detalle.producto.nombre }}</td>
+                            <td>{{ detalle.cantidad }}</td>
+                            <td>{{ detalle.precio|intcomma }}</td>
+                            <td>{{ detalle.subtotal|intcomma }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    <h3 style="margin-top: 3%; margin-bottom: 3%; font-weight: 700; text-align: end;">Total: {{ cuenta|intcomma }}</h3>
+    </div>
+{% endblock %}

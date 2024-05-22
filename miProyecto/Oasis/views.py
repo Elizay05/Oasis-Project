@@ -549,12 +549,27 @@ def actualizarProducto(request):
 
 
 
-
-
 def peInicio(request):
     logueo = request.session.get("logueo", False)
     user = Usuario.objects.get(pk = logueo["id"])
-    contexto = {'user':user}
+
+    pedidos = Pedido.objects.all()
+
+    detalles_pedidos = []
+    for pedido in pedidos:
+        detalles = DetallePedido.objects.filter(pedido=pedido)
+        detalles_pedidos.append({
+            'pedido': pedido,
+            'detalles': detalles
+        })
+
+    total_pedidos = len(pedidos)
+
+    contexto = {
+        'user':user,
+        'detalles_pedidos': detalles_pedidos,
+        'total_pedidos': total_pedidos,
+    }
     return render (request, "Oasis/pedidos/peInicio.html", contexto)
 
 def peHistorial(request):
@@ -566,15 +581,18 @@ def peHistorial(request):
 def peGestionMesas(request):
     logueo = request.session.get("logueo", False)
     user = Usuario.objects.get(pk = logueo["id"])
-    contexto = {'user':user}
+    mesas = Mesa.objects.all()
+    contexto = {'user':user, 'mesas':mesas}
     return render (request, "Oasis/pedidos/peGestionMesas.html", contexto)
 
-def pedidoEmpleado(request):
+def pedidoEmpleado(request, id):
     logueo = request.session.get("logueo", False)
-    user = Usuario.objects.get(pk = logueo["id"])
+    user = Usuario.objects.get(pk=logueo["id"])
+    carrito = request.session.get("carrito", [])
+    mesa = Mesa.objects.get(pk=id)
     productos = Producto.objects.all()
-    contexto = {'user':user, 'productos':productos}
-    return render (request, "Oasis/pedidos/pedidoEmpleado.html", contexto)
+    contexto = {'user': user, 'productos': productos, 'mesa': mesa, 'carrito': carrito}
+    return render(request, "Oasis/pedidos/pedidoEmpleado.html", contexto)
 
 #MESAS
 
@@ -1313,6 +1331,77 @@ def actualizar_totales_carrito_admin(request, id_producto):
     request.session["items"] = len(carrito)
     return redirect('carrito_ver_admin')
 
+
+def crear_pedido_admin(request, id):
+    try:
+        logueo = request.session.get("logueo")
+        
+        user = Usuario.objects.get(pk=logueo["id"])
+        mesa = Mesa.objects.get(pk=id)
+        
+        carrito = request.session.get("carrito", [])
+        if not carrito:
+            messages.error(request, "El pedido está vacío.")
+            return redirect('pedidoEmpleado', id=id)
+        
+        comentario = request.POST.get("comentario", "")
+        
+        pedido = Pedido.objects.create(
+            mesa=mesa, 
+            total=sum(item['subtotal'] for item in carrito), 
+            usuario=user,
+            comentario=comentario
+        )
+        
+        for p in carrito:
+            producto = Producto.objects.get(pk=p['id'])
+            DetallePedido.objects.create(
+                pedido=pedido,
+                producto=producto,
+                cantidad=p['cantidad'],
+                precio=p['precio']
+            )
+            producto.inventario -= p['cantidad']
+            producto.save()
+
+        mesa.estado = mesa.ACTIVA
+        mesa.save()
+        request.session["carrito"] = []
+        request.session["items"] = 0
+        messages.success(request, "Pedido creado con éxito.")
+
+    except Exception as e:
+        messages.error(request, f"Ocurrió un Error: {e}")
+    
+    return redirect('pedidoEmpleado', id=id)
+
+
+def ver_pedidos_mesa(request, mesa_id):
+    mesa = Mesa.objects.get(pk=mesa_id)
+    pedidos = Pedido.objects.filter(mesa=mesa)
+
+    detalles_pedidos = []
+    for pedido in pedidos:
+        detalles = DetallePedido.objects.filter(pedido=pedido)
+        detalles_pedidos.append({
+            'pedido': pedido,
+            'detalles': detalles
+        })
+
+    total_pedidos = len(pedidos)
+    cuenta = sum(p.total for p in pedidos)
+
+    contexto = {
+        'mesa': mesa,
+        'detalles_pedidos': detalles_pedidos,
+        'total_pedidos': total_pedidos,
+        'cuenta': cuenta
+    }
+    return render(request, 'Oasis/pedidos/modal_pedidos.html', contexto)
+
+
+
+
 def crear_venta(request):
 	try:
 		logueo = request.session.get("logueo")
@@ -1410,8 +1499,8 @@ class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
 
 class PedidoMesaViewSet(viewsets.ModelViewSet):
-    queryset = PedidoMesa.objects.all()
-    serializer_class = PedidoMesaSerializer
+    queryset = DetallePedido.objects.all()
+    serializer_class = DetallePedidoSerializer
 
 """class InventarioViewSet(viewsets.ModelViewSet):
     queryset = Inventario.objects.all()

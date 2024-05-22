@@ -26,8 +26,7 @@
 
 {% block contenedor %}
     <div class="contenedor">
-        <a href="javascript:ver_carrito_admin(`{% url 'carrito_ver' %}` 'Oasis/carrito/carrito_admin.html');"></a>
-        <h1 style="margin-top: 0.5em;">Mesa 3</h1>
+        <h1 style="margin-top: 0.5em;">{{ mesa.nombre }}</h1>
         <div class="search">
             <input  type="text" id="myInput" placeholder="Buscar productos...">
             <button id="searchButton" type="submit">Buscar</button>
@@ -50,18 +49,23 @@
                 {% endfor %}
             </div>
             <div class="col-md-6">
-                <div class="pedido-resumen">
-                    <h2>Pedido en Curso</h2>
-                    <div class="order-items">
-                        <div id="respuesta_carrito">
-
-                        </div>
-                    </div>
-                    <div class="total">
-                        <p>Total: $<span id="total">0.00</span></p>
-                    </div>
-                    <button class="btn btn-success btn-lg pedidoListo">Enviar Pedido</button>
-                </div>
+              <form method="post" action="{% url 'crear_pedido_admin' mesa.id %}">
+                {% csrf_token %}
+                  <div class="pedido-resumen">
+                      <h2 style="font-family: Nunito; font-weight: 700;">Pedido en Curso</h2>
+                      <div class="order-items">
+                          <div id="respuesta_carrito">
+                          </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="comentarios" class="form-label">Comentario</label>
+                        <input type="text" name="comentario" id="comentarios" class="form-control" placeholder="Ingresa un comentario">
+                      </div>
+                      <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success btn-lg pedidoListo">Enviar Pedido</button>
+                      </div>
+                  </div>
+              </form>
             </div>
         </div>
     </div>

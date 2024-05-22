@@ -67,16 +67,16 @@ class ProductoAdmin(admin.ModelAdmin):
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ['id','mesa','producto','detalles','estado','precio']
+    list_display = ['id','mesa','usuario', 'fecha','comentario','estado','total']
     search_fields = ['id','mesa','estado']
     list_filter = ['estado']
     list_editable = ['estado']
 
-@admin.register(PedidoMesa)
-class PedidoMesaAdmin(admin.ModelAdmin):
-    list_display = ['id','mesa','producto','cantidad'] 
-    search_fields = ['id','mesa','producto','cantidad']
-    list_filter = ['mesa']
+@admin.register(DetallePedido)
+class DetallePedidoAdmin(admin.ModelAdmin):
+    list_display = ['id','pedido','producto','cantidad', 'precio'] 
+    search_fields = ['id','pedido','producto','cantidad']
+    list_filter = ['pedido']
 
 """@admin.register(Inventario)
 class InventarioAdmin(admin.ModelAdmin):

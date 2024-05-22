@@ -44,12 +44,12 @@ class ProductoSerializer(serializers.HyperlinkedModelSerializer):
 class PedidoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Pedido
-        fields = ['id', 'mesa', 'producto', 'detalles', 'estado', 'precio']
+        fields = ['id', 'mesa', 'usuario', 'fecha','comentario', 'estado', 'total']
 
-class PedidoMesaSerializer(serializers.HyperlinkedModelSerializer):
+class DetallePedidoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = PedidoMesa
-        fields = ['id', 'mesa', 'producto', 'cantidad']
+        model = DetallePedido
+        fields = ['id', 'pedido', 'producto', 'cantidad', 'precio']
 
 """class InventarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
