@@ -78,6 +78,17 @@ class DetallePedidoAdmin(admin.ModelAdmin):
     search_fields = ['id','pedido','producto','cantidad']
     list_filter = ['pedido']
 
+@admin.register(HistorialPedido)
+class HistorialPedidoAdmin(admin.ModelAdmin):
+    list_display = ['id','mesa','usuario', 'fecha','estado','total']
+    search_fields = ['id','mesa','estado']
+    list_filter = ['estado']
+    list_editable = ['estado']
+
+@admin.register(HistorialDetallePedido)
+class HistorialDetallePedidoAdmin(admin.ModelAdmin):
+    list_display = ['id','historial_pedido','producto', 'cantidad','precio']
+
 """@admin.register(Inventario)
 class InventarioAdmin(admin.ModelAdmin):
     list_display = ['id','producto','cantidad','fecha_caducidad']

@@ -14,7 +14,8 @@ router.register(r'reserva', views.ReservaViewSet)
 router.register(r'categoria', views.CategoriaViewSet)
 router.register(r'producto', views.ProductoViewSet)
 router.register(r'pedido', views.PedidoViewSet)
-router.register(r'pedido_mesa', views.PedidoMesaViewSet)
+router.register(r'detalle_pedido', views.DetallePedidoViewSet)
+router.register(r'compra_entrada', views.CompraEntradaViewSet)
 #router.register(r'inventario', views.InventarioViewSet)
 router.register(r'galeria', views.GaleriaViewSet)
 router.register(r'fotos', views.FotosViewSet)
@@ -86,7 +87,7 @@ urlpatterns = [
 
     #PEDIDOS
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
-    path('Historial_Pedidos/', views.peHistorial, name='peHistorial'),
+    path('Historial_Pedidos/', views.ver_historial_pedidos, name='peHistorial'),
     path('Mesas/', views.peGestionMesas, name='peGestionMesas'),
     path('Agregar_Pedido/<int:id>', views.pedidoEmpleado, name='pedidoEmpleado'),
 	path("crear_pedido/<int:id>", views.crear_pedido_admin, name="crear_pedido_admin"),
@@ -157,6 +158,8 @@ urlpatterns = [
 	path("vaciar_carrito_admin/", views.vaciar_carrito_admin, name="vaciar_carrito_admin"),
     
     path('ver_pedidos_mesa/<int:mesa_id>/', views.ver_pedidos_mesa, name='ver_pedidos_mesa'),
+
+    path('pagar_pedido/<int:id>/', views.pagar_pedido, name='pagar_pedido'),
 
 
 

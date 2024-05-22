@@ -17,7 +17,7 @@ from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 import json
 
-
+from django.utils import timezone
 
 
 
@@ -571,12 +571,6 @@ def peInicio(request):
         'total_pedidos': total_pedidos,
     }
     return render (request, "Oasis/pedidos/peInicio.html", contexto)
-
-def peHistorial(request):
-    logueo = request.session.get("logueo", False)
-    user = Usuario.objects.get(pk = logueo["id"])
-    contexto = {'user':user}
-    return render (request, "Oasis/pedidos/peHistorial.html", contexto)
 
 def peGestionMesas(request):
     logueo = request.session.get("logueo", False)
@@ -1373,7 +1367,51 @@ def crear_pedido_admin(request, id):
     except Exception as e:
         messages.error(request, f"Ocurrió un Error: {e}")
     
-    return redirect('pedidoEmpleado', id=id)
+    return redirect('peGestionMesas')
+
+
+def pagar_pedido(request, id):
+    try:
+        mesa = Mesa.objects.get(pk=id)
+        pedidos = Pedido.objects.filter(mesa=mesa)
+
+        if not pedidos.exists():
+            messages.error(request, "No hay pedidos para esta mesa.")
+            return redirect('peGestionMesas')
+
+        usuario = pedidos.first().usuario
+        total_pedido = sum(p.total for p in pedidos)
+
+        # Crear un solo objeto en la tabla de historial
+        historial_pedido = HistorialPedido.objects.create(
+            mesa=mesa,
+            fecha=timezone.now(),
+            usuario=usuario,
+            total=total_pedido
+        )
+
+        # Crear objetos en la tabla de historial de detalles
+        for pedido in pedidos:
+            for detalle in pedido.detallepedido_set.all():
+                HistorialDetallePedido.objects.create(
+                    historial_pedido=historial_pedido,
+                    producto=detalle.producto,
+                    cantidad=detalle.cantidad,
+                    precio=detalle.precio
+                )
+
+        # Eliminar pedidos y detalles originales
+        pedidos.delete()
+
+        # Actualizar el estado de la mesa
+        mesa.estado = mesa.DISPONIBLE
+        mesa.save()
+
+        messages.success(request, "Pedido pagado y movido al historial exitosamente.")
+    except Exception as e:
+        messages.error(request, f"Ocurrió un Error: {e}")
+
+    return redirect('peGestionMesas')
 
 
 def ver_pedidos_mesa(request, mesa_id):
@@ -1397,10 +1435,26 @@ def ver_pedidos_mesa(request, mesa_id):
         'total_pedidos': total_pedidos,
         'cuenta': cuenta
     }
-    return render(request, 'Oasis/pedidos/modal_pedidos.html', contexto)
+    return render(request, 'Oasis/pedidos/info_pedido_mesa.html', contexto)
 
+def ver_historial_pedidos(request):
+    logueo = request.session.get("logueo", False)
+    user = Usuario.objects.get(pk = logueo["id"])
 
+    historial_pedidos = HistorialPedido.objects.all().order_by('-fecha')
 
+    detalles_pedidos = []
+    for historial_pedido in historial_pedidos:
+        detalles = HistorialDetallePedido.objects.filter(historial_pedido=historial_pedido)
+        detalles_pedidos.append({
+            'pedido': historial_pedido,
+            'detalles': detalles
+        })
+
+    contexto = {
+        'user':user, 'detalles_pedidos': detalles_pedidos, 
+    }
+    return render(request, "Oasis/pedidos/peHistorial.html", contexto)
 
 def crear_venta(request):
 	try:
@@ -1497,6 +1551,10 @@ class ProductoViewSet(viewsets.ModelViewSet):
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
+
+class DetallePedidoViewSet(viewsets.ModelViewSet):
+    queryset = DetallePedido.objects.all()
+    serializer_class = DetallePedidoSerializer
 
 class PedidoMesaViewSet(viewsets.ModelViewSet):
     queryset = DetallePedido.objects.all()

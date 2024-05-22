@@ -147,14 +147,10 @@ class Pedido(models.Model):
     comentario = models.TextField(default="")
     PREPARACION = 'En preparación'
     ENTREGADO = 'Entregado'
-    PAGADO = 'Pagado'
-    CANCELADO = 'Cancelado'
 
     ESTADO_CHOICES = (
         (PREPARACION, 'En preparacion'),
         (ENTREGADO, 'Entregado'),
-        (PAGADO, 'Pagado'),
-        (CANCELADO, 'Cancelado'),
     )
 
     estado = models.CharField(max_length=14, choices=ESTADO_CHOICES, default=PREPARACION)
@@ -166,6 +162,37 @@ class Pedido(models.Model):
 
 class DetallePedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
+    cantidad = models.IntegerField()
+    precio = models.IntegerField()
+
+    @property
+    def subtotal(self):
+        return self.cantidad * self.precio
+
+    def __str__(self):
+        return f'{self.cantidad} x {self.producto.nombre}'
+
+
+class HistorialPedido(models.Model):
+    mesa = models.ForeignKey(Mesa, on_delete=models.DO_NOTHING)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    fecha = models.DateTimeField()
+    PAGADO = 'Pagado'
+    CANCELADO = 'Cancelado'
+
+    ESTADO_CHOICES = (
+        (PAGADO, 'Pagado'),
+        (CANCELADO, 'Cancelado')
+    )
+    estado = models.CharField(max_length=14, choices=ESTADO_CHOICES, default=PAGADO)
+    total = models.IntegerField()
+
+    def __str__(self):
+        return f'Historial Pedido {self.id} - Mesa {self.mesa.nombre}'
+
+class HistorialDetallePedido(models.Model):
+    historial_pedido = models.ForeignKey(HistorialPedido, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
     cantidad = models.IntegerField()
     precio = models.IntegerField()
