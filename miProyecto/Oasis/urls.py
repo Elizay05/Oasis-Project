@@ -15,6 +15,7 @@ router.register(r'categoria', views.CategoriaViewSet)
 router.register(r'producto', views.ProductoViewSet)
 router.register(r'pedido', views.PedidoViewSet)
 router.register(r'pedido_mesa', views.PedidoMesaViewSet)
+
 #router.register(r'inventario', views.InventarioViewSet)
 router.register(r'galeria', views.GaleriaViewSet)
 router.register(r'fotos', views.FotosViewSet)
@@ -63,7 +64,7 @@ urlpatterns = [
     path('Gestion_Usuarios/', views.guInicio, name='guInicio'),
     path('Agregar_Usuario/', views.guInicioForm, name='guInicioForm'),
     path('Usuarios_Bloqueados/', views.guUsuariosBloqueados, name='guUsuariosBloqueados'),
-
+    path('registro', views.registro, name='reigstro'),
     path('Usuarios_Eliminados/<int:id>', views.guUsuariosEliminados, name='guUsuariosEliminados'),
     path('Usuarios_Form_Editar/<int:id>', views.guUsuariosFormEditar, name='guUsuariosFormEditar'),
     path('Usuarios_Actualizar/', views.guUsuariosActualizar, name='guUsuariosActualizar'),

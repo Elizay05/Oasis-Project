@@ -123,7 +123,6 @@ def registro(request):
     else:
         return render(request, "Oasis/registro.html")
 
-
 #PERFIL
 def ver_perfil(request):
     logueo = request.session.get("logueo", False)
@@ -223,13 +222,14 @@ def recuperar_clave(request):
 					<h1 style='color:blue;'>Tienda virtual</h1>
 					<p>Usted ha solicitado recuperar su contraseña, haga clic en el link y digite el token.</p>
 					<p>Token: <strong>{token}</strong></p>
-					<a href='http://127.0.0.1:8000/Oasis/verificar_recuperar/?correo={correo}'>Recuperar...</a>
+					<a href='http://127.0.0.1:8000/tienda/verificar_recuperar/?correo={correo}'>Recuperar...</a>
 					"""
 			try:
-				msg = EmailMessage("Tienda ADSO", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+				msg = EmailMessage("Oasis", mensaje, settings.EMAIL_HOST_USER, [destinatario])
 				msg.content_subtype = "html"  # Habilitar contenido html
 				msg.send()
 				messages.success(request, "Correo enviado!!")
+                
 			except BadHeaderError:
 				messages.error(request, "Encabezado no válido")
 			except Exception as e:
@@ -239,7 +239,8 @@ def recuperar_clave(request):
 			messages.error(request, "No existe el usuario....")
 		return redirect("recuperar_clave")
 	else:
-		return render(request, "Oasis/login/recuperar_clave.html")
+		return render(request, "tienda/login/recuperar_clave.html")
+
 
      
 def verificar_recuperar(request):
@@ -247,14 +248,14 @@ def verificar_recuperar(request):
 		if request.POST.get("check"):
 			# caso en el que el token es correcto
 			correo = request.POST.get("correo")
-			q = Usuario.objects.get(email=correo)
+			q = Usuario.objects.get(correo=correo)
 
 			c1 = request.POST.get("nueva1")
 			c2 = request.POST.get("nueva2")
 
 			if c1 == c2:
 				# cambiar clave en DB
-				q.password = hash_password(c1)
+				q.clave = hash_password(c1)
 				q.token_recuperar = ""
 				q.save()
 				messages.success(request, "Contraseña guardada correctamente!!")
@@ -266,17 +267,18 @@ def verificar_recuperar(request):
 			# caso en el que se hace clic en el correo-e para digitar token
 			correo = request.POST.get("correo")
 			token = request.POST.get("token")
-			q = Usuario.objects.get(email=correo)
+			q = Usuario.objects.get(correo=correo)
 			if (q.token_recuperar == token) and q.token_recuperar != "":
 				contexto = {"check": "ok", "correo":correo}
-				return render(request, "Oasis/login/verificar_recuperar.html", contexto)
+				return render(request, "tienda/login/verificar_recuperar.html", contexto)
 			else:
 				messages.error(request, "Token incorrecto")
 				return redirect("verificar_recuperar")	# falta agregar correo como parametro url
 	else:
 		correo = request.GET.get("correo")
 		contexto = {"correo":correo}
-		return render(request, "Oasis/login/verificar_recuperar.html", contexto)
+		return render(request, "tienda/login/verificar_recuperar.html", contexto)
+
 
 
 
