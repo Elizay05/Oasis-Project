@@ -12,6 +12,11 @@
     </li>
     {% if user.rol == 4 %}
         <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_detalles_pedido_usuario' %}">
+            Pedidos activos                   
+            </a>
+        </li>
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
             <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
             Historial de pedidos                   
             </a>

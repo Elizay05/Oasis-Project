@@ -112,9 +112,9 @@
     </div>
     <div style="display: flex; justify-content: end; align-items: center; gap: 2em; margin-right: 2em; margin-bottom: 3em;">
         {% if pedidos_eliminados == total_pedidos %}
-            <a type="button" class="btn btn-info" href="">Liberar Mesa</a>
+            <a type="button" class="btn btn-info" href="{% url 'liberar_mesa' mesa.id %}">Liberar Mesa</a>
         {% else %}
-            <a type="button" class="btn btn-info" href="{% url 'pagar_pedido' mesa.id %}">Pedido Pagado</a>
+            <a type="button" class="btn btn-info" href="{% url 'pagar_pedido' mesa.id 'empleado' %}">Pedido Pagado</a>
         {% endif %}
         <h3 style="font-weight: 700; text-align: end;">Total: {{ cuenta|intcomma }}</h3>
     </div>

@@ -1377,15 +1377,20 @@ def crear_pedido_admin(request, id):
     return redirect('peGestionMesas')
 
 
-def pagar_pedido(request, id):
+def pagar_pedido(request, id, rol):
     try:
         mesa = Mesa.objects.get(pk=id)
         # Filtrar pedidos excluyendo los cancelados
         pedidos = Pedido.objects.filter(mesa=mesa).exclude(estado='Cancelado')
+        pedidos_eliminados = Pedido.objects.filter(mesa=mesa).filter(estado='Cancelado')
 
         if not pedidos.exists():
-            messages.error(request, "No hay pedidos para esta mesa.")
-            return redirect('peGestionMesas')
+            if rol == 'usuario':
+                messages.error(request, "No hay pedidos para esta mesa.")
+                return redirect('ver_detalles_pedido_usuario')
+            else:
+                messages.error(request, "No hay pedidos para esta mesa.")
+                return redirect('peGestionMesas')
 
         usuario = pedidos.first().usuario
 
@@ -1406,8 +1411,12 @@ def pagar_pedido(request, id):
         productos_agrupados = defaultdict(lambda: {'cantidad': 0, 'precio': 0})
         for pedido in pedidos:
             if pedido.estado == pedido.PREPARACION:
-                messages.warning(request, "No se pueden pagar pedidos en preparación.")
-                return redirect('ver_pedidos_mesa', mesa_id=id)
+                if rol == 'usuario':
+                    messages.warning(request, "No se pueden pagar pedidos en preparación.")
+                    return redirect('ver_detalles_pedido_usuario')
+                else:
+                    messages.warning(request, "No se pueden pagar pedidos en preparación.")
+                    return redirect('ver_pedidos_mesa', mesa_id=id)
 
             for detalle in pedido.detallepedido_set.filter(estado='Activo'):
                 producto_id = detalle.producto.id
@@ -1426,6 +1435,7 @@ def pagar_pedido(request, id):
 
         # Eliminar pedidos y detalles originales
         pedidos.delete()
+        pedidos_eliminados.delete()
 
         # Actualizar el estado de la mesa
         mesa.estado = mesa.DISPONIBLE
@@ -1435,7 +1445,10 @@ def pagar_pedido(request, id):
     except Exception as e:
         messages.error(request, f"Ocurrió un Error: {e}")
 
-    return redirect('peGestionMesas')
+    if rol == 'usuario':
+        return redirect('ver_detalles_pedido_usuario')
+    else:
+        return redirect('peGestionMesas')
 
 
 def ver_pedidos_mesa(request, mesa_id):
@@ -1543,6 +1556,17 @@ def eliminar_item(request):
     
     return redirect('peInicio')
 
+def liberar_mesa(request, id):
+    try:
+        mesa = Mesa.objects.get(pk=id)
+        mesa.estado = mesa.DISPONIBLE
+        mesa.save()
+        messages.success(request, "Mesa liberada exitosamente.")
+    except Exception as e:
+        messages.error(request, f"Ocurrio un error: {e}")
+
+    return redirect('peGestionMesas')
+
 
 def crear_venta(request):
 	try:
@@ -1576,26 +1600,61 @@ def crear_venta(request):
 
 	return redirect('inicio')
 
-def ver_ventas(request):
-	logueo = request.session.get("logueo")
-	user = Usuario.objects.get(pk=logueo["id"])
+def ver_pedidos_usuario(request):
+    logueo = request.session.get("logueo")
+    user = Usuario.objects.get(pk=logueo["id"])
+    historial_pedidos = HistorialPedido.objects.filter(usuario=user).order_by('-fecha')
 
-	if user.rol == 4:
-		venta = Venta.objects.filter(usuario=user)
-		contexto = {"user":user, "venta":venta}
-		return render(request, "Oasis/carrito/ventas.html", contexto)
-	else:
-		venta = Venta.objects.all()
-		contexto = {"user": user, "venta":venta}
-		return render(request, "Oasis/carrito/ventas.html", contexto)
+    detalles_pedidos = []
+    for historial_pedido in historial_pedidos:
+        detalles = HistorialDetallePedido.objects.filter(historial_pedido=historial_pedido)
+        detalles_pedidos.append({
+            'pedido': historial_pedido,
+            'detalles': detalles
+        })
 
-def ver_detalles(request, id):
-    logueo = request.session.get("logueo", False)
-    user = Usuario.objects.get(pk = logueo["id"])
-    venta = Venta.objects.get(pk=id) 
-    detalles = DetalleVenta.objects.filter(venta=venta.id)
-    contexto = {"user":user, "venta":detalles}
-    return render(request, "Oasis/carrito/detalles.html", contexto)
+    total_pedidos = historial_pedidos.count()
+        
+    contexto = {
+        'user':user, 'detalles_pedidos': detalles_pedidos, 'total_pedidos': total_pedidos
+    }
+    return render(request, "Oasis/usuario/pedidos_usuario.html", contexto)
+
+def ver_detalles_usuario(request):
+    logueo = request.session.get("logueo")
+    user = Usuario.objects.get(pk=logueo["id"])
+    pedidos = Pedido.objects.filter(usuario=user).order_by('-fecha')
+
+    detalles_pedidos = []
+    cuenta = 0
+
+    for pedido in pedidos:
+        detalles = DetallePedido.objects.filter(pedido=pedido)
+        subtotal_pedido = 0
+
+        for detalle in detalles:
+            if detalle.estado != detalle.ELIMINADO:
+                subtotal_pedido += detalle.subtotal
+        
+        detalles_pedidos.append({
+            'pedido': pedido,
+            'detalles': detalles,
+        })
+
+        if pedido.estado != 'Cancelado':
+            cuenta += subtotal_pedido
+
+    pedidos_eliminados = pedidos.filter(estado='Cancelado').count()
+    total_pedidos = pedidos.count()
+
+    contexto = {
+        'user': user,
+        'detalles_pedidos': detalles_pedidos,
+        'total_pedidos': total_pedidos,
+        'pedidos_eliminados': pedidos_eliminados,
+        'cuenta': cuenta
+    }
+    return render(request, 'Oasis/usuario/detalles_pedido_usuario.html', contexto)
 
 
 # -------------------------------------------------------------------------------------------

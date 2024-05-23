@@ -9,16 +9,26 @@
           Inicio                    
         </a>
     </li>
-    {% if data.rol == 4 %}
+    {% if user.rol == 4 %}
         <li id='segundaOpcion' class="nav-item lateralOpciones2">
-            <a class="nav-link text-white" href="#">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
+            Pedidos activos                   
+            </a>
+        </li>
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+            <a class="nav-link text-white" href="{% url 'ver_ventas' %}">
             Historial de pedidos                   
             </a>
         </li>
         <li id='segundaOpcion' class="nav-item lateralOpciones2">
-            <a class="nav-link text-white" href="#">
+            <a class="nav-link text-white" href="{% url 'reservas_usuario' %}">
             Reservas                    
             </a>
+        </li>
+        <li id='segundaOpcion' class="nav-item lateralOpciones2">
+          <a class="nav-link text-white" href="{% url 'entradas_usuario' %}">
+          Entradas
+          </a>
         </li>
     {% endif %}
 {% endblock %}

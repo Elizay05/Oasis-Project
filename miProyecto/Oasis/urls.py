@@ -159,17 +159,19 @@ urlpatterns = [
     
     path('ver_pedidos_mesa/<int:mesa_id>/', views.ver_pedidos_mesa, name='ver_pedidos_mesa'),
 
-    path('pagar_pedido/<int:id>/', views.pagar_pedido, name='pagar_pedido'),
+    path('pagar_pedido/<int:id>/<str:rol>/', views.pagar_pedido, name='pagar_pedido'),
     path('entregar_pedido/<int:id>/', views.entregar_pedido, name='entregar_pedido'),
     path('cancelar_pedido/', views.cancelar_pedido, name='cancelar_pedido'),
     path('eliminar_producto/', views.eliminar_item, name='eliminar_producto'),
+    path('liberar_mesa/<int:id>/', views.liberar_mesa, name='liberar_mesa'),
+
 
 
 
 #VENTAS
 	path("crear_venta/", views.crear_venta, name="crear_venta"),
-	path("ver_ventas/", views.ver_ventas, name="ver_ventas"),
-	path("ver_detalles/<int:id>/", views.ver_detalles, name="ver_detalles"),
+	path("ver_ventas/", views.ver_pedidos_usuario, name="ver_ventas"),
+	path("ver_detalles_pedido_usuario/", views.ver_detalles_usuario, name="ver_detalles_pedido_usuario"),
 
 #COMPRAR ENTRADAS
     path("comprar_entradas/<int:id>/", views.comprar_entradas, name="comprar_entradas"),
