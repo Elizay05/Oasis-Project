@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 
 from django.db.models import F
+from collections import defaultdict
+
 
 
 # Para tomar el from desde el settings
@@ -551,26 +553,31 @@ def actualizarProducto(request):
 
 def peInicio(request):
     logueo = request.session.get("logueo", False)
-    user = Usuario.objects.get(pk = logueo["id"])
+    user = Usuario.objects.get(pk=logueo["id"])
 
-    pedidos = Pedido.objects.all()
+    pedidos = Pedido.objects.all().order_by('-fecha')
 
     detalles_pedidos = []
     for pedido in pedidos:
         detalles = DetallePedido.objects.filter(pedido=pedido)
+        detalles_activos_count = detalles.filter(estado='Activo').count()
         detalles_pedidos.append({
             'pedido': pedido,
-            'detalles': detalles
+            'detalles': detalles,
+            'detalles_activos_count': detalles_activos_count
         })
 
-    total_pedidos = len(pedidos)
+    total_preparacion = 0
+    for pedido in pedidos:
+        if pedido.estado == pedido.PREPARACION:
+            total_preparacion += 1
 
     contexto = {
-        'user':user,
+        'user': user,
         'detalles_pedidos': detalles_pedidos,
-        'total_pedidos': total_pedidos,
+        'total_preparacion': total_preparacion,
     }
-    return render (request, "Oasis/pedidos/peInicio.html", contexto)
+    return render(request, "Oasis/pedidos/peInicio.html", contexto)
 
 def peGestionMesas(request):
     logueo = request.session.get("logueo", False)
@@ -1373,16 +1380,21 @@ def crear_pedido_admin(request, id):
 def pagar_pedido(request, id):
     try:
         mesa = Mesa.objects.get(pk=id)
-        pedidos = Pedido.objects.filter(mesa=mesa)
+        # Filtrar pedidos excluyendo los cancelados
+        pedidos = Pedido.objects.filter(mesa=mesa).exclude(estado='Cancelado')
 
         if not pedidos.exists():
             messages.error(request, "No hay pedidos para esta mesa.")
             return redirect('peGestionMesas')
 
         usuario = pedidos.first().usuario
-        total_pedido = sum(p.total for p in pedidos)
 
-        # Crear un solo objeto en la tabla de historial
+        # Calcular el total del pedido excluyendo los productos eliminados
+        total_pedido = sum(
+            sum(detalle.cantidad * detalle.precio for detalle in pedido.detallepedido_set.filter(estado='Activo'))
+            for pedido in pedidos
+        )
+
         historial_pedido = HistorialPedido.objects.create(
             mesa=mesa,
             fecha=timezone.now(),
@@ -1390,15 +1402,27 @@ def pagar_pedido(request, id):
             total=total_pedido
         )
 
-        # Crear objetos en la tabla de historial de detalles
+        # Agrupar productos por ID y sumar las cantidades, excluyendo los productos eliminados
+        productos_agrupados = defaultdict(lambda: {'cantidad': 0, 'precio': 0})
         for pedido in pedidos:
-            for detalle in pedido.detallepedido_set.all():
-                HistorialDetallePedido.objects.create(
-                    historial_pedido=historial_pedido,
-                    producto=detalle.producto,
-                    cantidad=detalle.cantidad,
-                    precio=detalle.precio
-                )
+            if pedido.estado == pedido.PREPARACION:
+                messages.warning(request, "No se pueden pagar pedidos en preparación.")
+                return redirect('ver_pedidos_mesa', mesa_id=id)
+
+            for detalle in pedido.detallepedido_set.filter(estado='Activo'):
+                producto_id = detalle.producto.id
+                productos_agrupados[producto_id]['cantidad'] += detalle.cantidad
+                productos_agrupados[producto_id]['precio'] = detalle.precio
+
+        # Crear objetos en la tabla de historial de detalles con los productos agrupados
+        for producto_id, datos in productos_agrupados.items():
+            producto = Producto.objects.get(pk=producto_id)
+            HistorialDetallePedido.objects.create(
+                historial_pedido=historial_pedido,
+                producto=producto,
+                cantidad=datos['cantidad'],
+                precio=datos['precio']
+            )
 
         # Eliminar pedidos y detalles originales
         pedidos.delete()
@@ -1407,7 +1431,7 @@ def pagar_pedido(request, id):
         mesa.estado = mesa.DISPONIBLE
         mesa.save()
 
-        messages.success(request, "Pedido pagado y movido al historial exitosamente.")
+        messages.success(request, "¡Pedido pagado exitosamente!")
     except Exception as e:
         messages.error(request, f"Ocurrió un Error: {e}")
 
@@ -1419,23 +1443,36 @@ def ver_pedidos_mesa(request, mesa_id):
     pedidos = Pedido.objects.filter(mesa=mesa)
 
     detalles_pedidos = []
+    cuenta = 0
+
     for pedido in pedidos:
         detalles = DetallePedido.objects.filter(pedido=pedido)
+        subtotal_pedido = 0
+
+        for detalle in detalles:
+            if detalle.estado != detalle.ELIMINADO:
+                subtotal_pedido += detalle.subtotal
+        
         detalles_pedidos.append({
             'pedido': pedido,
-            'detalles': detalles
+            'detalles': detalles,
         })
 
+        if pedido.estado != 'Cancelado':
+            cuenta += subtotal_pedido
+
+    pedidos_eliminados = len(pedidos.filter(estado='Cancelado'))
     total_pedidos = len(pedidos)
-    cuenta = sum(p.total for p in pedidos)
 
     contexto = {
         'mesa': mesa,
         'detalles_pedidos': detalles_pedidos,
         'total_pedidos': total_pedidos,
+        'pedidos_eliminados': pedidos_eliminados,
         'cuenta': cuenta
     }
     return render(request, 'Oasis/pedidos/info_pedido_mesa.html', contexto)
+
 
 def ver_historial_pedidos(request):
     logueo = request.session.get("logueo", False)
@@ -1455,6 +1492,57 @@ def ver_historial_pedidos(request):
         'user':user, 'detalles_pedidos': detalles_pedidos, 
     }
     return render(request, "Oasis/pedidos/peHistorial.html", contexto)
+
+
+def entregar_pedido(request, id):
+    try:
+        pedido = Pedido.objects.get(pk=id)
+        pedido.estado = pedido.ENTREGADO
+        pedido.save()
+        messages.success(request, "El pedido ha sido entregado.")
+    except Exception as e:
+        messages.error(request, f"Ocurió un un Error: {e}")
+
+    return redirect('peInicio')
+
+
+def cancelar_pedido(request):
+    if request.method == 'POST':
+        pedido_id = request.POST.get('pedido_id')
+        comentario = request.POST.get('comentario')
+        try:
+            pedido = Pedido.objects.get(pk=pedido_id)
+            pedido.comentario = comentario
+            pedido.estado = pedido.CANCELADO
+            pedido.save()
+            messages.success(request, "Pedido cancelado exitosamente.")
+        except Pedido.DoesNotExist:
+            messages.error(request, "El pedido no existe.")
+        except Exception as e:
+            messages.error(request, f"Ocurrio un error: {e}")
+    return redirect('peInicio')
+
+
+def eliminar_item(request):
+    if request.method == 'POST':
+        producto_id = request.POST.get('producto_id')
+        motivo = request.POST.get('comentario')
+        
+        try: 
+            detalle = DetallePedido.objects.get(pk=producto_id)
+            detalle.motivo_eliminacion = motivo
+            detalle.estado = detalle.ELIMINADO
+            detalle.save()
+            
+            messages.success(request, 'Producto eliminado del pedido con éxito.')
+
+        except DetallePedido.DoesNotExist:
+            messages.error(request, "El detalle del pedido no existe.")
+        except Exception as e:
+            messages.error(request, f'Ocurrió un error: {e}')
+    
+    return redirect('peInicio')
+
 
 def crear_venta(request):
 	try:

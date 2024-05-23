@@ -36,14 +36,13 @@
     </div>
 </div>
 <div id="contenedorTabla" class="contenedorTabla">            
-  <table id="tabla" class="table table-striped">
-    <thead>
+  <table id="tabla2" class="table table-striped">
+    <thead class="table-dark">
       <tr>
         <th>Mesa</th>
         <th>Cliente</th>
         <th>Fecha</th>
         <th>Total</th>
-        <th>Estado</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -54,9 +53,8 @@
           <td>{{ detalle_pedido.pedido.usuario.nombre }}</td>
           <td>{{ detalle_pedido.pedido.fecha }}</td>
           <td>${{ detalle_pedido.pedido.total|intcomma }}</td>
-          <td id="{{ detalle_pedido.pedido.estado|lower }}">{{ detalle_pedido.pedido.estado }}</td>
           <td>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#detalleModal{{ detalle_pedido.pedido.id }}">Ver más</button>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#detalleModal{{ detalle_pedido.pedido.id }}"><i class="bi bi-info-circle"></i></button>
           </td>
         </tr>
       {% endfor %}
@@ -75,6 +73,9 @@
             </button>
           </div>
           <div class="modal-body">
+            <h6><b>Pedido {{ detalle_pedido.pedido.id }} - Fecha: {{ detalle_pedido.pedido.fecha }}</b></h6>
+            <p><b>Mesa:</b> {{ detalle_pedido.pedido.mesa }}</p>
+            <p><b>Cliente: </b>{{ detalle_pedido.pedido.usuario }} <b>CC:</b> {{ detalle_pedido.pedido.usuario.cedula }}</p>
             <table class="table table-striped">
                 <tr>
                   <th>Cantidad</th>
@@ -99,4 +100,5 @@
     </div>
   {% endfor %}
 </div>
+
 {% endblock %}

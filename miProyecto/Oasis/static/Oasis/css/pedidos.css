@@ -1,6 +1,6 @@
     .tarjetaOrden{
         display: flex;
-        margin-top: 3%;
+        margin-bottom: 3%;
         font-family: "Nunito";
     }
     .listaOrden{
@@ -17,17 +17,6 @@
         padding: 10px;
         margin: 10px 0;
         background-color: #f9f9f9;
-    }
-    
-    #preparando {
-        background-color: #ff9800;
-        height: 40px;
-        color: #fff;
-        border: none;
-    }
-    #preparando:hover {
-        background-color: #ff6a00;
-        color: #fff;
     }
 
     #entregando {

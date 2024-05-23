@@ -140,7 +140,12 @@
 
     <script>
         $(document).ready(function () {
+            if ($.fn.dataTable.isDataTable('#tabla')) {
+            $('#tabla').DataTable().clear().destroy();
+            }
+
             var table = $('#tabla').DataTable({
+                ordering: true,
                 searching: false,
                 language: {
                 "decimal": "",
@@ -163,6 +168,33 @@
                 }
             },
             });
+        });
+
+
+        $('#tabla2').DataTable({
+            ordering: true,
+            order: [[2, 'desc']],
+            searching: false,
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
         });
         </script>
         <script>

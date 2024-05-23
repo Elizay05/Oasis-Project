@@ -147,10 +147,12 @@ class Pedido(models.Model):
     comentario = models.TextField(default="")
     PREPARACION = 'En preparación'
     ENTREGADO = 'Entregado'
+    CANCELADO = 'Cancelado'
 
     ESTADO_CHOICES = (
         (PREPARACION, 'En preparacion'),
         (ENTREGADO, 'Entregado'),
+        (CANCELADO, 'Cancelado')
     )
 
     estado = models.CharField(max_length=14, choices=ESTADO_CHOICES, default=PREPARACION)
@@ -161,10 +163,19 @@ class Pedido(models.Model):
 
 
 class DetallePedido(models.Model):
+    ACTIVO = 'Activo'
+    ELIMINADO = 'Eliminado'
+    ESTADO_CHOICES = (
+        (ACTIVO, 'Activo'),
+        (ELIMINADO, 'Eliminado')
+    )
+
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
     cantidad = models.IntegerField()
     precio = models.IntegerField()
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default=ACTIVO)
+    motivo_eliminacion = models.TextField(blank=True, default='')
 
     @property
     def subtotal(self):

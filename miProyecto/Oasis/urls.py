@@ -160,6 +160,9 @@ urlpatterns = [
     path('ver_pedidos_mesa/<int:mesa_id>/', views.ver_pedidos_mesa, name='ver_pedidos_mesa'),
 
     path('pagar_pedido/<int:id>/', views.pagar_pedido, name='pagar_pedido'),
+    path('entregar_pedido/<int:id>/', views.entregar_pedido, name='entregar_pedido'),
+    path('cancelar_pedido/', views.cancelar_pedido, name='cancelar_pedido'),
+    path('eliminar_producto/', views.eliminar_item, name='eliminar_producto'),
 
 
 
