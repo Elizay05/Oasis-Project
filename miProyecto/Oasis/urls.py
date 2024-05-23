@@ -35,6 +35,7 @@ urlpatterns = [
 
 
     #Autenticación de usuarios del sistema
+    path('register/', views.crear_usuario_registro, name="usuario_registro"),
     path('login/', views.login, name="login"),
 	path('logout/', views.logout, name="logout"),
 

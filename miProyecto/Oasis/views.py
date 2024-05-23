@@ -96,16 +96,36 @@ def inicio(request):
         return redirect("index")
 
 def registro(request):
-    """
-    serializer = UsuarioSerializer(data = request.data)
-    if serializer.is_valid():
-        serializer.save()
-        token = Token.objects.create(user=user)
-        return Response ({"token": token.key,"user":serializer.data},status = status.HTTP_201_CREATED)
-    
-    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-    """
-    return render(request, 'Oasis/registro.html')
+    return render(request, 'Oasis/registro/registro.html')
+
+
+def crear_usuario_registro(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        email = request.POST.get('email')
+        cedula = request.POST.get('cedula')
+        fecha_nacimiento = request.POST.get('fechaNacimiento')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        if password1 != password2:
+            messages.error(request, "Las contraseñas no coinciden")
+            return redirect("registro")
+        else:
+            try:
+                q = Usuario.objects.create(
+                    nombre = nombre,
+                    fecha_nacimiento = fecha_nacimiento,
+                    email = email,
+                    cedula = cedula,
+                    password = password1
+                )
+                q.save()
+                messages.success(request, "Usuario creado exitosamente")
+            except Exception as e:
+                messages.error(request, f"Error: {e}")
+
+    return redirect("registro")
 
 
 #PERFIL
