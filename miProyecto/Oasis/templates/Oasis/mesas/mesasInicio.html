@@ -1,5 +1,6 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block titulo %}Mesas{% endblock %}
 
@@ -31,6 +32,7 @@
           <tr>
             <th>Mesa</th>
             <th>Capacidad</th>
+            <th>Precio</th>
             <th>Estado Pedido</th>
             <th>Estado Reserva</th>
             <th>Código Qr</th>
@@ -42,6 +44,7 @@
           <tr>
             <td>{{ c.nombre }}</td>
             <td>{{ c.capacidad }}</td>
+            <td>{{ c.precio|intcomma }}</td>
             <td>{{ c.estado }}</td>
             <td>
               {% if c.estado_reserva == 'Reservada' %}

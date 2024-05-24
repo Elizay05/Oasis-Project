@@ -17,17 +17,24 @@
     <link rel="stylesheet" href="{% static 'Oasis/css/eventos.css' %}">
     <link rel="stylesheet" href="{% static 'Oasis/css/galeria.css' %}">
     <link rel="stylesheet" href="{% static 'Oasis/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Oasis/css/front_eventos/front_eventos_info.css' %}">
+    <link rel="stylesheet" href="{% static 'Oasis/css/usuario/reservas_y_entradas.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 
 <body>
@@ -106,12 +113,10 @@
     <div class="container-fluid">
         <div class="row">
             <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
-                <div class="position-sticky">
                     <ul id="listaOpciones" class="nav flex-column">
                         {% block Opciones %}{% endblock %}
                         
                     </ul>
-                </div>
             </nav>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 {% if messages %}
@@ -134,7 +139,12 @@
 
     <script>
         $(document).ready(function () {
+            if ($.fn.dataTable.isDataTable('#tabla')) {
+            $('#tabla').DataTable().clear().destroy();
+            }
+
             var table = $('#tabla').DataTable({
+                ordering: true,
                 searching: false,
                 language: {
                 "decimal": "",
@@ -157,6 +167,33 @@
                 }
             },
             });
+        });
+
+
+        $('#tabla2').DataTable({
+            ordering: true,
+            order: [[2, 'desc']],
+            searching: false,
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
         });
         </script>
         <script>

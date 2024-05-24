@@ -1,9 +1,9 @@
 
   #sidebar {
-    position: sticky;
+    position: fixed;
     top: 0;
-    height: 100vh;
-    overflow-y: auto;
+    height: 100%;
+    z-index: 1;
   }
   .cerrar li{
       font-size: 0.9em;
@@ -28,7 +28,13 @@
     font-family: Nunito;
 }
 
+  #listaOpciones {
+    margin-top: 40%;
+    width: 100%;
+  }
+
   #listaOpciones li:hover{
+      width: 100%;
       background-color: rgb(86, 86, 86);
   }
   main{
@@ -64,6 +70,25 @@
       margin-top: 0.7em;
       font-size: 1em;
       font-family: Nunito;
+  }
+  .nav_direccionamiento{
+    display: flex;
+    margin-left: 1.3em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    height: 40px;
+    width: 20%;
+    font-family: Nunito;
+    font-size: 20px;
+  }
+  .nav_direccionamiento a{
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    color: #aa46fc;
+    padding: 0% 3%;
+    width: 50%;
+    border-bottom: 1px solid #aa46fc;
   }
   .search {
     display: inline-block;

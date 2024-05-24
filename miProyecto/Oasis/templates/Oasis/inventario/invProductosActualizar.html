@@ -55,11 +55,15 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="mb-3 col-5">
+                <div class="mb-3 col-6">
                     <label for="exampleFormControlInput1" class="form-label">Precio</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" name="precio" value="{{ data.precio }}">
+                    <input type="float" class="form-control" id="exampleFormControlInput1" name="precio" value="{{ data.precio }}">
                 </div>
             </div>
+            <div class="mb-3 col-5">
+                <label for="exampleFormControlInput1" class="form-label">Inventario</label>
+                <input type="float" class="form-control" id="exampleFormControlInput1" name="inventario" value="{{ data.inventario }}">
+            </div> 
             <div class="mb-3 col-5">
                 <label for="exampleFormControlInput1" class="form-label">Foto Actual</label>
                 {% if data.foto %}

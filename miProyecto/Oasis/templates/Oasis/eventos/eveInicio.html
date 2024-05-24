@@ -33,6 +33,9 @@
               <th>ID</th>
               <th>Nombre</th>
               <th>Fecha</th>
+              <th>Aforo</th>
+              <th>Entradas Disponibles</th>
+              <th>Reservas</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -42,9 +45,16 @@
               <td>{{ e.id }}</td>
               <td>{{ e.nombre }}</td>
               <td>{{ e.fecha }}</td>
+              <td>{{ e.aforo }}</td>
+              <td><a href="{% url 'eveEntradas' e.id %}" style="text-decoration: none;">{{ e.entradas_disponibles }}</a></td>
+              {% if e.reservas %}
+                <td><a href="{% url 'eveReserva' e.id%}" style="text-decoration: none;">Ver reservas</a></td>
+              {% else %}
+                <td>No existen reservas</td>
+              {% endif %}
               <td>
-                <a type="button" class="btn btn-warning" href=""><i class="bi bi-pencil"></i></a>
-                <a type="button" class="btn btn-danger" href=""><i class="bi bi-x-lg"></i></a>
+                <a type="button" class="btn btn-warning" href="{% url 'eveFormActualizar' e.id %}"><i class="bi bi-pencil"></i></a>
+                <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarEvento' e.id %}')"><i class="bi bi-x-lg"></i></a>
               </td>
             </tr>
           </tbody>
@@ -52,110 +62,4 @@
         </table>
     </div>
 
-    <!-- 
-    <div class="bloqueEvento">
-        {% for i in data %}
-            <div class="evento">
-                <h2>{{ i.id}} - {{ i.nombre }}</h2>
-                <p>Fecha: {{ i.fecha}}</p>
-                <p>Hora de Inicio: {{ i.hora_incio }}</p>
-                <p>{{ i.descripcion }}</p>
-                <div class="botonesEvento">
-                    <a href="{% url 'eveReserva' %}">
-                        <button id="verReservaciones" class="btn btn-primary">Reservas</button>
-                    </a>
-                    <a href="{% url 'eveReserva' %}">
-                        <button id="verReservaciones" class="btn btn-primary">Entradas</button>
-                    </a>
-                    <div class="botonesCrud">
-                        <a type="button" class="btn btn-warning" href="{% url 'eveFormActualizar' i.id %}"><i class="bi bi-pencil"></i></a>
-                        <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarEvento' i.id %}')"><i class="bi bi-x-lg"></i></a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        
-    <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Detalles de Evento</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <form>
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" placeholder="Amor y Amistad"
-                                    readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Fecha</label>
-                                <input type="text" class="form-control" placeholder="10 de noviembre"
-                                    readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Hora</label>
-                                <input type="text" class="form-control" placeholder="20:00 - 02:00"
-                                    readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Detalles</label>
-                            </div>
-                            <div class="mb-3">
-                                <textarea id="informacion" name="textarea" rows="5" cols="60" readonly>Evento dedicado a nuestras hermosas madres, donde disfrutaremos de serenatas, 1 ronda de trago 2x1 (madre/hij@), chef de alta cocina, exposición de vinos y por ultimo contamos con la presencia del humorista X haciendo su monólogo,</textarea>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="modal" id="myModal2">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Detalles de Evento</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <form>
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" placeholder="Amor y Amistad">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Fecha</label>
-                                <input type="text" class="form-control" placeholder="10 de noviembre">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Hora</label>
-                                <input type="text" class="form-control" placeholder="20:00 - 02:00">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Detalles</label>
-                            </div>
-                            <div class="mb-3">
-                                <textarea id="informacion" name="textarea" rows="5" cols="60">Evento dedicado a nuestras hermosas madres, donde disfrutaremos de serenatas, 1 ronda de trago 2x1 (madre/hij@), chef de alta cocina, exposición de vinos y por ultimo contamos con la presencia del humorista X haciendo su monólogo.</textarea>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    -->
 {% endblock %}

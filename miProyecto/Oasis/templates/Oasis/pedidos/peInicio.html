@@ -10,12 +10,12 @@
       Inicio                    
     </a>
   </li>
-  <li id='segundaOpcion' class="nav-item">
+  <li id='segundaOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="{% url 'peHistorial' %}">
       Historial de Pedidos                    
     </a>
   </li>
-  <li id='terceraOpcion' class="nav-item">
+  <li id='terceraOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="{% url 'peGestionMesas' %}">
       Gestión de Mesas             
     </a>
@@ -26,91 +26,136 @@
     <h1 style="margin-top: 0.5em;" >Pedidos</h1>
     <div class="Contenido">
         <div class="conteos">
-            <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+            <p><b>Todos</b> (<span id="totalUsuarios">{{ total_preparacion }}</span>)</p>
         </div>
     </div>
-    <section class="tarjetaOrden" style="margin-top: 0%;">
-        <section class="listaOrden">
-            <div class="Orden">
-                <h3>Mesa 1</h3>
-                <p>Productos: x1 Tequila Don Julio Blanco Reserva 700ml, x3 Martini</p>
-                <p>Estado: Pendiente</p>
-                <button id="preparando" class="btn btn-prepare">En Preparación</button>
-                <button id="entregando" class="btn btn-deliver">Entregado</button>
-            </div>
-        </section>
+    {% for detalle_pedido in detalles_pedidos %}
+      {% if detalle_pedido.pedido.estado == 'En preparación' %}
+        <section class="tarjetaOrden">
+            <section class="listaOrden">
+                <div class="Orden">
+                    <h3><strong>{{ detalle_pedido.pedido.mesa.nombre }}</strong></h3>
+                    {% for detalle in detalle_pedido.detalles %}
+                        {% if detalle.estado != 'Eliminado' %}
+                          <p>x {{ detalle.cantidad }} {{ detalle.producto }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    <p style="color: #ff9800;"><b>{{ detalle_pedido.pedido.estado }}</b></p>
+                </div>
+                <a type="button" id="entregando" class="btn btn-deliver w-100" href="{% url 'entregar_pedido' detalle_pedido.pedido.id %}">Entregar Pedido</a>
+              </section>
 
-        <section class="detallesOrden">
-            <div class="informacionOrden">
-                <h3><span>Mesa 1</span> - Cliente: Juan Pérez</h3>
-                <p><b>Estado: <span>En Preparación</span></b></p>
-                <h5>Comentario</h5>
-                <textarea name="textarea" rows="2" cols="90" readonly> Porfavor bastante hielo</textarea>
-            </div>
-            <div class="order-items">
-                <h4>Productos</h4>
-                <ul>
-                    <li>x1 Tequila Don Julio Blanco Reserva 700ml</li>
-                    <li>x3 Martini</li>
-                </ul>
-            </div>
-        </section>
-    </section>
+            <section class="detallesOrden">
+                <div class="informacionOrden">
+                    <h3><span><b>{{ detalle_pedido.pedido.mesa.nombre }}</span> - Cliente: </b>{{ detalle_pedido.pedido.usuario }}</h3>
+                    <h5>Comentario</h5>
+                    <textarea name="textarea" rows="2" cols="90" readonly>{{ detalle_pedido.pedido.comentario }}</textarea>
+                </div>  
+                <div class="order-items">
+                    <h4>Productos</h4>
+                        {% for detalle in detalle_pedido.detalles %}
+                            {% if detalle.estado == 'Activo' %}
+                                <div class="d-flex w-100 gap-4">
+                                    {% if detalle_pedido.detalles_activos_count > 1 %}  
+                                      <a type="button" class="btn btn-close" data-bs-toggle="modal" data-bs-target="#cancelItemModal" data-detalle-id="{{ detalle.id }}"></a>
+                                    {% endif %}
+                                      <ul>
+                                        <li>x{{ detalle.cantidad }} {{ detalle.producto }}</li>
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <div class="d-flex w-100 gap-4">
+                                    <ul>
+                                        <li class="text-danger">x{{ detalle.cantidad }} {{ detalle.producto.nombre }} (Eliminado)</li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                </div>
+                <div class="d-flex justify-content-end">
+                  <a type="button" class="btn btn-danger w-25" data-bs-toggle="modal" data-bs-target="#cancelModal" data-pedido-id="{{ detalle_pedido.pedido.id }}">Cancelar Pedido</a>
 
-    <section class="tarjetaOrden">
-        <section class="listaOrden">
-            <div class="Orden">
-                <h3>Mesa 7</h3>
-                <p>Productos: x3 Tacos, x2 Moscow Mule, x1 Negroni</p>
-                <p>Estado: Pendiente</p>
-                <button id="preparando" class="btn btn-prepare">En Preparación</button>
-                <button id="entregando" class="btn btn-deliver">Entregado</button>
-            </div>
+                </div>
+            </section>
         </section>
+      {% endif %}
+    {% endfor %}
 
-        <section class="detallesOrden">
-            <div class="informacionOrden">
-                <h3><span>Mesa 7</span> - Cliente: Daniela Medina</h3>
-                <p><b>Estado: <span>En Preparación</span></b></p>
-                <h5>Comentario</h5>
-                <textarea name="textarea" rows="2" cols="90" readonly></textarea>
-            </div>
-            <div class="order-items">
-                <h4>Productos</h4>
-                <ul>
-                    <li>x3 Tacos</li>
-                    <li>x2 Moscow Mule</li>
-                    <li>x1 Negroni</li>
-                </ul>
-            </div>
-        </section>
-    </section>
 
-    <section class="tarjetaOrden">
-        <section class="listaOrden">
-            <div class="Orden">
-                <h3>Mesa 14</h3>
-                <p>Productos: X1 Litro Ron, x5 Michelada</p>
-                <p>Estado: Pendiente</p>
-                <button id="preparando" class="btn btn-prepare">En Preparación</button>
-                <button id="entregando" class="btn btn-deliver">Entregado</button>
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancelModalLabel">Cancelar Pedido</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="POST" action="{% url 'cancelar_pedido' %}">
+            {% csrf_token %}
+            <div class="modal-body">
+              <input type="hidden" name="pedido_id" id="pedidoId">
+              <div class="mb-3">
+                <label for="comentario" class="form-label">Comentario</label>
+                <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
+              </div>
             </div>
-        </section>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-danger">Cancelar Pedido</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-        <section class="detallesOrden">
-            <div class="informacionOrden">
-                <h3><span>Mesa 14</span> - Cliente: Yeison Grisales</h3>
-                <p><b>Estado: <span>En Preparación</span></b></p>
-                <h5>Comentario</h5>
-                <textarea name="textarea" rows="2" cols="90" readonly>Las micheladas con bastante limón</textarea>
+
+    <div class="modal fade" id="cancelItemModal" tabindex="-1" aria-labelledby="cancelItemModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancelItemModalLabel">Eliminar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="POST" action="{% url 'eliminar_producto' %}">
+            {% csrf_token %}
+            <div class="modal-body">
+                <input type="hidden" name="producto_id" id="producto_id">
+                <div class="mb-3">
+                    <label for="comentario" class="form-label">Comentario</label>
+                    <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
+                </div>
             </div>
-            <div class="order-items">
-                <h4>Productos</h4>
-                <ul>
-                    <li>x1 Litro Ron</li>
-                    <li>x5 Michelada</li>
-                </ul>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-danger">Eliminar Producto</button>
             </div>
-        </section>
-    </section>
+        </form>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          var cancelModal = document.getElementById('cancelModal');
+          cancelModal.addEventListener('show.bs.modal', function (event) {
+              var button = event.relatedTarget;
+              var pedidoId = button.getAttribute('data-pedido-id');
+              var modalPedidoIdInput = cancelModal.querySelector('#pedidoId');
+              modalPedidoIdInput.value = pedidoId;
+          });
+      });
+
+
+      document.addEventListener('DOMContentLoaded', function () {
+          var cancelItemModal = document.getElementById('cancelItemModal');
+          cancelItemModal.addEventListener('show.bs.modal', function (event) {
+              var button = event.relatedTarget;
+              var detalleId = button.getAttribute('data-detalle-id');
+              var modalDetalleIdInput = cancelItemModal.querySelector('#producto_id');
+              modalDetalleIdInput.value = detalleId;
+          });
+      });
+
+    </script>
 {% endblock %}

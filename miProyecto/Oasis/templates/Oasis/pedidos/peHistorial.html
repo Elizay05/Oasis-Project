@@ -1,5 +1,6 @@
 {% extends 'Oasis/barNav.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block titulo %}Historial de Pedidos{% endblock %}
 
@@ -10,12 +11,12 @@
       Inicio                    
     </a>
   </li>
-  <li id='segundaOpcion' class="nav-item">
+  <li id='segundaOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="{% url 'peHistorial' %}">
       Historial de Pedidos                    
     </a>
   </li>
-  <li id='terceraOpcion' class="nav-item">
+  <li id='terceraOpcion' class="nav-item lateralOpciones2">
     <a class="nav-link text-white" href="{% url 'peGestionMesas' %}">
       Gestión de Mesas             
     </a>
@@ -24,74 +25,80 @@
 
 
 {% block contenedor %}
-  <h1 style="margin-top: 0.5em;" >Historial de Pedidos</h1>
-  <div class="Contenido">
-      <div class="conteos">
-      <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
-      </div>
-      <div class="search">
-          <input  type="text" id="myInput" placeholder="Buscar pedidos...">
-          <button id="searchButton" type="submit">Buscar</button>
-      </div>
-  </div>
-  <div id="contenedorTabla" class="contenedorTabla">            
-      <table id="tabla" class="table table-striped">
-        <thead>
-          <tr>
-            <th>Mesa</th>
-            <th>Cliente</th>
-            <th>CC</th>
-            <th>Productos</th>
-            <th>Fecha</th>
-            <th>Total</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Mesa 1</td>
-            <td>Juan Pérez</td>
-            <td>1127653204</td>
-            <td class="tablaProductosHistorial">
-              <ul>
-                <li>x1 Tequila Don Julio Blanco Reserva 700ml</li>
-                <li>x3 Martini</li>
-              </ul>
-            </td>
-            <td>5/10/2023</td>
-            <td>$---</td>
-            <td id="entregado">Pagado</td>
-          </tr>
-          <tr>
-            <td>Mesa 7</td>
-            <td>Daniela Medina</td>
-            <td>1450987365</td>
-            <td class="tablaProductosHistorial">
-              <ul>
-                <li>x3 Tacos</li>
-                <li>x2 Moscow Mule</li>
-                <li>x1 Negroni</li>
-              </ul>
-            </td>
-            <td>4/10/2023</td>
-            <td>$---</td>
-            <td id="entregado">Pagado</td>
-          </tr>
-          <tr>
-            <td>Mesa 14</td>
-            <td>Yeison Grisales</td>
-            <td>1468942301</td>
-            <td class="tablaProductosHistorial">
-              <ul>
-                <li>x1 Litro Ron</li>
-                <li>x5 Michelada</li>
-              </ul>
-            </td>
-            <td>3/10/2023</td>
-            <td>$---</td>
-            <td id="cancelado">Cancelado</td>
-          </tr>
-        </tbody>
-      </table>
+<h1 style="margin-top: 0.5em;" >Historial de Pedidos</h1>
+<div class="Contenido">
+    <div class="conteos">
+    <p><b>Todos</b> (<span id="totalUsuarios">{{ detalles_pedidos|length }}</span>)</p>
     </div>
+    <div class="search">
+        <input type="text" id="myInput" placeholder="Buscar pedidos...">
+        <button id="searchButton" type="submit">Buscar</button>
+    </div>
+</div>
+<div id="contenedorTabla" class="contenedorTabla">            
+  <table id="tabla2" class="table table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Mesa</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detalle_pedido in detalles_pedidos %}
+        <tr>
+          <td>{{ detalle_pedido.pedido.mesa.nombre }}</td>
+          <td>{{ detalle_pedido.pedido.usuario.nombre }}</td>
+          <td>{{ detalle_pedido.pedido.fecha }}</td>
+          <td>${{ detalle_pedido.pedido.total|intcomma }}</td>
+          <td>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#detalleModal{{ detalle_pedido.pedido.id }}"><i class="bi bi-info-circle"></i></button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+  {% for detalle_pedido in detalles_pedidos %}
+    <div class="modal fade" id="detalleModal{{ detalle_pedido.pedido.id }}" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel{{ detalle_pedido.pedido.id }}" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="detalleModalLabel{{ detalle_pedido.pedido.id }}">Detalles del Pedido</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h6><b>Pedido {{ detalle_pedido.pedido.id }} - Fecha: {{ detalle_pedido.pedido.fecha }}</b></h6>
+            <p><b>Mesa:</b> {{ detalle_pedido.pedido.mesa }}</p>
+            <p><b>Cliente: </b>{{ detalle_pedido.pedido.usuario }} <b>CC:</b> {{ detalle_pedido.pedido.usuario.cedula }}</p>
+            <table class="table table-striped">
+                <tr>
+                  <th>Cantidad</th>
+                  <th>Producto</th>
+                  <th>Subtotal</th>
+                </tr>
+                {% for detalle in detalle_pedido.detalles %}
+                  <tr>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>{{ detalle.producto }}</td>
+                    <td style="text-align: end">${{ detalle.subtotal|intcomma }}</td>
+                  </tr>
+                {% endfor %}
+            </table>
+            <p style="text-align: end; margin-right: 0.5em;"><strong>Total: ${{ detalle_pedido.pedido.total|intcomma }}</strong></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
 {% endblock %}

@@ -1,12 +1,12 @@
 from django.urls import path, include
-from rest_framework import routers
+from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views as especial
 
 from . import views
 
 
 # Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
+router = DefaultRouter()
 router.register(r'usuario', views.UsuarioViewSet)
 router.register(r'evento', views.EventoViewSet)
 router.register(r'mesa', views.MesaViewSet)
@@ -14,7 +14,8 @@ router.register(r'reserva', views.ReservaViewSet)
 router.register(r'categoria', views.CategoriaViewSet)
 router.register(r'producto', views.ProductoViewSet)
 router.register(r'pedido', views.PedidoViewSet)
-router.register(r'pedido_mesa', views.PedidoMesaViewSet)
+router.register(r'detalle_pedido', views.DetallePedidoViewSet)
+router.register(r'compra_entrada', views.CompraEntradaViewSet)
 #router.register(r'inventario', views.InventarioViewSet)
 router.register(r'galeria', views.GaleriaViewSet)
 router.register(r'fotos', views.FotosViewSet)
@@ -24,9 +25,9 @@ router.register(r'detalle_venta', views.DetalleVentaViewSet)
 
 urlpatterns = [
     path('api/1.0/', include(router.urls)),
-	path('api/1.0/api-auth/', include('rest_framework.urls')),
     path('api/1.0/token-auth/', views.CustomAuthToken.as_view()),
-    # Ruta para login en API web
+	path('api/1.0/api-auth/', include('rest_framework.urls')),
+     # Ruta para login en API web
 	path('api/1.0/auth/', include("rest_framework.urls")),
 
 
@@ -35,6 +36,7 @@ urlpatterns = [
 
 
     #Autenticación de usuarios del sistema
+    path('register/', views.crear_usuario_registro, name="usuario_registro"),
     path('login/', views.login, name="login"),
 	path('logout/', views.logout, name="logout"),
 
@@ -44,6 +46,11 @@ urlpatterns = [
     #PERFIL
     path('Perfil/', views.ver_perfil, name='ver_perfil'),
     path('editar_perfil', views.editar_perfil, name='editar_perfil'),
+    path('entradas/', views.entradas_usuario, name='entradas_usuario'),
+    path('entradas_info/<int:id>/', views.entradas_usuario_info, name='entrada_info'),
+    path('reservas/', views.reservas_usuario, name='reservas_usuario'),
+    path('reservas_info/<int:id>/', views.reservas_usuario_info, name='reserva_info'),
+
 
 
     #CAMBIAR CONTRASEÑA
@@ -80,10 +87,19 @@ urlpatterns = [
     path('Actualizar_Producto/', views.actualizarProducto, name='actualizarProducto'),
 
 
+    #PEDIDOS
     path('Gestion_Pedidos/', views.peInicio, name='peInicio'),
-    path('Historial_Pedidos/', views.peHistorial, name='peHistorial'),
+    path('Historial_Pedidos/', views.ver_historial_pedidos, name='peHistorial'),
     path('Mesas/', views.peGestionMesas, name='peGestionMesas'),
-    path('Agregar_Pedido/', views.pedidoEmpleado, name='pedidoEmpleado'),
+    path('Agregar_Pedido/<int:id>', views.pedidoEmpleado, name='pedidoEmpleado'),
+	path("crear_pedido/<int:id>", views.crear_pedido_admin, name="crear_pedido_admin"),
+
+    #PEDIDOS USUARIO
+    path('escanear_mesa/', views.escanear_mesa, name='escanear_mesa'),
+    path('pedidoUsuario/<int:id>/', views.pedidoUsuario, name='pedidoUsuario'),
+    path('crear_pedido_usuario/<int:id>', views.crear_pedido_usuario, name='crear_pedido_usuario'),
+
+
 
     #CRUD MESAS
     path('Gestion_Mesas/', views.mesaInicio, name='Mesas'),
@@ -102,7 +118,9 @@ urlpatterns = [
     path('Eliminar_Evento/<int:id>', views.eliminarEvento, name='eliminarEvento'),
     path('Actualizar_Evento_Form/<int:id>', views.eveFormActualizar, name='eveFormActualizar'),
     path('Actualizar_Evento/', views.actualizarEvento, name='actualizarEvento'),
-    path('Reservas/', views.eveReserva, name='eveReserva'),
+    path('Reservas/<int:id>', views.eveReserva, name='eveReserva'),
+    path('Evento_Entradas/<int:id>', views.eveEntradas, name='eveEntradas'),
+    path('Eliminar_Entrada/<int:id>', views.eliminarEntrada, name='eliminarEntrada'),
 
 #   CRUD MENÚ (CATEGORÍAS)
     path('Gestion_Menu/', views.meInicio, name='Menu'),
@@ -133,19 +151,39 @@ urlpatterns = [
     path('front_eventos_info/<int:id>/', views.front_eventos_info, name='front_eventos_info'),
 
 
-# CARRITO DE COMPRA
+# CARRITO DE COMPRA USUARIO
 	path("carrito_add/", views.carrito_add, name="carrito_add"),
 	path("carrito_ver/", views.carrito_ver, name="carrito_ver"),
     path("carrito_eliminar/<int:id>/", views.carrito_eliminar, name="carrito_eliminar"),
 	path("vaciar_carrito/", views.vaciar_carrito, name="vaciar_carrito"),
 	path("actualizar_totales_carrito/<int:id_producto>/", views.actualizar_totales_carrito, name="actualizar_totales_carrito"),
 
+#CARRITO DE COMPRA MESERO
+	path("carrito_ver_admin/", views.carrito_ver_admin, name="carrito_ver_admin"),
+	path("actualizar_totales_carrito_admin/<int:id_producto>/", views.actualizar_totales_carrito_admin, name="actualizar_totales_carrito_admin"),
+    path("carrito_eliminar_admin/<int:id>/", views.carrito_eliminar_admin, name="carrito_eliminar_admin"),
+	path("vaciar_carrito_admin/", views.vaciar_carrito_admin, name="vaciar_carrito_admin"),
+    
+    path('ver_pedidos_mesa/<int:mesa_id>/', views.ver_pedidos_mesa, name='ver_pedidos_mesa'),
+
+    path('pagar_pedido/<int:id>/<str:rol>/', views.pagar_pedido, name='pagar_pedido'),
+    path('entregar_pedido/<int:id>/', views.entregar_pedido, name='entregar_pedido'),
+    path('cancelar_pedido/', views.cancelar_pedido, name='cancelar_pedido'),
+    path('eliminar_producto/', views.eliminar_item, name='eliminar_producto'),
+    path('liberar_mesa/<int:id>/', views.liberar_mesa, name='liberar_mesa'),
+
+
+
+
 #VENTAS
 	path("crear_venta/", views.crear_venta, name="crear_venta"),
-	path("ver_ventas/", views.ver_ventas, name="ver_ventas"),
-	path("ver_detalles/<int:id>/", views.ver_detalles, name="ver_detalles"),
+	path("ver_ventas/", views.ver_pedidos_usuario, name="ver_ventas"),
+	path("ver_detalles_pedido_usuario/", views.ver_detalles_usuario, name="ver_detalles_pedido_usuario"),
 
 #COMPRAR ENTRADAS
     path("comprar_entradas/<int:id>/", views.comprar_entradas, name="comprar_entradas"),
+
+#RESERVAR MESAS
+    path("reservar_mesa/<int:id>/", views.reservar_mesa, name="reservar_mesa"),
 
 ]   
