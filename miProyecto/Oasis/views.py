@@ -206,41 +206,38 @@ def cambiar_clave(request):
 
 #RECUPERAR CONTRASEÑA
 def recuperar_clave(request):
-	if request.method == "POST":
-		correo = request.POST.get("correo")
-		try:
-			q = Usuario.objects.get(email=correo)
-			from random import randint
-			import base64
-			token = base64.b64encode(str(randint(100000, 999999)).encode("ascii")).decode("ascii")
-			print(token)
-			q.token_recuperar = token
-			q.save()
-			# enviar correo de recuperación
-			destinatario = correo
-			mensaje = f"""
-					<h1 style='color:blue;'>Tienda virtual</h1>
-					<p>Usted ha solicitado recuperar su contraseña, haga clic en el link y digite el token.</p>
-					<p>Token: <strong>{token}</strong></p>
-					<a href='http://127.0.0.1:8000/tienda/verificar_recuperar/?correo={correo}'>Recuperar...</a>
-					"""
-			try:
-				msg = EmailMessage("Oasis", mensaje, settings.EMAIL_HOST_USER, [destinatario])
-				msg.content_subtype = "html"  # Habilitar contenido html
-				msg.send()
-				messages.success(request, "Correo enviado!!")
-                
-			except BadHeaderError:
-				messages.error(request, "Encabezado no válido")
-			except Exception as e:
-				messages.error(request, f"Error: {e}")
-			# fin -
-		except Usuario.DoesNotExist:
-			messages.error(request, "No existe el usuario....")
-		return redirect("recuperar_clave")
-	else:
-		return render(request, "tienda/login/recuperar_clave.html")
-
+    if request.method == "POST":
+        correo = request.POST.get("correo")
+        try:
+            q = Usuario.objects.get(email=correo)
+            from random import randint
+            import base64
+            token = base64.b64encode(str(randint(100000, 999999)).encode("ascii")).decode("ascii")
+            print(token)
+            q.token_recuperar = token
+            q.save()
+            # enviar correo de recuperación
+            destinatario = correo
+            mensaje = f"""
+                <h1 style='color:blue;'>Tienda virtual</h1>
+                <p>Usted ha solicitado recuperar su contraseña, haga clic en el link y digite el token.</p>
+                <p>Token: <strong>{token}</strong></p>
+                <a href='http://127.0.0.1:8000/tienda/verificar_recuperar/?correo={correo}'>Recuperar...</a>
+            """
+            try:
+                msg = EmailMessage("Oasis", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+                msg.content_subtype = "html"  # Habilitar contenido html
+                msg.send()
+                messages.success(request, "Correo enviado!!")
+            except BadHeaderError:
+                messages.error(request, "Encabezado no válido.")
+            except Exception as e:
+                messages.error(request, f"Error al enviar el correo: {e}")
+        except Usuario.DoesNotExist:
+            messages.error(request, "No existe el usuario.")
+        return redirect("recuperar_clave")
+    else:
+        return render(request, "tienda/login/recuperar_clave.html")
 
      
 def verificar_recuperar(request):
