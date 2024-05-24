@@ -81,7 +81,7 @@ function add_carrito_admin(url, id_producto, template_name){
     });
 }
 
-function carrito_eliminar(url){
+function carrito_eliminar_admin(url){
     contenido = $("#respuesta_carrito")
 
     $.ajax({
@@ -101,7 +101,7 @@ function carrito_eliminar(url){
 }
 
 
-function actualizar_totales_carrito(url,id){
+function actualizar_totales_carrito_admin(url,id){
     contenido = $("#respuesta_carrito")
     cantidad = $("#cantidad_carrito_"+id)
     

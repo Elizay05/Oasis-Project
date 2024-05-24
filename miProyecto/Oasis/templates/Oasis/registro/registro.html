@@ -3,45 +3,6 @@
 
 {% block titulo %}Registro{% endblock %}
 
-{% block opciones %}
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'guInicio' %}" role="button">
-    Seguridad
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'invInicio' %}" role="button">
-    Inventario
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'peInicio' %}" role="button">
-    Pedidos
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'eveInicio' %}" role="button">
-    Eventos
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'meInicio' %}" role="button">
-    Menú
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link toggle opcionesNav" href="{% url 'gaInicio' %}" role="button">
-    Galería
-  </a>
-</li>
-{% endblock %}
-
-{% block botones %}
-<button class="btn2" type="button" data-bs-toggle="offcanvas" data-bs-target="#pantallaLogin" style="margin-left: 40%;">Reservar
-  Ahora
-</button>
-{% endblock %}
-
 {% block contenedor %}
 <section class="contenedorInicio">
   <div class="imagen">

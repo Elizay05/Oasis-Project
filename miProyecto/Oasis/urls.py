@@ -93,6 +93,11 @@ urlpatterns = [
     path('Agregar_Pedido/<int:id>', views.pedidoEmpleado, name='pedidoEmpleado'),
 	path("crear_pedido/<int:id>", views.crear_pedido_admin, name="crear_pedido_admin"),
 
+    #PEDIDOS USUARIO
+    path('escanear_mesa/', views.escanear_mesa, name='escanear_mesa'),
+    path('pedidoUsuario/<int:id>/', views.pedidoUsuario, name='pedidoUsuario'),
+    path('crear_pedido_usuario/<int:id>', views.crear_pedido_usuario, name='crear_pedido_usuario'),
+
 
 
     #CRUD MESAS

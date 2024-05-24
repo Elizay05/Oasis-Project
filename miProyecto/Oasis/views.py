@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from django.urls import reverse
 
 from django.db.models import F
 from collections import defaultdict
@@ -1181,6 +1182,32 @@ def reservar_mesa(request, id):
             messages.append({'message_type': 'error', 'message': 'No hay suficientes entradas disponibles'})
 
     return JsonResponse({'messages': messages}) 
+
+
+def escanear_mesa (request):
+    logueo = request.session.get("logueo", False)
+    user = None
+    if logueo:
+        user = Usuario.objects.get(pk = logueo["id"])
+
+    mesas = Mesa.objects.all()
+
+    contexto = {'data':user, 'mesas':mesas}
+    return render(request, "Oasis/front_pedidos/escanear_mesa.html", contexto)
+
+
+def pedidoUsuario(request, id):
+    logueo = request.session.get("logueo", False)
+    user = None
+    if logueo:
+        user = get_object_or_404(Usuario, pk=logueo["id"])
+
+    mesa = get_object_or_404(Mesa, pk=id)
+    carrito = request.session.get("carrito", [])
+    productos = Producto.objects.all()
+
+    contexto = {'data': user, 'productos': productos, 'mesa': mesa, 'carrito': carrito}
+    return render(request, "Oasis/front_pedidos/pedido_usuario.html", contexto)
     
 
 def carrito_add(request):
@@ -1395,6 +1422,60 @@ def crear_pedido_admin(request, id):
         messages.error(request, f"Ocurrió un Error: {e}")
     
     return redirect('peGestionMesas')
+
+
+
+
+def crear_pedido_usuario(request, id):
+    try:
+        logueo = request.session.get("logueo", False)
+        user = None
+        if logueo:
+            user = Usuario.objects.get(pk = logueo["id"])
+
+        else:
+            messages.error(request, "Inicia sesión ó registrate para realizar el pedido.")
+            return redirect('pedidoUsuario', id=id)
+        
+        mesa = Mesa.objects.get(pk=id)
+        
+        carrito = request.session.get("carrito", [])
+        if not carrito:
+            messages.error(request, "El pedido está vacío.")
+            return redirect('pedidoEmpleado', id=id)
+        
+        comentario = request.POST.get("comentario", "")
+        
+        pedido = Pedido.objects.create(
+            mesa=mesa, 
+            total=sum(item['subtotal'] for item in carrito), 
+            usuario=user,
+            comentario=comentario
+        )
+        
+        for p in carrito:
+            producto = Producto.objects.get(pk=p['id'])
+            DetallePedido.objects.create(
+                pedido=pedido,
+                producto=producto,
+                cantidad=p['cantidad'],
+                precio=p['precio']
+            )
+            producto.inventario -= p['cantidad']
+            producto.save()
+
+        mesa.estado = mesa.ACTIVA
+        mesa.save()
+        request.session["carrito"] = []
+        request.session["items"] = 0
+        messages.success(request, "Pedido creado con éxito.")
+
+    except Exception as e:
+        messages.error(request, f"Ocurrió un Error: {e}")
+    
+    return redirect('ver_detalles_pedido_usuario')
+
+
 
 
 def pagar_pedido(request, id, rol):
