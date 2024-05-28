@@ -1776,12 +1776,13 @@ def ver_detalles_usuario(request):
 
 # -------------------------------------------------------------------------------------------
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 # Vistas para el conjunto de datos de las API
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
+    # permission_classes = [AllowAny]
     # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Usuario.objects.all()
