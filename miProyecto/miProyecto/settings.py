@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ["*"]
 
 CSRF_COOKIE_SECURE = True
 
-CSRF_TRUSTED_ORIGINS = ['']
+CSRF_TRUSTED_ORIGINS = ['https://oasis-project.onrender.com/']
 
 
 # Application definition
