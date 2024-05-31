@@ -123,6 +123,10 @@ def crear_usuario_registro(request):
     return redirect("registro")
 
 
+#TÉRMINOS Y CONDICIONES
+def terminos_condiciones(request):
+    return render(request, 'Oasis/terminos_condiciones/tyc.html')
+
 #PERFIL
 def ver_perfil(request):
     logueo = request.session.get("logueo", False)

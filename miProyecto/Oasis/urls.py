@@ -42,6 +42,10 @@ urlpatterns = [
 
     path('registro/', views.registro, name='registro'),
 
+    #TÉRMINOS Y CONDICIONES
+    path('tyc/', views.terminos_condiciones, name='tyc'),
+
+
     #PERFIL
     path('Perfil/', views.ver_perfil, name='ver_perfil'),
     path('editar_perfil', views.editar_perfil, name='editar_perfil'),

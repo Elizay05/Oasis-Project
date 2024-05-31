@@ -29,14 +29,10 @@ DATABASES = {
 SECRET_KEY = 'django-insecure-ztfip3l7w_5@gk2ci*7wpk@d$jy6g1jd74mj-8pcicxw3+q(wf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
-CSRF_COOKIE_SECURE = True
-
-CSRF_TRUSTED_ORIGINS = ['https://oasis-project.onrender.com/']
 
 
 # Application definition
@@ -65,7 +61,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'miProyecto.urls'
 
@@ -134,10 +129,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-if DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'Oasis/static/')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = 'static/'
+STATIC_ROOT =BASE_DIR / 'static/'
+
 
 MEDIA_URL = 'tienda/'
 MEDIA_ROOT = BASE_DIR / 'media/'
