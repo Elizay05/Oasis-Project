@@ -34,19 +34,13 @@ from rest_framework import viewsets
 #Importar todos los modelos de la base de datos.
 from .models import *
 
-# Create your views here.
-
-def view_404(request, exception=None):
-    # make a redirect to homepage
-    # you can use the name of url or just the plain link
-    return redirect('/')
-
-
 def index(request):
     logueo = request.session.get("logueo", False)
     if logueo == False:
+        print(logueo)
         return render(request, "Oasis/index.html")
     else:
+        print('holaaa')
         return redirect("inicio")
 
 def login(request):
