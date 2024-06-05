@@ -27,9 +27,8 @@ urlpatterns = [
     path('api/1.0/', include(router.urls)),
     path('api/1.0/token-auth/', views.CustomAuthToken.as_view()),
 	path('api/1.0/api-auth/', include('rest_framework.urls')),
-     # Ruta para login en API web
-	# path('api/1.0/auth/', include("rest_framework.urls")),
-    
+
+
 
     path('', views.index, name="index"),
 	path('inicio/', views.inicio, name="inicio"),
@@ -42,6 +41,10 @@ urlpatterns = [
 
 
     path('registro/', views.registro, name='registro'),
+
+    #TÉRMINOS Y CONDICIONES
+    path('tyc/', views.terminos_condiciones, name='tyc'),
+
 
     #PERFIL
     path('Perfil/', views.ver_perfil, name='ver_perfil'),
@@ -146,6 +149,7 @@ urlpatterns = [
 #   FRONT PRODUCTOS
     path('front_productos/', views.front_productos, name='front_productos'),
     path('front_productos_info/<int:id>/', views.front_productos_info, name='front_productos_info'),
+
 #   FRONT EVENTOS
     path('front_eventos/', views.front_eventos, name='front_eventos'),
     path('front_eventos_info/<int:id>/', views.front_eventos_info, name='front_eventos_info'),

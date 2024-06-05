@@ -6,7 +6,7 @@
 
 {% block contenedor %}
     <div class="d-flex">
-        <img src="{% static 'Oasis/img/fiesta.png' %}" alt="cerveza" class="d-block w-50" style="height: 300px;">
+        <img src="{% static 'Oasis/img/fiesta.png' %}" alt="cerveza" class="d-block w-50" style="height: 300px">
         <div class="w-50" style="background-color: black;">
             <h1 style="color: white; font-family: Camingo; margin-top: 5%;">EVENTOS OASIS</h1>
             <div style="height: 2%; background-color: blueviolet; width: 30%;"></div>
@@ -18,7 +18,7 @@
     <div class="bg-dark text-light w-100 d-flex" style="height: auto; padding: 2%;">
         <div class="d-flex w-100" style="flex-wrap: wrap;">
             {% for i in eventos %}
-                <div class="card bg-transparent text-light" style="width: 27.6rem; margin-right: 3%; border: none;">
+                <div class="bg-transparent text-light" style = "width: 27.3em; margin-right: 3%; border: none;">
                     <a style="text-decoration: none;" href="{% url 'front_eventos_info' i.id %}">
                         <img src="{{ i.foto.url }}" class="card-img-top" alt="Evento" style="height: 270px; width: 100%;padding: 16px; border-radius: 30px;"> 
                         <div class="card-body">

@@ -34,32 +34,13 @@ from rest_framework import viewsets
 #Importar todos los modelos de la base de datos.
 from .models import *
 
-# Create your views here.
-
-# ---------------------------------------------------------------------------------
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
-
-
-
-def view_404(request, exception=None):
-    # make a redirect to homepage
-    # you can use the name of url or just the plain link
-    return redirect('/')
-
-
 def index(request):
     logueo = request.session.get("logueo", False)
     if logueo == False:
+        print(logueo)
         return render(request, "Oasis/index.html")
     else:
+        print('holaaa')
         return redirect("inicio")
 
 def login(request):
@@ -141,6 +122,10 @@ def crear_usuario_registro(request):
 
     return redirect("registro")
 
+
+#TÉRMINOS Y CONDICIONES
+def terminos_condiciones(request):
+    return render(request, 'Oasis/terminos_condiciones/tyc.html')
 
 #PERFIL
 def ver_perfil(request):
@@ -1102,6 +1087,9 @@ def front_productos_info(request, id):
     contexto = {"data": user, "producto": producto, "categorias": categorias}
     return render(request, "Oasis/front_productos/front_productos_info.html", contexto)
 
+
+
+
 def front_eventos(request):
     logueo = request.session.get("logueo", False)
     user = None
@@ -1783,17 +1771,16 @@ def ver_detalles_usuario(request):
 
 # -------------------------------------------------------------------------------------------
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 # Vistas para el conjunto de datos de las API
 
 class UsuarioViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
-    # permission_classes = [AllowAny]
-    # authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
+    # authentication_classes = [TokenAuthentication, SessionAuthentication]
+	authentication_classes = [TokenAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = Usuario.objects.all()
+	serializer_class = UsuarioSerializer
 
 class EventoViewSet(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
@@ -1852,10 +1839,10 @@ class DetalleVentaViewSet(viewsets.ModelViewSet):
     queryset = DetalleVenta.objects.all()
     serializer_class = DetalleVentaSerializer
 
+
+
 # ------------------------------- Personalización de Token Autenticación ------------
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
 
 
 class CustomAuthToken(ObtainAuthToken):

@@ -20,11 +20,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-handler404 = "Oasis.views.view_404"
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('Oasis/', include('Oasis.urls')),
+    path('', include('Oasis.urls')),
 ]
 
 if settings.DEBUG:
