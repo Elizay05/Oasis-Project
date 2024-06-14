@@ -30,6 +30,9 @@ from rest_framework import viewsets
 from .serializers import *
 from rest_framework import viewsets
 
+#Importar el crypt
+from .crypt import *
+
 
 #Importar todos los modelos de la base de datos.
 from .models import *
@@ -44,27 +47,30 @@ def index(request):
         return redirect("inicio")
 
 def login(request):
-	if request.method == "POST":
-		user = request.POST.get("correo")
-		password = request.POST.get("clave")
+    if request.method == "POST":
+        user = request.POST.get("correo")
+        password = request.POST.get("clave")
 		#Select * from Usuario where correo = "user" and clave = "passw"
-		try:
-			q = Usuario.objects.get(email = user, password = password)
-			# Crear variable de sesión.
-			request.session["logueo"] = {
-				"id": q.id,
-				"nombre": q.nombre,
-				"rol": q.rol,
-                "nombre_rol":q.get_rol_display()
-			}
-			messages.success(request, f"Bienvendido {q.nombre}!!")
-			return redirect("inicio")
-		except Exception as e:
-			messages.error(request, f"Error: Usuario o contraseña incorrectos {e}")
-			return redirect("index")
-	else:
-		messages.warning(request, "Error: No se enviaron datos.")
-		return redirect("index")
+        try:
+            q = Usuario.objects.get(email = user)
+            if verify_password(password, q.password):
+                # Crear variable de sesión.
+                request.session["logueo"] = {
+                    "id": q.id,
+                    "nombre": q.nombre,
+                    "rol": q.rol,
+                    "nombre_rol":q.get_rol_display()
+                }
+                messages.success(request, f"Bienvendido {q.nombre}!!")
+            else:
+                messages.error(request, 'Error: Usuario o contraseña incorrectos...')
+            return redirect("inicio")
+        except Exception as e:
+            messages.error(request, f"Error: Usuario o contraseña incorrectos {e}")
+            return redirect("index")
+    else:
+        messages.warning(request, "Error: No se enviaron datos.")
+        return redirect("index")
 
 
 def logout(request):
@@ -113,7 +119,7 @@ def crear_usuario_registro(request):
                     fecha_nacimiento = fecha_nacimiento,
                     email = email,
                     cedula = cedula,
-                    password = password1
+                    password = hash_password(password1)
                 )
                 q.save()
                 messages.success(request, "Usuario creado exitosamente")
@@ -313,7 +319,7 @@ def guUsuariosCrear(request):
                 nombre=nombre,
                 fecha_nacimiento=fecha_nacimiento,
                 email=email,
-                password=password,
+                password=hash_password(password),
                 rol=rol,
                 cedula=cedula,
                 estado=estado,
@@ -365,7 +371,7 @@ def guUsuariosActualizar(request):
             q = Usuario.objects.get(pk = id)
             q.nombre = nombre
             q.email = email
-            q.password = password
+            q.password = hash_password(password)
             q.fecha_nacimiento = fecha_nacimiento
             q.rol = rol
             q.cedula = cedula

@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 # Serializers define the API representation.
-class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
+class UsuarioSerializer(serializers.HyperlinkedModelSerializer, serializers.ModelSerializer):
     foto = serializers.ImageField(required=False)
     class Meta:
         model = Usuario
