@@ -25,9 +25,9 @@ SECRET_KEY = 'django-insecure-ztfip3l7w_5@gk2ci*7wpk@d$jy6g1jd74mj-8pcicxw3+q(wf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["Elizay05.pythonanywhere.com"]
+ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["http://elizay05.pythonanywhere.com"]
+# CSRF_TRUSTED_ORIGINS = ["http://elizay05.pythonanywhere.com"]
 
 # Application definition
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Oasis',
     'rest_framework',
     'django.contrib.humanize',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [

@@ -1838,6 +1838,11 @@ class DetalleVentaViewSet(viewsets.ModelViewSet):
 from rest_framework.authtoken.views import ObtainAuthToken
 
 
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+	if created:
+		Token.objects.create(user=instance)
+
 class CustomAuthToken(ObtainAuthToken):
 	def post(self, request, *args, **kwargs):
 		serializer = self.serializer_class(data=request.data,
