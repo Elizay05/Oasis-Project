@@ -6,11 +6,11 @@
     height: auto;
   }
 
-  #tabla{
+  #tabla, #tabla2{
       width: 100%;
       margin: 0%;
   }
-  #tabla thead tr th{
+  #tabla thead tr th, #tabla2 thead tr th{
     background-color: black;
       line-height: 2.5em;
       text-align: center;
@@ -18,21 +18,13 @@
       font-weight: 600;
       font-family: Nunito;
   }
-  #tabla tbody tr td{
+  #tabla tbody tr td, #tabla2 tbody tr td{
       line-height: 2.5em;
       text-align: center;
       font-family: Nunito;
       color: #6e6e6e;
       font-weight: 100;
   }
-
-  #tabla tbody tr .tablaProductosHistorial{
-    line-height: 2.5em;
-    text-align: start;
-    font-family: Nunito;
-    color: #6e6e6e;
-    font-weight: 100;
-}
 
   #contenedorTabla{
       margin-left: 1.3em;
