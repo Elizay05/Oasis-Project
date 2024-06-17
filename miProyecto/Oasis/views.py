@@ -357,7 +357,7 @@ def guUsuariosFormEditar(request, id):
 
 def guUsuariosActualizar(request):
     if request.method == 'POST':
-        id = request.POST.get('id')
+        user_id = request.POST.get('id')
         nombre = request.POST.get('nombre')
         fecha_nacimiento = request.POST.get('fechaNacimiento')
         email = request.POST.get('email')
@@ -368,7 +368,7 @@ def guUsuariosActualizar(request):
         foto_nueva = request.FILES.get('foto_nueva')
 
         try:
-            q = Usuario.objects.get(pk = id)
+            q = Usuario.objects.get(pk = user_id)
             q.nombre = nombre
             q.email = email
             q.password = hash_password(password)
