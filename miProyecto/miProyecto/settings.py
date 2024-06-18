@@ -144,15 +144,14 @@ FORMAT_MODULE_PATH = [
 ]
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'tienda.utils.custom_exception_handler'
-    """
+    'EXCEPTION_HANDLER': 'Oasis.utils.custom_exception_handler',
 	'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ],"""
+    ],
 }
 
 AUTH_USER_MODEL = "Oasis.Usuario"
