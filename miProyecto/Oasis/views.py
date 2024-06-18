@@ -1499,12 +1499,22 @@ def pagar_pedido(request, id, rol):
 
         usuario = pedidos.first().usuario
 
+        # Verificar si algún pedido está en preparación
+        if any(pedido.estado == pedido.PREPARACION for pedido in pedidos):
+            if rol == 'usuario':
+                messages.warning(request, "No se pueden pagar pedidos en preparación.")
+                return redirect('ver_detalles_pedido_usuario')
+            else:
+                messages.warning(request, "No se pueden pagar pedidos en preparación.")
+                return redirect('ver_pedidos_mesa', mesa_id=id)
+
         # Calcular el total del pedido excluyendo los productos eliminados
         total_pedido = sum(
             sum(detalle.cantidad * detalle.precio for detalle in pedido.detallepedido_set.filter(estado='Activo'))
             for pedido in pedidos
         )
 
+        # Crear el historial de pedido
         historial_pedido = HistorialPedido.objects.create(
             mesa=mesa,
             fecha=timezone.now(),
@@ -1515,14 +1525,6 @@ def pagar_pedido(request, id, rol):
         # Agrupar productos por ID y sumar las cantidades, excluyendo los productos eliminados
         productos_agrupados = defaultdict(lambda: {'cantidad': 0, 'precio': 0})
         for pedido in pedidos:
-            if pedido.estado == pedido.PREPARACION:
-                if rol == 'usuario':
-                    messages.warning(request, "No se pueden pagar pedidos en preparación.")
-                    return redirect('ver_detalles_pedido_usuario')
-                else:
-                    messages.warning(request, "No se pueden pagar pedidos en preparación.")
-                    return redirect('ver_pedidos_mesa', mesa_id=id)
-
             for detalle in pedido.detallepedido_set.filter(estado='Activo'):
                 producto_id = detalle.producto.id
                 productos_agrupados[producto_id]['cantidad'] += detalle.cantidad
