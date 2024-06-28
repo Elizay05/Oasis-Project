@@ -150,6 +150,17 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "Oasis.Usuario"
 AUTH_PROFILE_MODULE = "Oasis.Usuario"
 
+
+
+#Configuracion de correo
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "juanpabloarango.iearm@gmail.com"
+EMAIL_HOST_PASSWORD = "iwladvdppenwwbox"
+EMAIL_USE_TLS = True
+
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
