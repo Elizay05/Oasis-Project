@@ -23,7 +23,7 @@
           <label for="input" class="label">Escribe tu contraseña</label>
           <div class="underline"></div>
         </div>
-        <a class="olvidarContraseña">Olvidé mi contraseña</a>
+        <a href="{% url 'recuperar' %}">Olvidé mi contraseña</a>
         <button type="submit" class="btn-normal">Entrar</button>
         <p class="p1">¿No tiene una cuenta?</p>
       </div>
@@ -69,6 +69,7 @@
     <h2>¿Para qué sirve la página?</h2>
     <p>Oasis es un software que permite agilizar las operaciones de las discotecas, ofreciendo funciones para compra de productos, reserva de eventos y mesas, y más.</p>
     <h2>¿Quiénes somos?</h2>
+    <p>Somos un equipo dedicado a mejorar la experiencia nocturna, brindando herramientas que facilitan la gestión de discotecas y la diversión de nuestros usuarios.</p>
   </div>
 </div>
 {% endblock %}
