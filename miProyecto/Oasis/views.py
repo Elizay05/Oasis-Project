@@ -30,6 +30,9 @@ from rest_framework import viewsets
 from .serializers import *
 from rest_framework import viewsets
 
+#Importar el crypt
+from .crypt import *
+
 
 #Importar todos los modelos de la base de datos.
 from .models import *
@@ -44,27 +47,30 @@ def index(request):
         return redirect("inicio")
 
 def login(request):
-	if request.method == "POST":
-		user = request.POST.get("correo")
-		password = request.POST.get("clave")
+    if request.method == "POST":
+        user = request.POST.get("correo")
+        password = request.POST.get("clave")
 		#Select * from Usuario where correo = "user" and clave = "passw"
-		try:
-			q = Usuario.objects.get(email = user, password = password)
-			# Crear variable de sesión.
-			request.session["logueo"] = {
-				"id": q.id,
-				"nombre": q.nombre,
-				"rol": q.rol,
-                "nombre_rol":q.get_rol_display()
-			}
-			messages.success(request, f"Bienvendido {q.nombre}!!")
-			return redirect("inicio")
-		except Exception as e:
-			messages.error(request, f"Error: Usuario o contraseña incorrectos {e}")
-			return redirect("index")
-	else:
-		messages.warning(request, "Error: No se enviaron datos.")
-		return redirect("index")
+        try:
+            q = Usuario.objects.get(email = user)
+            if verify_password(password, q.password):
+                # Crear variable de sesión.
+                request.session["logueo"] = {
+                    "id": q.id,
+                    "nombre": q.nombre,
+                    "rol": q.rol,
+                    "nombre_rol":q.get_rol_display()
+                }
+                messages.success(request, f"Bienvendido {q.nombre}!!")
+            else:
+                messages.error(request, 'Error: Usuario o contraseña incorrectos...')
+            return redirect("inicio")
+        except Exception as e:
+            messages.error(request, f"Error: Usuario o contraseña incorrectos {e}")
+            return redirect("index")
+    else:
+        messages.warning(request, "Error: No se enviaron datos.")
+        return redirect("index")
 
 
 def logout(request):
@@ -113,7 +119,7 @@ def crear_usuario_registro(request):
                     fecha_nacimiento = fecha_nacimiento,
                     email = email,
                     cedula = cedula,
-                    password = password1
+                    password = hash_password(password1)
                 )
                 q.save()
                 messages.success(request, "Usuario creado exitosamente")
@@ -313,7 +319,7 @@ def guUsuariosCrear(request):
                 nombre=nombre,
                 fecha_nacimiento=fecha_nacimiento,
                 email=email,
-                password=password,
+                password=hash_password(password),
                 rol=rol,
                 cedula=cedula,
                 estado=estado,
@@ -351,7 +357,7 @@ def guUsuariosFormEditar(request, id):
 
 def guUsuariosActualizar(request):
     if request.method == 'POST':
-        id = request.POST.get('id')
+        user_id = request.POST.get('id')
         nombre = request.POST.get('nombre')
         fecha_nacimiento = request.POST.get('fechaNacimiento')
         email = request.POST.get('email')
@@ -362,10 +368,10 @@ def guUsuariosActualizar(request):
         foto_nueva = request.FILES.get('foto_nueva')
 
         try:
-            q = Usuario.objects.get(pk = id)
+            q = Usuario.objects.get(pk = user_id)
             q.nombre = nombre
             q.email = email
-            q.password = password
+            q.password = hash_password(password)
             q.fecha_nacimiento = fecha_nacimiento
             q.rol = rol
             q.cedula = cedula
@@ -1076,6 +1082,8 @@ def front_productos(request):
     contexto = {"data": user,"productos": productos, "categorias": categorias}
     return render(request, "Oasis/front_productos/front_productos.html", contexto)
 
+
+
 def front_productos_info(request, id):
     logueo = request.session.get("logueo", False)
     user = None
@@ -1086,9 +1094,6 @@ def front_productos_info(request, id):
 
     contexto = {"data": user, "producto": producto, "categorias": categorias}
     return render(request, "Oasis/front_productos/front_productos_info.html", contexto)
-
-
-
 
 def front_eventos(request):
     logueo = request.session.get("logueo", False)
@@ -1506,12 +1511,22 @@ def pagar_pedido(request, id, rol):
 
         usuario = pedidos.first().usuario
 
+        # Verificar si algún pedido está en preparación
+        if any(pedido.estado == pedido.PREPARACION for pedido in pedidos):
+            if rol == 'usuario':
+                messages.warning(request, "No se pueden pagar pedidos en preparación.")
+                return redirect('ver_detalles_pedido_usuario')
+            else:
+                messages.warning(request, "No se pueden pagar pedidos en preparación.")
+                return redirect('ver_pedidos_mesa', mesa_id=id)
+
         # Calcular el total del pedido excluyendo los productos eliminados
         total_pedido = sum(
             sum(detalle.cantidad * detalle.precio for detalle in pedido.detallepedido_set.filter(estado='Activo'))
             for pedido in pedidos
         )
 
+        # Crear el historial de pedido
         historial_pedido = HistorialPedido.objects.create(
             mesa=mesa,
             fecha=timezone.now(),
@@ -1522,14 +1537,6 @@ def pagar_pedido(request, id, rol):
         # Agrupar productos por ID y sumar las cantidades, excluyendo los productos eliminados
         productos_agrupados = defaultdict(lambda: {'cantidad': 0, 'precio': 0})
         for pedido in pedidos:
-            if pedido.estado == pedido.PREPARACION:
-                if rol == 'usuario':
-                    messages.warning(request, "No se pueden pagar pedidos en preparación.")
-                    return redirect('ver_detalles_pedido_usuario')
-                else:
-                    messages.warning(request, "No se pueden pagar pedidos en preparación.")
-                    return redirect('ver_pedidos_mesa', mesa_id=id)
-
             for detalle in pedido.detallepedido_set.filter(estado='Activo'):
                 producto_id = detalle.producto.id
                 productos_agrupados[producto_id]['cantidad'] += detalle.cantidad
@@ -1844,6 +1851,11 @@ class DetalleVentaViewSet(viewsets.ModelViewSet):
 # ------------------------------- Personalización de Token Autenticación ------------
 from rest_framework.authtoken.views import ObtainAuthToken
 
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+	if created:
+		Token.objects.create(user=instance)
 
 class CustomAuthToken(ObtainAuthToken):
 	def post(self, request, *args, **kwargs):
