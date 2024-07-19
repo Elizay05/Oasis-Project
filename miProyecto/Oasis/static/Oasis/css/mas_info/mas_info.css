@@ -1,0 +1,29 @@
+/* Oasis/static/Oasis/css/styles.css */
+
+.mas-informacion-container {
+    background-color: #212529;
+    color: white;
+    padding: 20px;
+}
+
+.mas-informacion-container h2 {
+    color: red;
+    margin-top: 20px;
+}
+
+.mas-informacion-container p {
+    margin-bottom: 20px;
+}
+
+.imagenes-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.imagenes-container img {
+    width: calc(33.33% - 10px); /* Ajustar el ancho de las imágenes */
+    height: auto;
+    border-radius: 5px;
+}

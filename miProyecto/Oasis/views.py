@@ -1853,7 +1853,9 @@ def verificar_recuperar(request):
 		return render(request, "Oasis/login/verificar_recuperar.html", contexto)
 
 
-
+#mas info
+def mas_info(request):
+    return render(request, 'Oasis/mas_info.html')
 
 # -------------------------------------------------------------------------------------------
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
