@@ -136,10 +136,11 @@ def cambiar_clave(request):
         c1 = request.POST.get("nueva1")
         c2 = request.POST.get("nueva2")
 
-        if q.clave == request.POST.get("clave"):
+        #Puedes intentar cambiando "Clave" por "Password" - Sale un error diferente. JAJAJA
+        if verify_password(request.POST.get("clave"), q.password):
             if c1 == c2:
                 #Cambiar clave en DB
-                q.clave = c1
+                q.password = hash_password(c1)
                 q.save()
                 messages.success(request, "Contraseña guardada correctamente!")
                 return redirect('ver_perfil')
