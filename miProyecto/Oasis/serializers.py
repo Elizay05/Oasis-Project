@@ -4,25 +4,32 @@ from rest_framework import serializers
 
 
 # Serializers define the API representation.
-class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
+class UsuarioSerializer(serializers.HyperlinkedModelSerializer, serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False)
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'email', 'clave', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto']
+        fields = ['id', 'nombre', 'email', 'password', 'cedula', 'fecha_nacimiento', 'rol', 'estado', 'foto', 'token_recuperar']
 
 class EventoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Evento
-        fields = ['id', 'nombre', 'fecha', 'hora_incio', 'descripcion', 'foto']
+        fields = ['id', 'nombre', 'fecha', 'hora_incio', 'descripcion', 'aforo', 'entradas_disponibles','precio_entrada', 'precio_vip', 'reservas','foto']
+
+class CompraEntradaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CompraEntrada
+        fields = ['id', 'usuario', 'evento', 'entrada_general', 'entrada_vip', 'total', 'fecha_compra']
 
 class MesaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Mesa
-        fields = ['id', 'usuario', 'estado', 'codigo_qr']
+        fields = ['id', 'nombre', 'capacidad', 'precio', 'estado', 'estado_reserva', 'codigo_qr']
 
 class ReservaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reserva
-        fields = ['id', 'usuario', 'evento', 'mesa', 'fecha_compra', 'hora_compra', 'codigo_qr']
+        #Agregar el 'usuario' cuando funcione
+        fields = ['id', 'evento', 'mesa', 'fecha_compra', 'total', 'codigo_qr']
 
 class CategoriaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -37,12 +44,12 @@ class ProductoSerializer(serializers.HyperlinkedModelSerializer):
 class PedidoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Pedido
-        fields = ['id', 'mesa', 'producto', 'detalles', 'estado', 'precio']
+        fields = ['id', 'mesa', 'usuario', 'fecha','comentario', 'estado', 'total']
 
-class PedidoMesaSerializer(serializers.HyperlinkedModelSerializer):
+class DetallePedidoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = PedidoMesa
-        fields = ['id', 'mesa', 'producto', 'cantidad']
+        model = DetallePedido
+        fields = ['id', 'pedido', 'producto', 'cantidad', 'precio']
 
 """class InventarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -62,7 +69,8 @@ class FotosSerializer(serializers.HyperlinkedModelSerializer):
 class VentaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Venta
-        fields = ['fecha_venta', 'usuario', 'estado']
+        #Agregar el 'usuario' cuando funcione
+        fields = ['fecha_venta', 'estado']
 
 class DetalleVentaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -1,0 +1,66 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block titulo %}Mesas{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item lateralOpciones">
+    <a class="nav-link text-white" href="{% url 'Mesas' %}">
+        Inicio                    
+    </a>
+  </li>
+{% endblock %}
+
+{% block contenedor %}
+<h1 style="margin-top: 0.5em;">Mesas</h1>
+  <div class="Contenido">
+      <div class="conteos">
+        <p><b>Todos</b> (<span id="totalUsuarios">0</span>)</p>
+      </div>
+      <div class="search">
+        <input placeholder="Buscar mesas..." type="text">
+        <button type="submit">Buscar</button>
+    </div>
+  </div>
+  <div class="Agregar">
+    <a type="button" class="btn btn-success" href="{% url 'mesaForm' %}">Agregar Mesa</a>
+  </div>
+  <div id="contenedorTabla" class="contenedorTabla">            
+      <table id="tabla" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Mesa</th>
+            <th>Capacidad</th>
+            <th>Precio</th>
+            <th>Estado Pedido</th>
+            <th>Estado Reserva</th>
+            <th>Código Qr</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in data %}
+          <tr>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.capacidad }}</td>
+            <td>{{ c.precio|intcomma }}</td>
+            <td>{{ c.estado }}</td>
+            <td>
+              {% if c.estado_reserva == 'Reservada' %}
+                <a href="">{{ c.estado_reserva }}</a>
+              {% else %}
+                {{ c.estado_reserva }}
+              {% endif %}
+            </td>
+            <td>{{ c.codigo_qr }}</td>
+            <td>
+              <a type="button" class="btn btn-warning" href="{% url 'mesaFormActualizar' c.id %}"><i class="bi bi-pencil"></i></a>
+              <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarMesa' c.id %}')"><i class="bi bi-x-lg"></i></a>
+            </td>
+          </tr>
+        </tbody>
+        {% endfor %}
+      </table>
+    </div>
+{% endblock %}  

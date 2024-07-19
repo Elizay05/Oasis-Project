@@ -1,0 +1,61 @@
+{% extends 'Oasis/barNav.html' %}
+{% load static %}
+{% load humanize %}
+{{data}}
+
+{% block titulo %}Entradas{% endblock %}
+
+{% block Opciones %}
+  <li id='primeraOpcion' class="nav-item">
+    <a class="nav-link text-white" href="{% url 'Eventos' %}">
+      Inicio                    
+    </a>
+  </li>     
+{% endblock %}
+
+{% block contenedor %}
+    <h1 style="margin-top: 0.5em;">{{ evento.nombre }}</h1>
+    <div class="Contenido">
+        <div class="conteos">
+            <p><b>Entradas disponibles</b> (<span id="totalUsuarios">{{ evento.entradas_disponibles }}</span>)</p>
+        </div>
+    </div>
+    <!--
+    <div class="nav_direccionamiento">
+      <a href="{% url 'Eventos' %}">Entradas</a>
+      <a href="{% url 'Eventos' %}">Reservas</a>
+    </div>
+    -->
+    <div id="contenedorTabla" class="contenedorTabla">            
+        <table id="tabla" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Id Entrada</th>
+              <th>Usuario</th>
+              <th>Email</th>
+              <th>Entradas Generales</th>
+              <th>Entradas Vip</th>
+              <th>Total</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entrada_con_correo in entradas_con_correo %}
+              <tr>
+                <td>{{ entrada_con_correo.entrada.id }}</td>
+                <td>{{ entrada_con_correo.entrada.usuario }}</td>
+                <td>{{ entrada_con_correo.correo }}</td>
+                <td>{{ entrada_con_correo.entrada.entrada_general }}</td>
+                <td>{{ entrada_con_correo.entrada.entrada_vip }}</td>
+                <td>{{ entrada_con_correo.entrada.total|intcomma }}</td>
+                <td>{{ entrada_con_correo.entrada.fecha_compra }}</td>
+                <td>
+                  <a type="button" class="btn btn-danger" href="javascript:eliminar('{% url 'eliminarEntrada' entrada_con_correo.entrada.id %}')"><i class="bi bi-x-lg"></i></a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+{% endblock %}

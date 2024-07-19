@@ -7,40 +7,47 @@ function eliminar(url){
 function remove_producto(url){
     location.href = url;
 }
+document.addEventListener("DOMContentLoaded", function() {
+    const selectMesa = document.getElementById('mesaSelect');
+    const botonEscaneada = document.getElementById('escaneadaButton');
 
-//jquery-3.7.1.min
+    function verificarSelect() {
+        if (selectMesa.value === '') {
+            botonEscaneada.disabled = true;
+        } else {
+            botonEscaneada.disabled = false;
+        }
+    }
+
+    selectMesa.addEventListener('change', verificarSelect);
+
+    verificarSelect();
+});
+
+function mesa_escaneada(url) {
+    const mesaId = document.getElementById('mesaSelect').value;
+    if (mesaId) {
+        window.location.href = `${url}${mesaId}/`;
+    }
+}
+
 function ver_carrito(url){
-    //Capturo referencia a dom de carrito del offcanvas
     contenido = $("#respuesta_carrito")
-    loader = $("#loader")
-
-    loader.removeClass("d-none");
-    loader.addClass("d-block");
-
-
-    offCanvas_carrito = $("#carritoCompras");
-    offCanvas_carrito.offcanvas('toggle');
-
     $.ajax({
         url: url
     })
     .done(function(respuesta){
         if (respuesta != "Error"){
-            loader.removeClass("d-block");
-            loader.addClass("d-none");
-            //Pintar respuesta en offcanvas
             contenido.html(respuesta)
         }
         else{
-            location.href="/Oasis/front_productos/";
+            location.href="/Oasis/escanear_mesa/";
         }
     })
     .fail(function(respuesta){
-        location.href="/Oasis/front_productos/";
+        location.href="/Oasis/escanear_mesa/";
     });
 }
-
-
 
 
 function add_carrito(url, id_producto){
@@ -49,17 +56,7 @@ function add_carrito(url, id_producto){
     id = $(`#id_${id_producto}`).val()
     cantidad = $(`#cantidad_${id_producto}`).val()
 
-
-    //Capturo referencia a dom de carrito del offcanvas
     contenido = $("#respuesta_carrito")
-    loader = $("#loader")
-
-    loader.removeClass("d-none");
-    loader.addClass("d-block");
-
-
-    offCanvas_carrito = $("#carritoCompras");
-    offCanvas_carrito.offcanvas('toggle');
 
     $.ajax({
         url: url,
@@ -68,58 +65,42 @@ function add_carrito(url, id_producto){
     })
     .done(function(respuesta){
         if (respuesta != "Error"){
-            loader.removeClass("d-block");
-            loader.addClass("d-none");
-            //Pintar respuesta en offcanvas
             contenido.html(respuesta)
         }
         else{
-            location.href="/Oasis/front_productos/";
+            location.href="/Oasis/escanear_mesa/";
         }
     })
     .fail(function(respuesta){
-        location.href="/Oasis/front_productos/";
+        location.href="/Oasis/escanear_mesa/";
     });
     
 }
 
 function carrito_eliminar(url){
     contenido = $("#respuesta_carrito")
-    loader = $("#loader")
-
-    loader.removeClass("d-none");
-    loader.addClass("d-block");
 
     $.ajax({
         url: url,
     })
     .done(function(respuesta){
         if (respuesta != "Error"){
-            loader.removeClass("d-block");
-            loader.addClass("d-none");
-            //Pintar respuesta en offcanvas
             contenido.html(respuesta)
         }
         else{
-            location.href="/Oasis/front_productos/";
+            location.href="/Oasis/escanear_mesa/";
         }
     })
     .fail(function(respuesta){
-        location.href="/Oasis/front_productos/";
+        location.href="/Oasis/escanear_mesa/";
     });
 }
 
 
-
 function actualizar_totales_carrito(url,id){
     contenido = $("#respuesta_carrito")
-    loader = $("#loader")
     cantidad = $("#cantidad_carrito_"+id)
 
-
-    loader.removeClass("d-none");
-    loader.addClass("d-block");
-    
     $.ajax({
         url: url,
         type: "GET",
@@ -127,16 +108,13 @@ function actualizar_totales_carrito(url,id){
     })
     .done(function(respuesta){
         if (respuesta != "Error"){
-            loader.removeClass("d-block");
-            loader.addClass("d-none");
-            //Pintar respuesta en offcanvas
             contenido.html(respuesta)
         }
         else{
-            location.href="/Oasis/front_productos/";
+            location.href="/Oasis/escanear_mesa/";
         }
     })
     .fail(function(respuesta){
-        location.href="/Oasis/front_productos/";
+        location.href="/Oasis/escanear_mesa/";
     });
 }
