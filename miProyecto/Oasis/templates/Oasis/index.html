@@ -3,7 +3,6 @@
 
 {% block titulo %}Inicio{% endblock %}
 
-
 {% block lateral %}
   <div class="offcanvas offcanvas-end bg-dark" id="pantallaLogin">
     <div class="offcanvas-header cabecera">
@@ -36,7 +35,6 @@
 {% block contenedor %}
 <div>
   <div id="demo" class="carousel slide" data-bs-ride="carousel">
-
     <div class="carousel-inner">
       <div class="carousel-item active">
         <img src="{% static 'Oasis/img/fondo1.jpg' %}" alt="fondo1" class="d-block w-100">
@@ -49,22 +47,29 @@
       </div>
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-    </button>
+    <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev"></button>
+    <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next"></button>
 
     <div id="frase">
       <p>- Bienvenidos a Oasis</p>
       <div id="parrafo">
-        Sumérgete en la noche en nuestro bar único, donde los cócteles cobran vida, la música llena el aire y las
-        risas
-        fluyen sin parar. Únete a nosotros y descubre el epicentro de la diversión nocturna en la ciudad.
+        Sumérgete en la noche en nuestro bar único, donde los cócteles cobran vida, la música llena el aire y las risas fluyen sin parar. Únete a nosotros y descubre el epicentro de la diversión nocturna en la ciudad.
       </div>
-      <button class="btn3">Más información</button>
+      <button class="btn3" data-bs-toggle="offcanvas" data-bs-target="#informacionAdicional">Más información</button>
     </div>
   </div>
 </div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="informacionAdicional">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Más Información</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <h2>¿Para qué sirve la página?</h2>
+    <p>Oasis es un software que permite agilizar las operaciones de las discotecas, ofreciendo funciones para compra de productos, reserva de eventos y mesas, y más.</p>
+    <h2>¿Quiénes somos?</h2>
+    <p>Somos un equipo dedicado a mejorar la experiencia nocturna, brindando herramientas que facilitan la gestión de discotecas y la diversión de nuestros usuarios.</p>
+  </div>
 </div>
 {% endblock %}
-
