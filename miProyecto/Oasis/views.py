@@ -22,6 +22,8 @@ import json
 
 from django.utils import timezone
 
+#APIVIEW
+from rest_framework.views import APIView
 
 
 
@@ -650,6 +652,7 @@ def crearMesa(request):
                     nombre = nom,
                     capacidad = cap,
                     precio = precio,
+                    usuario = ""
                     )
                     q.save()
                     messages.success(request, "Mesa Registrada Correctamente!")
@@ -1417,6 +1420,7 @@ def crear_pedido_admin(request, id):
             producto.save()
 
         mesa.estado = mesa.ACTIVA
+        mesa.usuario = f"MESERO: {user.nombre}"
         mesa.save()
         request.session["carrito"] = []
         request.session["items"] = 0
@@ -1427,6 +1431,22 @@ def crear_pedido_admin(request, id):
     
     return redirect('peGestionMesas')
 
+
+class token_qr(APIView):
+    def post(self, request):
+        try:
+            mesa = MesaSerializer(codigo_qr = request.data.mesa)
+            user = UsuarioSerializer(email=request.data.email)
+            if serializer.is_valid(mesa):
+                mesa.estado = mesa.ACTIVA
+                mesa.usuario = user.email
+                mesa.save()
+                return JsonResponse({'mesa':{
+                    'nombre': mesa.nombre,
+                    'qr':mesa.qr
+                }})
+        except Exception as e:
+            return JsonResponse({'Error':f'{e}'}, status=400)
 
 
 
@@ -1469,6 +1489,7 @@ def crear_pedido_usuario(request, id):
             producto.save()
 
         mesa.estado = mesa.ACTIVA
+        mesa.usuario = user.email
         mesa.save()
         request.session["carrito"] = []
         request.session["items"] = 0
@@ -1546,6 +1567,7 @@ def pagar_pedido(request, id, rol):
 
         # Actualizar el estado de la mesa
         mesa.estado = mesa.DISPONIBLE
+        mesa.usuario = ""
         mesa.save()
 
         messages.success(request, "¡Pedido pagado exitosamente!")
@@ -1667,6 +1689,7 @@ def liberar_mesa(request, id):
     try:
         mesa = Mesa.objects.get(pk=id)
         mesa.estado = mesa.DISPONIBLE
+        mesa.usuario = ""
         mesa.save()
         messages.success(request, "Mesa liberada exitosamente.")
     except Exception as e:
@@ -1732,6 +1755,8 @@ def ver_detalles_usuario(request):
     user = Usuario.objects.get(pk=logueo["id"])
     pedidos = Pedido.objects.filter(usuario=user).order_by('-fecha')
 
+    mesa = Mesa.objects.get(usuario=user.email)
+
     detalles_pedidos = []
     cuenta = 0
 
@@ -1756,6 +1781,7 @@ def ver_detalles_usuario(request):
 
     contexto = {
         'user': user,
+        'mesa': mesa,
         'detalles_pedidos': detalles_pedidos,
         'total_pedidos': total_pedidos,
         'pedidos_eliminados': pedidos_eliminados,

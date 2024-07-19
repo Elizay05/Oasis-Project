@@ -44,7 +44,7 @@
 
 
 {% block contenedor %}
-    <h1 style="margin-top: 0.5em;">Pedidos</h1>
+    <h1 style="margin-top: 0.5em;">Pedidos {{ mesa.nombre }}</h1>
     {% if total_pedidos == 0 %}
         <p style="margin-left: 1.5em;">No tienes pedidos activos</p>
     {% else %}
@@ -52,22 +52,14 @@
             <div class="conteos">
                 <p><b>Todos</b> (<span id="totalUsuarios">{{ total_pedidos }}</span>)</p>
             </div>
-<<<<<<< HEAD
-=======
-            <div class="search">
-                <input placeholder="Buscar usuarios..." type="text">
-                <button type="submit">Buscar</button>
-            </div>
->>>>>>> 562494fa63016a106588a650c4219debed89c7de
         </div>
             <div class="Agregar">
-                <a type="button" class="btn btn-success" href="#">Nuevo pedido</a>
+                <a type="button" class="btn btn-success" href="{% url 'pedidoUsuario' mesa.id %}">Nuevo pedido</a>
             </div>
             <div style="margin-left: 2%; margin-right: 2%; margin-top: 3%; font-family: Nunito;">
                 {% for detalle_pedido in detalles_pedidos %}
                     <div style="margin-bottom: 3em;">
-                        <h5 style="color: blueviolet;"><b>Mesa: {{ detalle_pedido.pedido.mesa }}</b></h5>
-                        <h6>Pedido {{ detalle_pedido.pedido.id }} - Fecha: {{ detalle_pedido.pedido.fecha }}</h6>
+                        <h6>Fecha: {{ detalle_pedido.pedido.fecha }}</h6>
                         <div style="display: flex; padding: 0.5em 1em 0.5em 0em; width: fit-content; align-items: center; gap: 10px;">
                             <p style="margin-bottom: 0%;">Estado: <b>{{ detalle_pedido.pedido.estado }}</b></p>
                             <div class="d-flex justify-content-center align-items-center rounded-circle"
